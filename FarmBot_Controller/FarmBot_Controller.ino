@@ -6,12 +6,12 @@
 #include "DS1307RTC.h"
 #include "TaskScheduler.h"
 
-#define RETURN 7
-#define LEFT 9
-#define RIGHT 11
-#define DOWN 10
-#define UP 12
-#define ENTER 8 
+#define RETURN  7
+#define LEFT    9
+#define RIGHT   11
+#define DOWN    10
+#define UP      12
+#define ENTER   8 
 
 uint8_t ButtonArray[] = { RETURN, LEFT, RIGHT, UP, DOWN, ENTER };
 
@@ -30,6 +30,10 @@ SubMenu* smTree1;
 SubMenu* smTree2;
 SubMenu* smTree3;
 
+SubMenu* smWaterTime;
+SubMenu* smMaxTemp;
+SubMenu* smMaxHumi;
+
 void setup()
 {
 	Serial.begin(9600);
@@ -45,6 +49,11 @@ void setup()
 	{
 		lbSeasonName = new Label(SecondMenu, "Season 1", 7, 0);
 		smTree1 = new SubMenu(SecondMenu, "Tree 1", 0, 2);
+    {
+      smWaterTime = new SubMenu(smTree1->Container, "Time for water", 3, 0);
+      smMaxTemp = new SubMenu(smTree1->Container, "Max temperature", 3, 1);
+      smMaxHumi = new SubMenu(smTree1->Container, "Max humidity" , 3, 2); 
+    }
 		smTree2 = new SubMenu(SecondMenu, "Tree 2", 7, 2);
 		smTree3 = new SubMenu(SecondMenu, "Tree 3", 14, 2);
 	}
