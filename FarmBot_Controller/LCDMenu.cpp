@@ -52,20 +52,13 @@ void LCDMenuClass::UpdateScreen()
 		LCD->print("No menu");
 	}
 
-	if (currentMenu->CursorEnable == false)
-	{
-		TurnCursor(false);
-	}
-
 	DisplayElement* procEle;	// Processing Element
 	for (uint8_t i = 0; i < currentMenu->DisEleNumber; i++)
 	{
 		procEle = currentMenu->DisEleArray[i];
-		if (procEle->GetElementType() != LABEL)
-
+		
 		if (procEle->IsTextChanged == false)
-			continue;		
-
+			continue;	
 		
 		LCD->setCursor(procEle->Column, procEle->Row);
 		if (procEle->IsDisplay == false)
@@ -99,6 +92,14 @@ void LCDMenuClass::TurnCursor(bool state)
 void LCDMenuClass::SetCurrentMenu(AbstractMenu* menu)
 {
 	currentMenu = menu;
+
+	for (uint8_t i = 0; i < currentMenu->DisEleNumber; i++)
+	{
+		if (currentMenu->DisEleArray[i]->GetElementType() != LABEL)
+		{
+			currentMenu->CursorEnable = true;
+		}
+	}
 	
 	// If menu is origin menu type, change index
 	if (BrandOrder == -1)
@@ -118,7 +119,7 @@ void LCDMenuClass::SetCurrentMenu(AbstractMenu* menu)
 	}
 
 	// if menu is not have any display element, turn off cursor
-	if (currentMenu->DisEleNumber == 0)
+	if (currentMenu->DisEleNumber == 0 || currentMenu->CursorEnable == false)
 	{
 		TurnCursor(false);
 	}
@@ -183,7 +184,6 @@ void LCDMenuClass::MoveCursorLeft()
 
 	CurrentCursor = nearestEle;
 	LCD->setCursor(CurrentCursor.X, CurrentCursor.Y);
-	TurnCursor(true);
 }
 
 void LCDMenuClass::MoveCursorRight()
@@ -216,7 +216,6 @@ void LCDMenuClass::MoveCursorRight()
 
 	CurrentCursor = nearestEle;
 	LCD->setCursor(CurrentCursor.X, CurrentCursor.Y);
-	TurnCursor(true);
 }
 
 void LCDMenuClass::ExecuteEffect()
@@ -230,12 +229,10 @@ void LCDMenuClass::ExecuteEffect()
 			lasttime = millis();
 			if (IsCursorOn == false)
 			{
-				IsCursorOn = true;
 				TurnCursor(true);
 			}
 			else
 			{
-				IsCursorOn = false;
 				TurnCursor(false);
 			}
 		}
@@ -404,10 +401,6 @@ AbstractMenu::~AbstractMenu()
 
 void AbstractMenu::AddElement(DisplayElement* element)
 {
-	if (element->GetElementType() != LABEL)
-	{
-		CursorEnable = true;
-	}
 	DisEleNumber++;
 	DisplayElement** newDisEleArray = new DisplayElement*[DisEleNumber];
 

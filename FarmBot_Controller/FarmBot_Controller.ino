@@ -28,26 +28,30 @@ OriginMenu* SecondMenu;
 Label* lbSeasonName;
 SubMenu* smTree1;
 SubMenu* smTree2;
-SubMenu* 
+SubMenu* smTree3;
 
 void setup()
 {
+	Serial.begin(9600);
+
 	FirstMenu = new OriginMenu();
 	{
 		lbToday = new Label(FirstMenu, "Today: ", 0, 0);
-		lbDateValue = new Label(FirstMenu, "27/4/2017", 8, 0);
-		lbTimeValue = new Label(FirstMenu, "20:33:23", 8, 1);
+		lbDateValue = new Label(FirstMenu, "", 8, 0);
+		lbTimeValue = new Label(FirstMenu, "07:33:10", 8, 1);
 	}
 
 	SecondMenu = new OriginMenu();
 	{
-
+		lbSeasonName = new Label(SecondMenu, "Season 1", 7, 0);
+		smTree1 = new SubMenu(SecondMenu, "Tree 1", 0, 2);
+		smTree2 = new SubMenu(SecondMenu, "Tree 2", 7, 2);
+		smTree3 = new SubMenu(SecondMenu, "Tree 3", 14, 2);
 	}
-
-	Serial.begin(9600);
 	
 	LCDMenu.Init(&lcd, "FarmBot Controller");
 	LCDMenu.AddMenu(FirstMenu);
+	LCDMenu.AddMenu(SecondMenu);
 	LCDMenu.SetCurrentMenu(FirstMenu);
 	LCDMenu.UpdateScreen();
 
@@ -76,13 +80,42 @@ void ReadTime()
 
 void UpdateTimeInDay()
 {
-	lbTimeValue->SetText(String(TodayTime.Hour) + ":" + String(TodayTime.Minute) + ":" + String(TodayTime.Second));
+	String hour = String(TodayTime.Hour);
+	String minute = String(TodayTime.Minute);
+	String second = String(TodayTime.Second);
+
+	if (hour.length() == 1)
+	{
+		hour = String("0") + hour;
+	}
+	if (minute.length() == 1)
+	{
+		minute = String("0") + minute;
+	}
+	if (second.length() == 1)
+	{
+		second = String("0") + second;
+	}
+	lbTimeValue->SetText(hour + ":" + minute + ":" + second);
 	
 }
 
 void UpdateDateInMonth()
 {
-	lbDateValue->SetText(String(TodayTime.Day) + "/" + String(TodayTime.Month) + "/20" + String(TodayTime.Year-30));
+	String day = String(TodayTime.Day);
+	String month = String(TodayTime.Month);
+	String year = String("20") + String(abs(TodayTime.Year - 30));
+
+	if (day.length() == 1)
+	{
+		day = String("0") + day;
+	}
+	if (month.length() == 1)
+	{
+		month = String("0") + month;
+	}
+
+	lbDateValue->SetText(day + "/" + month + "/" + year);
 }
 
 void ExecuteMenuButton()
