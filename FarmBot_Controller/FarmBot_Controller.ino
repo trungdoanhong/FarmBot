@@ -30,10 +30,14 @@ SubMenu* smTree1;
 SubMenu* smTree2;
 SubMenu* smTree3;
 
-SubMenu* smWaterTime;
-SubMenu* smMaxTemp;
-SubMenu* smMaxHumi;
-
+SubMenu* smT1WaterTime;
+Label* lbT1MaxTemp;
+Label* lbT1MaxHumi;
+VariableText* vtMaxTempValue;
+VariableText* vtMaxHumiValue;
+SubMenu* smT2WaterTime;
+SubMenu* smT2MaxTemp;
+SubMenu* smT2MaxHumi;
 void setup()
 {
 	Serial.begin(9600);
@@ -51,8 +55,10 @@ void setup()
 		smTree1 = new SubMenu(SecondMenu, "Tree 1", 0, 2);
     {
       smWaterTime = new SubMenu(smTree1->Container, "Time for water", 3, 0);
-      smMaxTemp = new SubMenu(smTree1->Container, "Max temperature", 3, 1);
-      smMaxHumi = new SubMenu(smTree1->Container, "Max humidity" , 3, 2); 
+      lbMaxTemp = new Label(smTree1->Container, "Max temp", 0, 1);
+      vtMaxTempvalue = new VariableText(smTree1->Container, 33, 10, 1); 
+      lbMaxHumi = new Label(smTree1->Container, "Max humi" , 3, 2);
+      vtMaxHumivalue = new VariableText(smTree1->Container, 60, 10, 2); 
     }
 		smTree2 = new SubMenu(SecondMenu, "Tree 2", 7, 2);
 		smTree3 = new SubMenu(SecondMenu, "Tree 3", 14, 2);
