@@ -30,14 +30,24 @@ SubMenu* smTree1;
 SubMenu* smTree2;
 SubMenu* smTree3;
 
-SubMenu* smT1WaterTime;
-Label* lbT1MaxTemp;
-Label* lbT1MaxHumi;
-VariableText* vtMaxTempValue;
-VariableText* vtMaxHumiValue;
-SubMenu* smT2WaterTime;
-SubMenu* smT2MaxTemp;
-SubMenu* smT2MaxHumi;
+SubMenu* smWaterTime1;
+Label* lbMaxTemp1;
+Label* lbMaxHumi1;
+VariableText* vtMaxTempValue1;
+VariableText* vtMaxHumiValue1;
+
+SubMenu* smWaterTime2;
+Label* lbMaxTemp2;
+Label* lbMaxHumi2;
+VariableText* vtMaxTempValue2;
+VariableText* vtMaxHumiValue2;
+
+SubMenu* smWaterTime3;
+Label* lbMaxTemp3;
+Label* lbMaxHumi3;
+VariableText* vtMaxTempValue3;
+VariableText* vtMaxHumiValue3;
+
 void setup()
 {
 	Serial.begin(9600);
@@ -53,15 +63,29 @@ void setup()
 	{
 		lbSeasonName = new Label(SecondMenu, "Season 1", 7, 0);
 		smTree1 = new SubMenu(SecondMenu, "Tree 1", 0, 2);
-    {
-      smWaterTime = new SubMenu(smTree1->Container, "Time for water", 3, 0);
-      lbMaxTemp = new Label(smTree1->Container, "Max temp", 0, 1);
-      vtMaxTempvalue = new VariableText(smTree1->Container, 33, 10, 1); 
-      lbMaxHumi = new Label(smTree1->Container, "Max humi" , 3, 2);
-      vtMaxHumivalue = new VariableText(smTree1->Container, 60, 10, 2); 
-    }
+		{
+			smWaterTime1 = new SubMenu(smTree1->Container, "Time for water", 3, 0);
+			lbMaxTemp1 = new Label(smTree1->Container, "Max temp", 0, 1);
+			vtMaxTempValue1 = new VariableText(smTree1->Container, 33, 10, 1); 
+			lbMaxHumi1 = new Label(smTree1->Container, "Max humi" ,0 , 2);
+			vtMaxHumiValue1 = new VariableText(smTree1->Container, 60, 10, 2); 
+		}
 		smTree2 = new SubMenu(SecondMenu, "Tree 2", 7, 2);
+		{
+			smWaterTime2 = new SubMenu(smTree2->Container, "Time for water", 3, 0);
+			lbMaxTemp2 = new Label(smTree2->Container, "Max temp", 0, 1);
+			vtMaxTempValue2 = new VariableText(smTree2->Container, 33, 10, 1);
+			lbMaxHumi2 = new Label(smTree2->Container, "Max humi", 0, 2);
+			vtMaxHumiValue2 = new VariableText(smTree2->Container, 60, 10, 2);
+		}
 		smTree3 = new SubMenu(SecondMenu, "Tree 3", 14, 2);
+		{
+			smWaterTime3 = new SubMenu(smTree3->Container, "Time for water", 3, 0);
+			lbMaxTemp3 = new Label(smTree3->Container, "Max temp", 0, 1);
+			vtMaxTempValue3 = new VariableText(smTree3->Container, 33, 10, 1);
+			lbMaxHumi3 = new Label(smTree3->Container, "Max humi", 0, 2);
+			vtMaxHumiValue3 = new VariableText(smTree3->Container, 60, 10, 2);
+		}
 	}
 	
 	LCDMenu.Init(&lcd, "FarmBot Controller");
