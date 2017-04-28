@@ -9,7 +9,7 @@
 	#include "WProgram.h"
 #endif
 
-#include <LiquidCrystal_I2C.h>
+#include "LiquidCrystal_I2C.h"
 #include <string.h>
 #include "StableButton.h"
 
