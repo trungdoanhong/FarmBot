@@ -48,6 +48,36 @@ Label* lbMaxHumi3;
 VariableText* vtMaxTempValue3;
 VariableText* vtMaxHumiValue3;
 
+FunctionText* ftAddTime1;
+FunctionText* ftAddTime2;
+FunctionText* ftAddTime3;
+
+typedef struct
+{
+	float Hour;
+	float Minute;
+} TimeInDay;
+
+typedef struct
+{
+	VariableText* vtHour;
+	Label* lbColon;
+	VariableText* vtMinute;
+	FunctionText* ftDelete;
+} TimeInDayWidget;
+
+typedef struct
+{
+	uint8_t TimeNumber = 0;
+	TimeInDay* TimeList;
+	float* MaxTemp_ptr;
+	float* MaxHumi_ptr;
+} Tree;
+
+Tree TreeList[3];
+TimeInDayWidget TimeWidgetList1[6];
+uint8_t NumberOfTime1 = 0;
+
 void setup()
 {
 	Serial.begin(9600);
@@ -65,26 +95,51 @@ void setup()
 		smTree1 = new SubMenu(SecondMenu, "Tree 1", 0, 2);
 		{
 			smWaterTime1 = new SubMenu(smTree1->Container, "Time for water", 3, 0);
+			{
+				ftAddTime1 = new FunctionText(smWaterTime1->Container, "Add", 0, 0);
+				ftAddTime1->Function = AddTimeTree1;
+			}
 			lbMaxTemp1 = new Label(smTree1->Container, "Max temp", 0, 1);
-			vtMaxTempValue1 = new VariableText(smTree1->Container, 33, 10, 1); 
+
+			vtMaxTempValue1 = new VariableText(smTree1->Container, 33.21, 10, 1); 
+			TreeList[0].MaxTemp_ptr = &vtMaxTempValue1->Value;
+
 			lbMaxHumi1 = new Label(smTree1->Container, "Max humi" ,0 , 2);
-			vtMaxHumiValue1 = new VariableText(smTree1->Container, 60, 10, 2); 
+
+			vtMaxHumiValue1 = new VariableText(smTree1->Container, 60.2, 10, 2); 
+			TreeList[0].MaxHumi_ptr = &vtMaxHumiValue1->Value;
 		}
 		smTree2 = new SubMenu(SecondMenu, "Tree 2", 7, 2);
 		{
 			smWaterTime2 = new SubMenu(smTree2->Container, "Time for water", 3, 0);
+			{
+				ftAddTime2 = new FunctionText(smWaterTime2->Container, "Add", 0, 0);
+			}
 			lbMaxTemp2 = new Label(smTree2->Container, "Max temp", 0, 1);
+
 			vtMaxTempValue2 = new VariableText(smTree2->Container, 33, 10, 1);
+			TreeList[1].MaxTemp_ptr = &vtMaxTempValue2->Value;
+
 			lbMaxHumi2 = new Label(smTree2->Container, "Max humi", 0, 2);
+
 			vtMaxHumiValue2 = new VariableText(smTree2->Container, 60, 10, 2);
+			TreeList[1].MaxHumi_ptr = &vtMaxHumiValue2->Value;
 		}
 		smTree3 = new SubMenu(SecondMenu, "Tree 3", 14, 2);
 		{
 			smWaterTime3 = new SubMenu(smTree3->Container, "Time for water", 3, 0);
+			{
+				ftAddTime3 = new FunctionText(smWaterTime3->Container, "Add", 0, 0);
+			}
 			lbMaxTemp3 = new Label(smTree3->Container, "Max temp", 0, 1);
+
 			vtMaxTempValue3 = new VariableText(smTree3->Container, 33, 10, 1);
+			TreeList[2].MaxTemp_ptr = &vtMaxTempValue3->Value;
+
 			lbMaxHumi3 = new Label(smTree3->Container, "Max humi", 0, 2);
+
 			vtMaxHumiValue3 = new VariableText(smTree3->Container, 60, 10, 2);
+			TreeList[2].MaxHumi_ptr = &vtMaxHumiValue3->Value;
 		}
 	}
 	
@@ -110,6 +165,47 @@ void loop()
 	ExecuteMenuButton();
 	LCDMenu.ExecuteEffect();	
 	LCDMenu.UpdateScreen();
+}
+
+void AddTime(uint8_t index)
+{
+	TreeList[index].TimeNumber++;
+	TimeInDay* tempTimeInDay = new TimeInDay[TreeList[index].TimeNumber];
+	for (uint8_t i = 0; i < TreeList[index].TimeNumber - 1; i++)
+	{
+		tempTimeInDay[i] = TreeList[index].TimeList[i];
+	}
+
+	if (TreeList[index].TimeList != NULL)
+	{
+		delete[] TreeList[index].TimeList;
+	}
+
+	TreeList[index].TimeList = tempTimeInDay;
+}
+
+void AddTimeTree1()
+{
+	if (NumberOfTime1 == 6)
+		return;
+	AddTime(0);	
+	uint8_t x = (NumberOfTime1 % 2) * 10;
+	uint8_t y = NumberOfTime1 / 2 + 1;
+	TimeWidgetList1[NumberOfTime1].vtHour = new VariableText(smWaterTime1->Container, 12, x, y);
+	TimeWidgetList1[NumberOfTime1].lbColon = new Label(smWaterTime1->Container, ":", x + 2, y);
+	TimeWidgetList1[NumberOfTime1].vtMinute = new VariableText(smWaterTime1->Container, 15, x + 3, y);
+	TimeWidgetList1[NumberOfTime1].ftDelete = new FunctionText(smWaterTime1->Container, "x", x + 6, y);
+	NumberOfTime1++;
+}
+
+void AddTimeTree2()
+{
+	AddTime(1);
+}
+
+void AddTimeTree3()
+{
+	AddTime(2);
 }
 
 void ReadTime()

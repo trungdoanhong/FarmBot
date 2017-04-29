@@ -64,7 +64,7 @@ void LCDMenuClass::UpdateScreen()
 		if (procEle->IsDisplay == false)
 		{
 			String spaces = "";
-			for (uint8_t i = 0; i <= procEle->Text.length(); i++)
+			for (uint8_t i = 0; i < procEle->Text.length(); i++)
 			{
 				spaces += " ";
 			}
@@ -496,9 +496,32 @@ DisplayElementType Label::GetElementType()
 
 VariableText::VariableText(AbstractMenu* parent, float value, uint8_t col, uint8_t row) : DisplayElement(parent, "", col, row)
 {
-	Resolution = 1;
+	if (value - (int)value == 0)
+	{
+		Resolution = 1;
+	}		
+	else
+	{
+		uint8_t numForCheck = (int)(value / 0.01) % 10;
+		if (numForCheck == 0)
+		{
+			Resolution = 0.1;
+		}
+		else
+		{
+			Resolution = 0.01;
+		}
+	}
+
 	Value = value;
-	SetText(String((int)Value));
+	if ((Resolution - (int)Resolution) == 0)
+	{
+		SetText(String((int)Value));
+	}
+	else
+	{
+		SetText(String(Value));
+	}
 	IsSelected = false;
 }
 
@@ -509,15 +532,37 @@ DisplayElementType VariableText::GetElementType()
 
 void VariableText::Decrease()
 {
-	Value = Value - Resolution;
-	SetText(String((int)Value));
+	float newValue = Value - Resolution;
+	String endSpace = "";
+	if (String(newValue).length() < String(Value).length())
+	{
+		endSpace = " ";
+	}
+
+	Value = newValue;
+
+	if ((Resolution - (int)Resolution) == 0)
+	{
+		SetText(String((int)Value) + endSpace);
+	}
+	else
+	{
+		SetText(String(Value) + endSpace);
+	}
 	IsTextChanged = true;
 }
 
 void VariableText::Increase()
 {
 	Value = Value + Resolution;
-	SetText(String((int)Value));
+	if ((Resolution - (int)Resolution) == 0)
+	{
+		SetText(String((int)Value));
+	}
+	else
+	{
+		SetText(String(Value));
+	}
 	IsTextChanged = true;
 }
 
