@@ -192,8 +192,10 @@ void AddTimeTree1()
 	uint8_t x = (NumberOfTime1 % 2) * 10;
 	uint8_t y = NumberOfTime1 / 2 + 1;
 	TimeWidgetList1[NumberOfTime1].vtHour = new VariableText(smWaterTime1->Container, 12, x, y);
+	TimeWidgetList1[NumberOfTime1].vtHour->Max = 12;
 	TimeWidgetList1[NumberOfTime1].lbColon = new Label(smWaterTime1->Container, ":", x + 2, y);
 	TimeWidgetList1[NumberOfTime1].vtMinute = new VariableText(smWaterTime1->Container, 15, x + 3, y);
+	TimeWidgetList1[NumberOfTime1].vtMinute->Max = 59;
 	TimeWidgetList1[NumberOfTime1].ftDelete = new FunctionText(smWaterTime1->Container, "x", x + 6, y);
 	NumberOfTime1++;
 }

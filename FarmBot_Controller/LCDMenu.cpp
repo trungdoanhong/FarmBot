@@ -44,6 +44,26 @@ void LCDMenuClass::AddMenu(OriginMenu* menu)
 	OriginMenuArray[OriginMenuNumber - 1] = menu;
 }
 
+void LCDMenuClass::eraseText(DisplayElement* procEle)
+{
+	String spaces = "";
+	uint8_t numOfSpace = 0;
+	if (procEle->oldText.length() == 0)
+	{
+		numOfSpace = procEle->Text.length();
+	}
+	else
+	{
+		numOfSpace = procEle->oldText.length();
+	}
+	for (uint8_t i = 0; i < numOfSpace; i++)
+	{
+		spaces = spaces + " ";
+	}
+	LCD->setCursor(procEle->Column, procEle->Row);
+	LCD->print(spaces);
+}
+
 void LCDMenuClass::UpdateScreen()
 {
 	// If have no menu is added, display "No menu" on LCD
@@ -58,20 +78,19 @@ void LCDMenuClass::UpdateScreen()
 		procEle = currentMenu->DisEleArray[i];
 		
 		if (procEle->IsTextChanged == false)
-			continue;	
+			continue;			
 		
-		LCD->setCursor(procEle->Column, procEle->Row);
 		if (procEle->IsDisplay == false)
 		{
-			String spaces = "";
-			for (uint8_t i = 0; i < procEle->Text.length(); i++)
-			{
-				spaces += " ";
-			}
-			LCD->print(spaces);
+			eraseText(procEle);
 		}
 		else
 		{
+			if (procEle->oldText.length() > procEle->Text.length())
+			{
+				eraseText(procEle);
+			}
+			LCD->setCursor(procEle->Column, procEle->Row);
 			LCD->print(procEle->Text);
 		}
 		procEle->IsTextChanged = false;
@@ -376,6 +395,7 @@ DisplayElementType DisplayElement::GetElementType()
 
 void DisplayElement::SetText(String text)
 {
+	oldText = Text;
 	Text = text;
 	IsTextChanged = true;
 }
@@ -496,6 +516,8 @@ DisplayElementType Label::GetElementType()
 
 VariableText::VariableText(AbstractMenu* parent, float value, uint8_t col, uint8_t row) : DisplayElement(parent, "", col, row)
 {
+	Max = 0;
+	Min = 0;
 	if (value - (int)value == 0)
 	{
 		Resolution = 1;
@@ -523,6 +545,8 @@ VariableText::VariableText(AbstractMenu* parent, float value, uint8_t col, uint8
 		SetText(String(Value));
 	}
 	IsSelected = false;
+
+	
 }
 
 DisplayElementType VariableText::GetElementType()
@@ -532,29 +556,13 @@ DisplayElementType VariableText::GetElementType()
 
 void VariableText::Decrease()
 {
-	float newValue = Value - Resolution;
-	String endSpace = "";
-	if (String(newValue).length() < String(Value).length())
+	Value = Value - Resolution;
+
+	if (Value < Min && Min < Max)
 	{
-		endSpace = " ";
+		Value = Max;
 	}
 
-	Value = newValue;
-
-	if ((Resolution - (int)Resolution) == 0)
-	{
-		SetText(String((int)Value) + endSpace);
-	}
-	else
-	{
-		SetText(String(Value) + endSpace);
-	}
-	IsTextChanged = true;
-}
-
-void VariableText::Increase()
-{
-	Value = Value + Resolution;
 	if ((Resolution - (int)Resolution) == 0)
 	{
 		SetText(String((int)Value));
@@ -563,6 +571,41 @@ void VariableText::Increase()
 	{
 		SetText(String(Value));
 	}
+	IsTextChanged = true;
+}
+
+void VariableText::Increase()
+{
+	Value = Value + Resolution;
+
+	if (Value > Max && Min < Max)
+	{
+		Value = Min;
+	}
+
+	if ((Resolution - (int)Resolution) == 0)
+	{
+		SetText(String((int)Value));
+	}
+	else
+	{
+		SetText(String(Value));
+	}
+	IsTextChanged = true;
+}
+
+void VariableText::SetText(String text)
+{
+	String space = "";
+	if (Max > Min)
+	{
+		for (uint8_t i = 0; i < String((int)Max).length() - text.length(); i++)
+		{
+			space = space + "0";
+		}
+	}
+	oldText = Text;
+	Text = space + text;
 	IsTextChanged = true;
 }
 

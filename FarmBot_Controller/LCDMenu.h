@@ -65,6 +65,8 @@ public:
 	uint8_t Column;
 	uint8_t Row;
 	String Text;
+	String oldText;
+
 };
 
 class SubMenu : public DisplayElement
@@ -92,10 +94,13 @@ public:
 	void Decrease();
 	void Increase();
 	DisplayElementType GetElementType();
+	void SetText(String text);
 
 	float Resolution;
 	float Value;
 	bool IsSelected;
+	float Max;
+	float Min;
 };
 
 class FunctionText : public DisplayElement
@@ -137,6 +142,7 @@ class LCDMenuClass
 	 int8_t BrandOrder = -1;
 	 int8_t Index = -1;
  private:
+	 void eraseText(DisplayElement* procEle);
 	 AbstractMenu* currentMenu;
 	 VariableText* blinkVariableText;
 
