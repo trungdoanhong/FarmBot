@@ -57,8 +57,7 @@ public:
 	virtual ~DisplayElement();
 	virtual DisplayElementType GetElementType();
 	void SetText(String text);
-	String GetText();
-	void SetPosition();
+	void SetPosition(uint8_t col, uint8_t row);
 
 	bool IsDisplay = true;
 	bool IsTextChanged = false;
@@ -129,7 +128,8 @@ class LCDMenuClass
 	 void UpdateScreen();				// Update changed content on LCD
 	 void SetCurrentMenu(AbstractMenu* menu);	// Set menu need to display
 	 void TurnCursor(bool state);
-	 void ExecuteEffect();				
+	 void ExecuteEffect();	
+	 void ReLoadMenu();
 	 
 	 LiquidCrystal_I2C* LCD;
 	 Point CurrentCursor;

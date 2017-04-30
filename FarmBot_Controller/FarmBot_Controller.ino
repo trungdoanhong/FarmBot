@@ -75,8 +75,8 @@ typedef struct
 } Tree;
 
 Tree TreeList[3];
-TimeInDayWidget TimeWidgetList1[6];
-uint8_t NumberOfTime1 = 0;
+TimeInDayWidget TimeWidgetList[3][6];
+uint8_t NumberOfTime[3] = { 0, 0, 0 };
 
 void setup()
 {
@@ -97,7 +97,7 @@ void setup()
 			smWaterTime1 = new SubMenu(smTree1->Container, "Time for water", 3, 0);
 			{
 				ftAddTime1 = new FunctionText(smWaterTime1->Container, "Add", 0, 0);
-				ftAddTime1->Function = AddTimeTree1;
+				ftAddTime1->Function = AddTime1;
 			}
 			lbMaxTemp1 = new Label(smTree1->Container, "Max temp", 0, 1);
 
@@ -114,6 +114,7 @@ void setup()
 			smWaterTime2 = new SubMenu(smTree2->Container, "Time for water", 3, 0);
 			{
 				ftAddTime2 = new FunctionText(smWaterTime2->Container, "Add", 0, 0);
+				ftAddTime2->Function = AddTime2;
 			}
 			lbMaxTemp2 = new Label(smTree2->Container, "Max temp", 0, 1);
 
@@ -130,6 +131,7 @@ void setup()
 			smWaterTime3 = new SubMenu(smTree3->Container, "Time for water", 3, 0);
 			{
 				ftAddTime3 = new FunctionText(smWaterTime3->Container, "Add", 0, 0);
+				ftAddTime3->Function = AddTime3;
 			}
 			lbMaxTemp3 = new Label(smTree3->Container, "Max temp", 0, 1);
 
@@ -169,6 +171,52 @@ void loop()
 
 void AddTime(uint8_t index)
 {
+	if (NumberOfTime[index] == 6)
+		return;
+
+	uint8_t x = (NumberOfTime[index] % 2) * 10;
+	uint8_t y = NumberOfTime[index] / 2 + 1;
+
+	AbstractMenu* tempMenu;
+
+	switch (index)
+	{
+	case 0:
+		tempMenu = smWaterTime1->Container;
+		break;
+	case 1:
+		tempMenu = smWaterTime2->Container;
+		break;
+	case 2:
+		tempMenu = smWaterTime3->Container;
+		break;
+	default:
+		break;
+	}
+
+	TimeWidgetList[index][NumberOfTime[index]].vtHour = new VariableText(tempMenu, 12, x, y);
+	TimeWidgetList[index][NumberOfTime[index]].vtHour->Max = 12;
+	TimeWidgetList[index][NumberOfTime[index]].lbColon = new Label(tempMenu, ":", x + 2, y);
+	TimeWidgetList[index][NumberOfTime[index]].vtMinute = new VariableText(tempMenu, 15, x + 3, y);
+	TimeWidgetList[index][NumberOfTime[index]].vtMinute->Max = 59;
+	TimeWidgetList[index][NumberOfTime[index]].ftDelete = new FunctionText(tempMenu, "x", x + 6, y);
+	switch (index)
+	{
+	case 0:
+		TimeWidgetList[index][NumberOfTime[index]].ftDelete->Function = DeleteTime1;
+		break;
+	case 1:
+		TimeWidgetList[index][NumberOfTime[index]].ftDelete->Function = DeleteTime2;
+		break;
+	case 2:
+		TimeWidgetList[index][NumberOfTime[index]].ftDelete->Function = DeleteTime3;
+		break;
+	default:
+		break;
+	}
+	
+	NumberOfTime[index]++;
+
 	TreeList[index].TimeNumber++;
 	TimeInDay* tempTimeInDay = new TimeInDay[TreeList[index].TimeNumber];
 	for (uint8_t i = 0; i < TreeList[index].TimeNumber - 1; i++)
@@ -184,28 +232,68 @@ void AddTime(uint8_t index)
 	TreeList[index].TimeList = tempTimeInDay;
 }
 
-void AddTimeTree1()
+void DeleteTime(uint8_t treeOder)
 {
-	if (NumberOfTime1 == 6)
-		return;
-	AddTime(0);	
-	uint8_t x = (NumberOfTime1 % 2) * 10;
-	uint8_t y = NumberOfTime1 / 2 + 1;
-	TimeWidgetList1[NumberOfTime1].vtHour = new VariableText(smWaterTime1->Container, 12, x, y);
-	TimeWidgetList1[NumberOfTime1].vtHour->Max = 12;
-	TimeWidgetList1[NumberOfTime1].lbColon = new Label(smWaterTime1->Container, ":", x + 2, y);
-	TimeWidgetList1[NumberOfTime1].vtMinute = new VariableText(smWaterTime1->Container, 15, x + 3, y);
-	TimeWidgetList1[NumberOfTime1].vtMinute->Max = 59;
-	TimeWidgetList1[NumberOfTime1].ftDelete = new FunctionText(smWaterTime1->Container, "x", x + 6, y);
-	NumberOfTime1++;
+	uint8_t order = (LCDMenu.CurrentCursor.Y - 1) * 2 + (LCDMenu.CurrentCursor.X - 6) / 10;	
+
+	TimeInDayWidget tempTimeWidget;
+	tempTimeWidget.vtHour = TimeWidgetList[treeOder][order].vtHour;
+	tempTimeWidget.lbColon = TimeWidgetList[treeOder][order].lbColon;
+	tempTimeWidget.vtMinute = TimeWidgetList[treeOder][order].vtMinute;
+	tempTimeWidget.ftDelete = TimeWidgetList[treeOder][order].ftDelete;
+
+	for (uint8_t i = order; i < NumberOfTime[treeOder] - 1; i++)
+	{	
+		uint8_t x = (i % 2) * 10;
+		uint8_t y = i / 2 + 1;
+
+		TimeWidgetList[treeOder][i].vtHour = TimeWidgetList[treeOder][i + 1].vtHour;
+		TimeWidgetList[treeOder][i].lbColon = TimeWidgetList[treeOder][i + 1].lbColon;
+		TimeWidgetList[treeOder][i].vtMinute = TimeWidgetList[treeOder][i + 1].vtMinute;
+		TimeWidgetList[treeOder][i].ftDelete = TimeWidgetList[treeOder][i + 1].ftDelete;
+
+		TimeWidgetList[treeOder][i].vtHour->SetPosition(x, y);
+		TimeWidgetList[treeOder][i].lbColon->SetPosition(x + 2, y);
+		TimeWidgetList[treeOder][i].vtMinute->SetPosition(x + 3, y);
+		TimeWidgetList[treeOder][i].ftDelete->SetPosition(x + 6, y);
+	}
+
+	smWaterTime1->Container->DeleteElement(tempTimeWidget.vtHour);
+	smWaterTime1->Container->DeleteElement(tempTimeWidget.lbColon);
+	smWaterTime1->Container->DeleteElement(tempTimeWidget.vtMinute);
+	smWaterTime1->Container->DeleteElement(tempTimeWidget.ftDelete);
+
+	LCDMenu.ReLoadMenu();
+
+	NumberOfTime[treeOder]--;
 }
 
-void AddTimeTree2()
+void DeleteTime1()
+{
+	DeleteTime(0);
+}
+
+void DeleteTime2()
+{
+	DeleteTime(1);
+}
+
+void DeleteTime3()
+{
+	DeleteTime(2);
+}
+
+void AddTime1()
+{
+	AddTime(0);
+}
+
+void AddTime2()
 {
 	AddTime(1);
 }
 
-void AddTimeTree3()
+void AddTime3()
 {
 	AddTime(2);
 }
