@@ -172,6 +172,12 @@ void LCDMenuClass::SetCurrentMenu(AbstractMenu* menu)
 
 }
 
+void LCDMenuClass::ReLoadMenu()
+{
+	LCD->clear();
+	SetCurrentMenu(currentMenu);
+}
+
 void LCDMenuClass::MoveCursorLeft()
 {
 	if (blinkVariableText != NULL)
@@ -276,12 +282,6 @@ void LCDMenuClass::ExecuteEffect()
 		UpdateScreen();
 	}
 	
-}
-
-void LCDMenuClass::ReLoadMenu()
-{
-	LCD->clear();
-	SetCurrentMenu(currentMenu);
 }
 
 void LCDMenuClass::MoveCursorUp()
@@ -408,8 +408,8 @@ void DisplayElement::SetText(String text)
 
 void DisplayElement::SetPosition(uint8_t col, uint8_t row)
 {
-	Row = row;
 	Column = col;
+	Row = row;
 }
 
 #pragma endregion DisplayElement

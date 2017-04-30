@@ -54,8 +54,8 @@ FunctionText* ftAddTime3;
 
 typedef struct
 {
-	float Hour;
-	float Minute;
+	float* Hour;
+	float* Minute;
 } TimeInDay;
 
 typedef struct
@@ -169,17 +169,17 @@ void loop()
 	LCDMenu.UpdateScreen();
 }
 
-void AddTime(uint8_t index)
+void AddTime(uint8_t treeOrder)
 {
-	if (NumberOfTime[index] == 6)
+	if (NumberOfTime[treeOrder] == 6)
 		return;
 
-	uint8_t x = (NumberOfTime[index] % 2) * 10;
-	uint8_t y = NumberOfTime[index] / 2 + 1;
+	uint8_t x = (NumberOfTime[treeOrder] % 2) * 10;
+	uint8_t y = NumberOfTime[treeOrder] / 2 + 1;
 
 	AbstractMenu* tempMenu;
 
-	switch (index)
+	switch (treeOrder)
 	{
 	case 0:
 		tempMenu = smWaterTime1->Container;
@@ -194,42 +194,42 @@ void AddTime(uint8_t index)
 		break;
 	}
 
-	TimeWidgetList[index][NumberOfTime[index]].vtHour = new VariableText(tempMenu, 12, x, y);
-	TimeWidgetList[index][NumberOfTime[index]].vtHour->Max = 12;
-	TimeWidgetList[index][NumberOfTime[index]].lbColon = new Label(tempMenu, ":", x + 2, y);
-	TimeWidgetList[index][NumberOfTime[index]].vtMinute = new VariableText(tempMenu, 15, x + 3, y);
-	TimeWidgetList[index][NumberOfTime[index]].vtMinute->Max = 59;
-	TimeWidgetList[index][NumberOfTime[index]].ftDelete = new FunctionText(tempMenu, "x", x + 6, y);
-	switch (index)
+	TimeWidgetList[treeOrder][NumberOfTime[treeOrder]].vtHour = new VariableText(tempMenu, 12, x, y);
+	TimeWidgetList[treeOrder][NumberOfTime[treeOrder]].vtHour->Max = 12;
+	TimeWidgetList[treeOrder][NumberOfTime[treeOrder]].lbColon = new Label(tempMenu, ":", x + 2, y);
+	TimeWidgetList[treeOrder][NumberOfTime[treeOrder]].vtMinute = new VariableText(tempMenu, 15, x + 3, y);
+	TimeWidgetList[treeOrder][NumberOfTime[treeOrder]].vtMinute->Max = 59;
+	TimeWidgetList[treeOrder][NumberOfTime[treeOrder]].ftDelete = new FunctionText(tempMenu, "x", x + 6, y);
+	switch (treeOrder)
 	{
 	case 0:
-		TimeWidgetList[index][NumberOfTime[index]].ftDelete->Function = DeleteTime1;
+		TimeWidgetList[treeOrder][NumberOfTime[treeOrder]].ftDelete->Function = DeleteTime1;
 		break;
 	case 1:
-		TimeWidgetList[index][NumberOfTime[index]].ftDelete->Function = DeleteTime2;
+		TimeWidgetList[treeOrder][NumberOfTime[treeOrder]].ftDelete->Function = DeleteTime2;
 		break;
 	case 2:
-		TimeWidgetList[index][NumberOfTime[index]].ftDelete->Function = DeleteTime3;
+		TimeWidgetList[treeOrder][NumberOfTime[treeOrder]].ftDelete->Function = DeleteTime3;
 		break;
 	default:
 		break;
 	}
 	
-	NumberOfTime[index]++;
+	NumberOfTime[treeOrder]++;
 
-	TreeList[index].TimeNumber++;
-	TimeInDay* tempTimeInDay = new TimeInDay[TreeList[index].TimeNumber];
-	for (uint8_t i = 0; i < TreeList[index].TimeNumber - 1; i++)
+	TreeList[treeOrder].TimeNumber++;
+	TimeInDay* tempTimeInDay = new TimeInDay[TreeList[treeOrder].TimeNumber];
+	for (uint8_t i = 0; i < TreeList[treeOrder].TimeNumber - 1; i++)
 	{
-		tempTimeInDay[i] = TreeList[index].TimeList[i];
+		tempTimeInDay[i] = TreeList[treeOrder].TimeList[i];
 	}
 
-	if (TreeList[index].TimeList != NULL)
+	if (TreeList[treeOrder].TimeList != NULL)
 	{
-		delete[] TreeList[index].TimeList;
+		delete[] TreeList[treeOrder].TimeList;
 	}
 
-	TreeList[index].TimeList = tempTimeInDay;
+	TreeList[treeOrder].TimeList = tempTimeInDay;
 }
 
 void DeleteTime(uint8_t treeOder)
