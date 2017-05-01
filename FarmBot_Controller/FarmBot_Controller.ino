@@ -69,7 +69,7 @@ typedef struct
 typedef struct
 {
 	uint8_t TimeNumber = 0;
-	TimeInDay* TimeList;
+	TimeInDay TimeList[6];
 	float* MaxTemp_ptr;
 	float* MaxHumi_ptr;
 } Tree;
@@ -214,35 +214,26 @@ void AddTime(uint8_t treeOrder)
 	default:
 		break;
 	}
-	
+
 	NumberOfTime[treeOrder]++;
 
 	TreeList[treeOrder].TimeNumber++;
-	TimeInDay* tempTimeInDay = new TimeInDay[TreeList[treeOrder].TimeNumber];
-	for (uint8_t i = 0; i < TreeList[treeOrder].TimeNumber - 1; i++)
-	{
-		tempTimeInDay[i] = TreeList[treeOrder].TimeList[i];
-	}
-
-	if (TreeList[treeOrder].TimeList != NULL)
-	{
-		delete[] TreeList[treeOrder].TimeList;
-	}
-
-	TreeList[treeOrder].TimeList = tempTimeInDay;
+	uint8_t index = TreeList[treeOrder].TimeNumber - 1;
+	TreeList[treeOrder].TimeList[index].Hour = &(TimeWidgetList[treeOrder][index].vtHour->Value);
+	TreeList[treeOrder].TimeList[index].Minute = &(TimeWidgetList[treeOrder][index].vtMinute->Value);
 }
 
 void DeleteTime(uint8_t treeOder)
 {
-	uint8_t order = (LCDMenu.CurrentCursor.Y - 1) * 2 + (LCDMenu.CurrentCursor.X - 6) / 10;	
+	uint8_t selectedTimeOrder = (LCDMenu.CurrentCursor.Y - 1) * 2 + (LCDMenu.CurrentCursor.X - 6) / 10;	
 
 	TimeInDayWidget tempTimeWidget;
-	tempTimeWidget.vtHour = TimeWidgetList[treeOder][order].vtHour;
-	tempTimeWidget.lbColon = TimeWidgetList[treeOder][order].lbColon;
-	tempTimeWidget.vtMinute = TimeWidgetList[treeOder][order].vtMinute;
-	tempTimeWidget.ftDelete = TimeWidgetList[treeOder][order].ftDelete;
+	tempTimeWidget.vtHour = TimeWidgetList[treeOder][selectedTimeOrder].vtHour;
+	tempTimeWidget.lbColon = TimeWidgetList[treeOder][selectedTimeOrder].lbColon;
+	tempTimeWidget.vtMinute = TimeWidgetList[treeOder][selectedTimeOrder].vtMinute;
+	tempTimeWidget.ftDelete = TimeWidgetList[treeOder][selectedTimeOrder].ftDelete;
 
-	for (uint8_t i = order; i < NumberOfTime[treeOder] - 1; i++)
+	for (uint8_t i = selectedTimeOrder; i < NumberOfTime[treeOder] - 1; i++)
 	{	
 		uint8_t x = (i % 2) * 10;
 		uint8_t y = i / 2 + 1;
@@ -266,6 +257,13 @@ void DeleteTime(uint8_t treeOder)
 	LCDMenu.ReLoadMenu();
 
 	NumberOfTime[treeOder]--;
+
+	for (uint8_t i = selectedTimeOrder; i < TreeList[treeOder].TimeNumber - 1; i++)
+	{
+		TreeList[treeOder].TimeList[i].Hour = TreeList[treeOder].TimeList[i + 1].Hour;
+		TreeList[treeOder].TimeList[i].Minute = TreeList[treeOder].TimeList[i + 1].Minute;
+	}
+	TreeList[treeOder].TimeNumber--;
 }
 
 void DeleteTime1()
