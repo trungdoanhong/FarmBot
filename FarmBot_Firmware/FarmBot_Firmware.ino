@@ -35,7 +35,7 @@ float X, Y, Z;
 
 void setup()
 {
-  serialCMD = SerialCommand(9600);
+  serialCMD = SerialCommand(&Serial, 9600);
 
   serialCMD.AddCommand("X", &X);
   serialCMD.AddCommand("MoveX", MoveX);
@@ -72,10 +72,10 @@ void StepperInit()
   digitalWrite(Z_EN, LOW);
 
   ForwardX();
-  while ( digitalRead(X_MIN) == 0 )
+  /*while ( digitalRead(X_MIN) == 0 )
   {
     JumpOneStepX();
-  }
+  }*/
 }
 
 void JumpOneStepX()

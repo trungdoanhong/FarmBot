@@ -81,6 +81,7 @@ uint8_t NumberOfTime[3] = { 0, 0, 0 };
 void setup()
 {
 	Serial.begin(9600);
+	Serial1.begin(9600);
 
 	FirstMenu = new OriginMenu();
 	{
@@ -167,6 +168,15 @@ void loop()
 	ExecuteMenuButton();
 	LCDMenu.ExecuteEffect();	
 	LCDMenu.UpdateScreen();
+	SerialEvent();
+}
+
+void SerialEvent()
+{
+	while (Serial.available())
+	{		
+		Serial1.write(Serial.read());
+	}
 }
 
 void AddTime(uint8_t treeOrder)

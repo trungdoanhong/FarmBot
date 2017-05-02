@@ -14,11 +14,12 @@ struct Command
 class SerialCommand
 {
 public:
+  HardwareSerial* _Serial;
   Command* cmdContainer;
   uint8_t cmdCounter = 0;
   
   SerialCommand();
-  SerialCommand(uint16_t);
+  SerialCommand(HardwareSerial*, uint16_t);
   ~SerialCommand();
   
   void AddCommand(String message, void(*function)());

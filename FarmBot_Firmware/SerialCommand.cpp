@@ -2,28 +2,30 @@
 
 SerialCommand::SerialCommand()
 {
-  Serial.begin(9600);
-  inputString.reserve(100);
+	_Serial = &Serial;
+	_Serial->begin(9600);
+	inputString.reserve(100);
 
-  boolean stringComplete = false;
-  String inputString = "";
+	boolean stringComplete = false;
+	String inputString = "";
 
-  cmdCounter = 0;
-  //cmdContainer = new Command[10];
-  cmdContainer = NULL;
+	cmdCounter = 0;
+	//cmdContainer = new Command[10];
+	cmdContainer = NULL;
 }
 
-SerialCommand::SerialCommand(uint16_t baudrate)
+SerialCommand::SerialCommand(HardwareSerial* serial, uint16_t baudrate)
 {
-  Serial.begin(baudrate);
-  inputString.reserve(100);
+	_Serial = serial;
+	_Serial->begin(baudrate);
+	inputString.reserve(100);
 
-  boolean stringComplete = false;
-  String inputString = "";
+	boolean stringComplete = false;
+	String inputString = "";
 
-  cmdCounter = 0;
-  //cmdContainer = new Command[cmdCounter];
-  cmdContainer = NULL;
+	cmdCounter = 0;
+	//cmdContainer = new Command[cmdCounter];
+	cmdContainer = NULL;
 }
 
 SerialCommand::~SerialCommand()
@@ -80,9 +82,9 @@ void SerialCommand::AddCommand(String message, float* value)
 void SerialCommand::Execute()
 {
   // receive every character
-  while (Serial.available()) 
+  while (_Serial->available()) 
   {
-    char inChar = (char)Serial.read();
+    char inChar = (char)_Serial->read();
     
     if (inChar == '\n') 
     {
