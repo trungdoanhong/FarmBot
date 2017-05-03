@@ -76,8 +76,12 @@ namespace FarmBot_Software
                     pbEndActuator.Top = -20;
                 if (pbEndActuator.Top > 460)
                     pbEndActuator.Top = 460;
+
+                lbX.Text = "X : " + ((pbEndActuator.Left + 20) * 10) / 6 + " mm";
+                lbY.Text = "Y : " + ((pbEndActuator.Top + 20) * 10) / 6 + " mm";
             }
         }
+
 
 
     }

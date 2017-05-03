@@ -87,6 +87,8 @@ namespace FarmBot_Software
 
         private void X_Click(object sender, EventArgs e)
         {
+            if (!Port1.IsOpen)
+                return;
             Thread threadSendCmd = new Thread(SendCommandX);
             threadSendCmd.Start();           
             
@@ -94,6 +96,8 @@ namespace FarmBot_Software
 
         private void Y_Click(object sender, EventArgs e)
         {
+            if (!Port1.IsOpen)
+                return;
             Thread threadSendCmd = new Thread(SendCommandY);
             threadSendCmd.Start();
 
@@ -101,6 +105,8 @@ namespace FarmBot_Software
 
         private void Z_Click(object sender, EventArgs e)
         {
+            if (!Port1.IsOpen)
+                return;
             Thread threadSendCmd = new Thread(SendCommandZ);
             threadSendCmd.Start();
 
@@ -108,6 +114,8 @@ namespace FarmBot_Software
 
         private void XPressEnter(object sender, KeyEventArgs e)
         {
+            if (!Port1.IsOpen)
+                return;
             if( e.KeyCode == Keys.Enter)
             {
                 X_Click(null, null);
@@ -116,6 +124,8 @@ namespace FarmBot_Software
 
         private void YPressEnter(object sender, KeyEventArgs e)
         {
+            if (!Port1.IsOpen)
+                return;
             if (e.KeyCode == Keys.Enter)
             {
                 Y_Click(null, null);
@@ -124,6 +134,8 @@ namespace FarmBot_Software
 
         private void ZPressEnter(object sender, KeyEventArgs e)
         {
+            if (!Port1.IsOpen)
+                return;
             if (e.KeyCode == Keys.Enter)
             {
                 Z_Click(null, null);
