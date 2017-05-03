@@ -69,6 +69,9 @@
             this.button10 = new System.Windows.Forms.Button();
             this.label10 = new System.Windows.Forms.Label();
             this.panel5 = new System.Windows.Forms.Panel();
+            this.btMinimize = new System.Windows.Forms.Button();
+            this.panel6 = new System.Windows.Forms.Panel();
+            this.label11 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pbGarden)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbEndActuator)).BeginInit();
             this.panel1.SuspendLayout();
@@ -76,6 +79,7 @@
             this.panel3.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel5.SuspendLayout();
+            this.panel6.SuspendLayout();
             this.SuspendLayout();
             // 
             // btTestControlBoard
@@ -84,9 +88,9 @@
             this.btTestControlBoard.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btTestControlBoard.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btTestControlBoard.ForeColor = System.Drawing.Color.White;
-            this.btTestControlBoard.Location = new System.Drawing.Point(27, 45);
+            this.btTestControlBoard.Location = new System.Drawing.Point(27, 57);
             this.btTestControlBoard.Name = "btTestControlBoard";
-            this.btTestControlBoard.Size = new System.Drawing.Size(140, 30);
+            this.btTestControlBoard.Size = new System.Drawing.Size(152, 30);
             this.btTestControlBoard.TabIndex = 0;
             this.btTestControlBoard.Text = "Test Control Board";
             this.btTestControlBoard.UseVisualStyleBackColor = false;
@@ -112,9 +116,9 @@
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button1.ForeColor = System.Drawing.Color.White;
-            this.button1.Location = new System.Drawing.Point(92, 86);
+            this.button1.Location = new System.Drawing.Point(195, 57);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 48);
+            this.button1.Size = new System.Drawing.Size(86, 61);
             this.button1.TabIndex = 2;
             this.button1.Text = "Connect";
             this.button1.UseVisualStyleBackColor = false;
@@ -125,25 +129,25 @@
             this.label1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(89)))), ((int)(((byte)(123)))));
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(27, 88);
+            this.label1.Location = new System.Drawing.Point(28, 100);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(62, 45);
+            this.label1.Size = new System.Drawing.Size(144, 15);
             this.label1.TabIndex = 3;
-            this.label1.Text = "FarmBot\r\n Is not \r\nAvailable !";
+            this.label1.Text = "FarmBot is not Available !";
             // 
             // comboBox1
             // 
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(27, 190);
+            this.comboBox1.Location = new System.Drawing.Point(108, 175);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(140, 21);
+            this.comboBox1.Size = new System.Drawing.Size(111, 21);
             this.comboBox1.TabIndex = 4;
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(27, 152);
+            this.textBox1.Location = new System.Drawing.Point(108, 137);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(140, 20);
+            this.textBox1.Size = new System.Drawing.Size(111, 20);
             this.textBox1.TabIndex = 5;
             // 
             // button2
@@ -151,7 +155,7 @@
             this.button2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(89)))), ((int)(((byte)(123)))));
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.button2.ForeColor = System.Drawing.Color.White;
-            this.button2.Location = new System.Drawing.Point(183, 152);
+            this.button2.Location = new System.Drawing.Point(229, 137);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(52, 20);
             this.button2.TabIndex = 6;
@@ -163,7 +167,7 @@
             this.button3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(89)))), ((int)(((byte)(123)))));
             this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.button3.ForeColor = System.Drawing.Color.White;
-            this.button3.Location = new System.Drawing.Point(183, 189);
+            this.button3.Location = new System.Drawing.Point(229, 174);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(52, 20);
             this.button3.TabIndex = 6;
@@ -176,7 +180,7 @@
             this.pbGarden.ErrorImage = null;
             this.pbGarden.Image = global::FarmBot_Software.Properties.Resources.farmsize1;
             this.pbGarden.InitialImage = null;
-            this.pbGarden.Location = new System.Drawing.Point(27, 228);
+            this.pbGarden.Location = new System.Drawing.Point(27, 213);
             this.pbGarden.Name = "pbGarden";
             this.pbGarden.Size = new System.Drawing.Size(180, 480);
             this.pbGarden.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -187,7 +191,7 @@
             // 
             this.pbEndActuator.BackColor = System.Drawing.Color.Transparent;
             this.pbEndActuator.Image = global::FarmBot_Software.Properties.Resources.endDevice;
-            this.pbEndActuator.Location = new System.Drawing.Point(68, 267);
+            this.pbEndActuator.Location = new System.Drawing.Point(68, 252);
             this.pbEndActuator.Name = "pbEndActuator";
             this.pbEndActuator.Size = new System.Drawing.Size(40, 40);
             this.pbEndActuator.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -200,7 +204,7 @@
             // 
             this.lbX.AutoSize = true;
             this.lbX.ForeColor = System.Drawing.Color.White;
-            this.lbX.Location = new System.Drawing.Point(226, 228);
+            this.lbX.Location = new System.Drawing.Point(226, 213);
             this.lbX.Name = "lbX";
             this.lbX.Size = new System.Drawing.Size(60, 13);
             this.lbX.TabIndex = 9;
@@ -210,7 +214,7 @@
             // 
             this.lbY.AutoSize = true;
             this.lbY.ForeColor = System.Drawing.Color.White;
-            this.lbY.Location = new System.Drawing.Point(226, 253);
+            this.lbY.Location = new System.Drawing.Point(226, 238);
             this.lbY.Name = "lbY";
             this.lbY.Size = new System.Drawing.Size(60, 13);
             this.lbY.TabIndex = 9;
@@ -221,7 +225,7 @@
             this.btHome.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(89)))), ((int)(((byte)(123)))));
             this.btHome.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btHome.ForeColor = System.Drawing.Color.White;
-            this.btHome.Location = new System.Drawing.Point(229, 287);
+            this.btHome.Location = new System.Drawing.Point(229, 272);
             this.btHome.Name = "btHome";
             this.btHome.Size = new System.Drawing.Size(52, 20);
             this.btHome.TabIndex = 6;
@@ -233,7 +237,7 @@
             this.button4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(89)))), ((int)(((byte)(123)))));
             this.button4.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.button4.ForeColor = System.Drawing.Color.White;
-            this.button4.Location = new System.Drawing.Point(229, 313);
+            this.button4.Location = new System.Drawing.Point(229, 298);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(25, 20);
             this.button4.TabIndex = 6;
@@ -245,7 +249,7 @@
             this.button5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(89)))), ((int)(((byte)(123)))));
             this.button5.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.button5.ForeColor = System.Drawing.Color.White;
-            this.button5.Location = new System.Drawing.Point(256, 313);
+            this.button5.Location = new System.Drawing.Point(256, 298);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(25, 20);
             this.button5.TabIndex = 6;
@@ -258,7 +262,7 @@
             this.btTree1.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btTree1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btTree1.ForeColor = System.Drawing.Color.White;
-            this.btTree1.Location = new System.Drawing.Point(319, 46);
+            this.btTree1.Location = new System.Drawing.Point(319, 57);
             this.btTree1.Name = "btTree1";
             this.btTree1.Size = new System.Drawing.Size(89, 79);
             this.btTree1.TabIndex = 2;
@@ -271,7 +275,7 @@
             this.btTree2.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btTree2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btTree2.ForeColor = System.Drawing.Color.White;
-            this.btTree2.Location = new System.Drawing.Point(319, 164);
+            this.btTree2.Location = new System.Drawing.Point(319, 175);
             this.btTree2.Name = "btTree2";
             this.btTree2.Size = new System.Drawing.Size(89, 79);
             this.btTree2.TabIndex = 2;
@@ -284,7 +288,7 @@
             this.button7.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.button7.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button7.ForeColor = System.Drawing.Color.White;
-            this.button7.Location = new System.Drawing.Point(319, 287);
+            this.button7.Location = new System.Drawing.Point(319, 296);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(89, 79);
             this.button7.TabIndex = 2;
@@ -296,7 +300,7 @@
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(66)))), ((int)(((byte)(100)))));
             this.panel1.Controls.Add(this.textBox2);
             this.panel1.Controls.Add(this.label2);
-            this.panel1.Location = new System.Drawing.Point(465, 45);
+            this.panel1.Location = new System.Drawing.Point(465, 56);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(269, 56);
             this.panel1.TabIndex = 10;
@@ -329,7 +333,7 @@
             this.panel2.Controls.Add(this.label3);
             this.panel2.Controls.Add(this.button6);
             this.panel2.Controls.Add(this.button8);
-            this.panel2.Location = new System.Drawing.Point(465, 120);
+            this.panel2.Location = new System.Drawing.Point(465, 131);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(269, 126);
             this.panel2.TabIndex = 11;
@@ -411,7 +415,7 @@
             this.panel3.Controls.Add(this.textBox5);
             this.panel3.Controls.Add(this.label7);
             this.panel3.Controls.Add(this.label5);
-            this.panel3.Location = new System.Drawing.Point(465, 264);
+            this.panel3.Location = new System.Drawing.Point(465, 275);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(269, 51);
             this.panel3.TabIndex = 12;
@@ -451,7 +455,7 @@
             this.panel4.Controls.Add(this.textBox6);
             this.panel4.Controls.Add(this.label8);
             this.panel4.Controls.Add(this.label9);
-            this.panel4.Location = new System.Drawing.Point(465, 332);
+            this.panel4.Location = new System.Drawing.Point(465, 343);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(269, 51);
             this.panel4.TabIndex = 12;
@@ -491,7 +495,7 @@
             this.button9.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.button9.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button9.ForeColor = System.Drawing.Color.White;
-            this.button9.Location = new System.Drawing.Point(476, 647);
+            this.button9.Location = new System.Drawing.Point(473, 634);
             this.button9.Name = "button9";
             this.button9.Size = new System.Drawing.Size(123, 43);
             this.button9.TabIndex = 2;
@@ -504,7 +508,7 @@
             this.button10.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.button10.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button10.ForeColor = System.Drawing.Color.White;
-            this.button10.Location = new System.Drawing.Point(621, 647);
+            this.button10.Location = new System.Drawing.Point(618, 634);
             this.button10.Name = "button10";
             this.button10.Size = new System.Drawing.Size(123, 43);
             this.button10.TabIndex = 2;
@@ -522,23 +526,62 @@
             this.label10.Size = new System.Drawing.Size(231, 20);
             this.label10.TabIndex = 9;
             this.label10.Text = "Dashboard - FarmBot Software";
+            this.label10.MouseDown += new System.Windows.Forms.MouseEventHandler(this.DashBoard_MouseDown);
             // 
             // panel5
             // 
-            this.panel5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(19)))), ((int)(((byte)(32)))));
+            this.panel5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(28)))), ((int)(((byte)(47)))));
             this.panel5.Controls.Add(this.label10);
+            this.panel5.Controls.Add(this.btMinimize);
             this.panel5.Controls.Add(this.btExit);
             this.panel5.Location = new System.Drawing.Point(-1, 0);
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(775, 35);
             this.panel5.TabIndex = 13;
+            this.panel5.MouseDown += new System.Windows.Forms.MouseEventHandler(this.DashBoard_MouseDown);
+            // 
+            // btMinimize
+            // 
+            this.btMinimize.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(168)))), ((int)(((byte)(171)))));
+            this.btMinimize.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btMinimize.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btMinimize.ForeColor = System.Drawing.Color.White;
+            this.btMinimize.Location = new System.Drawing.Point(686, 4);
+            this.btMinimize.Name = "btMinimize";
+            this.btMinimize.Size = new System.Drawing.Size(34, 26);
+            this.btMinimize.TabIndex = 1;
+            this.btMinimize.Text = "_";
+            this.btMinimize.UseVisualStyleBackColor = false;
+            this.btMinimize.Click += new System.EventHandler(this.btMinimize_Click);
+            // 
+            // panel6
+            // 
+            this.panel6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(66)))), ((int)(((byte)(100)))));
+            this.panel6.Controls.Add(this.label11);
+            this.panel6.Location = new System.Drawing.Point(27, 137);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(69, 59);
+            this.panel6.TabIndex = 14;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.BackColor = System.Drawing.Color.Transparent;
+            this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label11.ForeColor = System.Drawing.Color.White;
+            this.label11.Location = new System.Drawing.Point(7, 19);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(56, 17);
+            this.label11.TabIndex = 9;
+            this.label11.Text = "Season";
             // 
             // DashBoard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(37)))), ((int)(((byte)(61)))));
-            this.ClientSize = new System.Drawing.Size(771, 719);
+            this.ClientSize = new System.Drawing.Size(771, 703);
+            this.Controls.Add(this.panel6);
             this.Controls.Add(this.panel5);
             this.Controls.Add(this.panel4);
             this.Controls.Add(this.panel3);
@@ -581,6 +624,8 @@
             this.panel4.PerformLayout();
             this.panel5.ResumeLayout(false);
             this.panel5.PerformLayout();
+            this.panel6.ResumeLayout(false);
+            this.panel6.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -629,6 +674,9 @@
         private System.Windows.Forms.Button button10;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Panel panel5;
+        private System.Windows.Forms.Button btMinimize;
+        private System.Windows.Forms.Panel panel6;
+        private System.Windows.Forms.Label label11;
     }
 }
 

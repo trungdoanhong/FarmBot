@@ -82,6 +82,16 @@ namespace FarmBot_Software
             }
         }
 
+        private void btMinimize_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+        }
+
+        private void panel5_MouseDown(object sender, MouseEventArgs e)
+        {
+
+        }
+
 
 
     }
