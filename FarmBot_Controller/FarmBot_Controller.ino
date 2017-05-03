@@ -5,6 +5,7 @@
 #include "Time.h"
 #include "DS1307RTC.h"
 #include "TaskScheduler.h"
+#include "SerialCommand.h"
 
 #define RETURN  7
 #define LEFT    9
@@ -12,6 +13,8 @@
 #define DOWN    10
 #define UP      12
 #define ENTER   8 
+
+SerialCommand SerialCMD;
 
 uint8_t ButtonArray[] = { RETURN, LEFT, RIGHT, UP, DOWN, ENTER };
 
@@ -81,7 +84,7 @@ uint8_t NumberOfTime[3] = { 0, 0, 0 };
 void setup()
 {
 	Serial.begin(9600);
-	Serial1.begin(9600);
+	SerialCMD.ForwardData(&Serial1, 9600);
 
 	FirstMenu = new OriginMenu();
 	{
@@ -168,15 +171,7 @@ void loop()
 	ExecuteMenuButton();
 	LCDMenu.ExecuteEffect();	
 	LCDMenu.UpdateScreen();
-	SerialEvent();
-}
-
-void SerialEvent()
-{
-	while (Serial.available())
-	{		
-		Serial1.write(Serial.read());
-	}
+	SerialCMD.Execute();
 }
 
 void AddTime(uint8_t treeOrder)

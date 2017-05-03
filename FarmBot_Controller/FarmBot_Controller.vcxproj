@@ -86,6 +86,7 @@
     <ClInclude Include="DS1307RTC.h" />
     <ClInclude Include="LCDMenu.h" />
     <ClInclude Include="LiquidCrystal_I2C.h" />
+    <ClInclude Include="SerialCommand.h" />
     <ClInclude Include="StableButton.h" />
     <ClInclude Include="TaskScheduler.h" />
     <ClInclude Include="Time.h" />
@@ -95,6 +96,7 @@
     <ClCompile Include="DS1307RTC.cpp" />
     <ClCompile Include="LCDMenu.cpp" />
     <ClCompile Include="LiquidCrystal_I2C.cpp" />
+    <ClCompile Include="SerialCommand.cpp" />
     <ClCompile Include="StableButton.cpp" />
     <ClCompile Include="TaskScheduler.cpp" />
     <ClCompile Include="Time.cpp" />

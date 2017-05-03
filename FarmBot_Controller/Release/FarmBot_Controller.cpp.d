@@ -19,4 +19,6 @@ C:\Users\hoainiemthoau\AppData\Local\Temp\VMBuilds\FarmBot_Controller\mega_atmeg
  C:\Users\hoainiemthoau\AppData\Local\Temp\VMBuilds\FarmBot_Controller\mega_atmega2560\StableButton.h \
  C:\Users\hoainiemthoau\AppData\Local\Temp\VMBuilds\FarmBot_Controller\mega_atmega2560\Time.h \
  C:\Users\hoainiemthoau\AppData\Local\Temp\VMBuilds\FarmBot_Controller\mega_atmega2560\DS1307RTC.h \
- C:\Users\hoainiemthoau\AppData\Local\Temp\VMBuilds\FarmBot_Controller\mega_atmega2560\TaskScheduler.h
+ C:\Users\hoainiemthoau\AppData\Local\Temp\VMBuilds\FarmBot_Controller\mega_atmega2560\TaskScheduler.h \
+ C:\Users\hoainiemthoau\AppData\Local\Temp\VMBuilds\FarmBot_Controller\mega_atmega2560\SerialCommand.h \
+ C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Arduino.h
