@@ -32,10 +32,10 @@
             this.btExit = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
+            this.cbSeasonName = new System.Windows.Forms.ComboBox();
+            this.tbSeasonName = new System.Windows.Forms.TextBox();
+            this.btAddSeason = new System.Windows.Forms.Button();
+            this.btLoadSeason = new System.Windows.Forms.Button();
             this.pbGarden = new System.Windows.Forms.PictureBox();
             this.pbEndActuator = new System.Windows.Forms.PictureBox();
             this.lbX = new System.Windows.Forms.Label();
@@ -45,24 +45,24 @@
             this.button5 = new System.Windows.Forms.Button();
             this.btTree1 = new System.Windows.Forms.Button();
             this.btTree2 = new System.Windows.Forms.Button();
-            this.button7 = new System.Windows.Forms.Button();
+            this.btTree3 = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.tbTreeName = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.textBox4 = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
+            this.pnTimeForWater = new System.Windows.Forms.Panel();
+            this.tbMinuteWater = new System.Windows.Forms.TextBox();
+            this.tbHourWater = new System.Windows.Forms.TextBox();
+            this.lbTimeForWater1 = new System.Windows.Forms.Label();
+            this.lbColon = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.button6 = new System.Windows.Forms.Button();
-            this.button8 = new System.Windows.Forms.Button();
+            this.btAddTimeForWater = new System.Windows.Forms.Button();
+            this.btDeleteTimeForWater1 = new System.Windows.Forms.Button();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.textBox5 = new System.Windows.Forms.TextBox();
+            this.tbTempForWater = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
-            this.textBox6 = new System.Windows.Forms.TextBox();
+            this.tbHumiForWater = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.button9 = new System.Windows.Forms.Button();
@@ -75,7 +75,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pbGarden)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbEndActuator)).BeginInit();
             this.panel1.SuspendLayout();
-            this.panel2.SuspendLayout();
+            this.pnTimeForWater.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel5.SuspendLayout();
@@ -135,44 +135,45 @@
             this.label1.TabIndex = 3;
             this.label1.Text = "FarmBot is not Available !";
             // 
-            // comboBox1
+            // cbSeasonName
             // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(108, 175);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(111, 21);
-            this.comboBox1.TabIndex = 4;
+            this.cbSeasonName.FormattingEnabled = true;
+            this.cbSeasonName.Location = new System.Drawing.Point(108, 175);
+            this.cbSeasonName.Name = "cbSeasonName";
+            this.cbSeasonName.Size = new System.Drawing.Size(111, 21);
+            this.cbSeasonName.TabIndex = 4;
             // 
-            // textBox1
+            // tbSeasonName
             // 
-            this.textBox1.Location = new System.Drawing.Point(108, 137);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(111, 20);
-            this.textBox1.TabIndex = 5;
+            this.tbSeasonName.Location = new System.Drawing.Point(108, 137);
+            this.tbSeasonName.Name = "tbSeasonName";
+            this.tbSeasonName.Size = new System.Drawing.Size(111, 20);
+            this.tbSeasonName.TabIndex = 5;
             // 
-            // button2
+            // btAddSeason
             // 
-            this.button2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(89)))), ((int)(((byte)(123)))));
-            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button2.ForeColor = System.Drawing.Color.White;
-            this.button2.Location = new System.Drawing.Point(229, 137);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(52, 20);
-            this.button2.TabIndex = 6;
-            this.button2.Text = "Add";
-            this.button2.UseVisualStyleBackColor = false;
+            this.btAddSeason.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(89)))), ((int)(((byte)(123)))));
+            this.btAddSeason.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btAddSeason.ForeColor = System.Drawing.Color.White;
+            this.btAddSeason.Location = new System.Drawing.Point(229, 137);
+            this.btAddSeason.Name = "btAddSeason";
+            this.btAddSeason.Size = new System.Drawing.Size(52, 20);
+            this.btAddSeason.TabIndex = 6;
+            this.btAddSeason.Text = "Add";
+            this.btAddSeason.UseVisualStyleBackColor = false;
             // 
-            // button3
+            // btLoadSeason
             // 
-            this.button3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(89)))), ((int)(((byte)(123)))));
-            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button3.ForeColor = System.Drawing.Color.White;
-            this.button3.Location = new System.Drawing.Point(229, 174);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(52, 20);
-            this.button3.TabIndex = 6;
-            this.button3.Text = "Load";
-            this.button3.UseVisualStyleBackColor = false;
+            this.btLoadSeason.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(89)))), ((int)(((byte)(123)))));
+            this.btLoadSeason.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btLoadSeason.ForeColor = System.Drawing.Color.White;
+            this.btLoadSeason.Location = new System.Drawing.Point(229, 174);
+            this.btLoadSeason.Name = "btLoadSeason";
+            this.btLoadSeason.Size = new System.Drawing.Size(52, 20);
+            this.btLoadSeason.TabIndex = 6;
+            this.btLoadSeason.Text = "Load";
+            this.btLoadSeason.UseVisualStyleBackColor = false;
+            this.btLoadSeason.Click += new System.EventHandler(this.btLoadSeason_Click);
             // 
             // pbGarden
             // 
@@ -268,6 +269,7 @@
             this.btTree1.TabIndex = 2;
             this.btTree1.Text = "Tree 1";
             this.btTree1.UseVisualStyleBackColor = false;
+            this.btTree1.Click += new System.EventHandler(this.btTree1_Click);
             // 
             // btTree2
             // 
@@ -281,36 +283,38 @@
             this.btTree2.TabIndex = 2;
             this.btTree2.Text = "Tree 2";
             this.btTree2.UseVisualStyleBackColor = false;
+            this.btTree2.Click += new System.EventHandler(this.btTree2_Click);
             // 
-            // button7
+            // btTree3
             // 
-            this.button7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(177)))), ((int)(((byte)(80)))));
-            this.button7.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button7.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button7.ForeColor = System.Drawing.Color.White;
-            this.button7.Location = new System.Drawing.Point(319, 296);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(89, 79);
-            this.button7.TabIndex = 2;
-            this.button7.Text = "Tree 3";
-            this.button7.UseVisualStyleBackColor = false;
+            this.btTree3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(177)))), ((int)(((byte)(80)))));
+            this.btTree3.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btTree3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btTree3.ForeColor = System.Drawing.Color.White;
+            this.btTree3.Location = new System.Drawing.Point(319, 296);
+            this.btTree3.Name = "btTree3";
+            this.btTree3.Size = new System.Drawing.Size(89, 79);
+            this.btTree3.TabIndex = 2;
+            this.btTree3.Text = "Tree 3";
+            this.btTree3.UseVisualStyleBackColor = false;
+            this.btTree3.Click += new System.EventHandler(this.btTree3_Click);
             // 
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(66)))), ((int)(((byte)(100)))));
-            this.panel1.Controls.Add(this.textBox2);
+            this.panel1.Controls.Add(this.tbTreeName);
             this.panel1.Controls.Add(this.label2);
             this.panel1.Location = new System.Drawing.Point(465, 56);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(269, 56);
             this.panel1.TabIndex = 10;
             // 
-            // textBox2
+            // tbTreeName
             // 
-            this.textBox2.Location = new System.Drawing.Point(98, 20);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(157, 20);
-            this.textBox2.TabIndex = 1;
+            this.tbTreeName.Location = new System.Drawing.Point(98, 20);
+            this.tbTreeName.Name = "tbTreeName";
+            this.tbTreeName.Size = new System.Drawing.Size(157, 20);
+            this.tbTreeName.TabIndex = 1;
             // 
             // label2
             // 
@@ -323,56 +327,57 @@
             this.label2.TabIndex = 0;
             this.label2.Text = "Tree Name";
             // 
-            // panel2
+            // pnTimeForWater
             // 
-            this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(66)))), ((int)(((byte)(100)))));
-            this.panel2.Controls.Add(this.textBox4);
-            this.panel2.Controls.Add(this.textBox3);
-            this.panel2.Controls.Add(this.label6);
-            this.panel2.Controls.Add(this.label4);
-            this.panel2.Controls.Add(this.label3);
-            this.panel2.Controls.Add(this.button6);
-            this.panel2.Controls.Add(this.button8);
-            this.panel2.Location = new System.Drawing.Point(465, 131);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(269, 126);
-            this.panel2.TabIndex = 11;
+            this.pnTimeForWater.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(66)))), ((int)(((byte)(100)))));
+            this.pnTimeForWater.Controls.Add(this.tbMinuteWater);
+            this.pnTimeForWater.Controls.Add(this.tbHourWater);
+            this.pnTimeForWater.Controls.Add(this.lbTimeForWater1);
+            this.pnTimeForWater.Controls.Add(this.lbColon);
+            this.pnTimeForWater.Controls.Add(this.label3);
+            this.pnTimeForWater.Controls.Add(this.btAddTimeForWater);
+            this.pnTimeForWater.Controls.Add(this.btDeleteTimeForWater1);
+            this.pnTimeForWater.Location = new System.Drawing.Point(465, 131);
+            this.pnTimeForWater.Name = "pnTimeForWater";
+            this.pnTimeForWater.Size = new System.Drawing.Size(269, 161);
+            this.pnTimeForWater.TabIndex = 11;
             // 
-            // textBox4
+            // tbMinuteWater
             // 
-            this.textBox4.Location = new System.Drawing.Point(167, 11);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(20, 20);
-            this.textBox4.TabIndex = 7;
+            this.tbMinuteWater.Location = new System.Drawing.Point(167, 11);
+            this.tbMinuteWater.Name = "tbMinuteWater";
+            this.tbMinuteWater.Size = new System.Drawing.Size(20, 20);
+            this.tbMinuteWater.TabIndex = 7;
             // 
-            // textBox3
+            // tbHourWater
             // 
-            this.textBox3.Location = new System.Drawing.Point(129, 11);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(20, 20);
-            this.textBox3.TabIndex = 7;
+            this.tbHourWater.Location = new System.Drawing.Point(129, 11);
+            this.tbHourWater.Name = "tbHourWater";
+            this.tbHourWater.Size = new System.Drawing.Size(20, 20);
+            this.tbHourWater.TabIndex = 7;
             // 
-            // label6
+            // lbTimeForWater1
             // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.label6.Location = new System.Drawing.Point(16, 48);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(49, 20);
-            this.label6.TabIndex = 0;
-            this.label6.Text = "12:15";
+            this.lbTimeForWater1.AutoSize = true;
+            this.lbTimeForWater1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbTimeForWater1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.lbTimeForWater1.Location = new System.Drawing.Point(15, 48);
+            this.lbTimeForWater1.Name = "lbTimeForWater1";
+            this.lbTimeForWater1.Size = new System.Drawing.Size(49, 20);
+            this.lbTimeForWater1.TabIndex = 0;
+            this.lbTimeForWater1.Text = "12:15";
+            this.lbTimeForWater1.Visible = false;
             // 
-            // label4
+            // lbColon
             // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.ForeColor = System.Drawing.Color.White;
-            this.label4.Location = new System.Drawing.Point(153, 11);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(12, 17);
-            this.label4.TabIndex = 0;
-            this.label4.Text = ":";
+            this.lbColon.AutoSize = true;
+            this.lbColon.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbColon.ForeColor = System.Drawing.Color.White;
+            this.lbColon.Location = new System.Drawing.Point(153, 11);
+            this.lbColon.Name = "lbColon";
+            this.lbColon.Size = new System.Drawing.Size(12, 17);
+            this.lbColon.TabIndex = 0;
+            this.lbColon.Text = ":";
             // 
             // label3
             // 
@@ -385,54 +390,56 @@
             this.label3.TabIndex = 0;
             this.label3.Text = "Time for water";
             // 
-            // button6
+            // btAddTimeForWater
             // 
-            this.button6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(89)))), ((int)(((byte)(123)))));
-            this.button6.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button6.ForeColor = System.Drawing.Color.White;
-            this.button6.Location = new System.Drawing.Point(203, 12);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(52, 20);
-            this.button6.TabIndex = 6;
-            this.button6.Text = "Add";
-            this.button6.UseVisualStyleBackColor = false;
+            this.btAddTimeForWater.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(89)))), ((int)(((byte)(123)))));
+            this.btAddTimeForWater.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btAddTimeForWater.ForeColor = System.Drawing.Color.White;
+            this.btAddTimeForWater.Location = new System.Drawing.Point(203, 12);
+            this.btAddTimeForWater.Name = "btAddTimeForWater";
+            this.btAddTimeForWater.Size = new System.Drawing.Size(52, 20);
+            this.btAddTimeForWater.TabIndex = 6;
+            this.btAddTimeForWater.Text = "Add";
+            this.btAddTimeForWater.UseVisualStyleBackColor = false;
+            this.btAddTimeForWater.Click += new System.EventHandler(this.btAddTimeForWater_Click);
             // 
-            // button8
+            // btDeleteTimeForWater1
             // 
-            this.button8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(89)))), ((int)(((byte)(123)))));
-            this.button8.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button8.ForeColor = System.Drawing.Color.White;
-            this.button8.Location = new System.Drawing.Point(69, 47);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(20, 20);
-            this.button8.TabIndex = 6;
-            this.button8.Text = "x";
-            this.button8.UseVisualStyleBackColor = false;
+            this.btDeleteTimeForWater1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(89)))), ((int)(((byte)(123)))));
+            this.btDeleteTimeForWater1.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btDeleteTimeForWater1.ForeColor = System.Drawing.Color.White;
+            this.btDeleteTimeForWater1.Location = new System.Drawing.Point(70, 48);
+            this.btDeleteTimeForWater1.Name = "btDeleteTimeForWater1";
+            this.btDeleteTimeForWater1.Size = new System.Drawing.Size(20, 20);
+            this.btDeleteTimeForWater1.TabIndex = 6;
+            this.btDeleteTimeForWater1.Text = "x";
+            this.btDeleteTimeForWater1.UseVisualStyleBackColor = false;
+            this.btDeleteTimeForWater1.Visible = false;
             // 
             // panel3
             // 
             this.panel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(66)))), ((int)(((byte)(100)))));
-            this.panel3.Controls.Add(this.textBox5);
+            this.panel3.Controls.Add(this.tbTempForWater);
             this.panel3.Controls.Add(this.label7);
             this.panel3.Controls.Add(this.label5);
-            this.panel3.Location = new System.Drawing.Point(465, 275);
+            this.panel3.Location = new System.Drawing.Point(465, 309);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(269, 51);
             this.panel3.TabIndex = 12;
             // 
-            // textBox5
+            // tbTempForWater
             // 
-            this.textBox5.Location = new System.Drawing.Point(166, 16);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(54, 20);
-            this.textBox5.TabIndex = 1;
+            this.tbTempForWater.Location = new System.Drawing.Point(171, 16);
+            this.tbTempForWater.Name = "tbTempForWater";
+            this.tbTempForWater.Size = new System.Drawing.Size(54, 20);
+            this.tbTempForWater.TabIndex = 1;
             // 
             // label7
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label7.ForeColor = System.Drawing.Color.White;
-            this.label7.Location = new System.Drawing.Point(229, 18);
+            this.label7.Location = new System.Drawing.Point(231, 18);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(23, 17);
             this.label7.TabIndex = 0;
@@ -445,34 +452,34 @@
             this.label5.ForeColor = System.Drawing.Color.White;
             this.label5.Location = new System.Drawing.Point(12, 17);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(148, 17);
+            this.label5.Size = new System.Drawing.Size(157, 17);
             this.label5.TabIndex = 0;
-            this.label5.Text = "Temperature to Water";
+            this.label5.Text = "Temperature For Water";
             // 
             // panel4
             // 
             this.panel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(66)))), ((int)(((byte)(100)))));
-            this.panel4.Controls.Add(this.textBox6);
+            this.panel4.Controls.Add(this.tbHumiForWater);
             this.panel4.Controls.Add(this.label8);
             this.panel4.Controls.Add(this.label9);
-            this.panel4.Location = new System.Drawing.Point(465, 343);
+            this.panel4.Location = new System.Drawing.Point(465, 377);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(269, 51);
             this.panel4.TabIndex = 12;
             // 
-            // textBox6
+            // tbHumiForWater
             // 
-            this.textBox6.Location = new System.Drawing.Point(166, 16);
-            this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(54, 20);
-            this.textBox6.TabIndex = 1;
+            this.tbHumiForWater.Location = new System.Drawing.Point(171, 16);
+            this.tbHumiForWater.Name = "tbHumiForWater";
+            this.tbHumiForWater.Size = new System.Drawing.Size(54, 20);
+            this.tbHumiForWater.TabIndex = 1;
             // 
             // label8
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label8.ForeColor = System.Drawing.Color.White;
-            this.label8.Location = new System.Drawing.Point(229, 18);
+            this.label8.Location = new System.Drawing.Point(234, 18);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(20, 17);
             this.label8.TabIndex = 0;
@@ -485,9 +492,9 @@
             this.label9.ForeColor = System.Drawing.Color.White;
             this.label9.Location = new System.Drawing.Point(12, 17);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(120, 17);
+            this.label9.Size = new System.Drawing.Size(129, 17);
             this.label9.TabIndex = 0;
-            this.label9.Text = "Humidity to Water";
+            this.label9.Text = "Humidity For Water";
             // 
             // button9
             // 
@@ -585,23 +592,23 @@
             this.Controls.Add(this.panel5);
             this.Controls.Add(this.panel4);
             this.Controls.Add(this.panel3);
-            this.Controls.Add(this.panel2);
+            this.Controls.Add(this.pnTimeForWater);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.lbY);
             this.Controls.Add(this.lbX);
             this.Controls.Add(this.pbEndActuator);
             this.Controls.Add(this.pbGarden);
-            this.Controls.Add(this.button3);
+            this.Controls.Add(this.btLoadSeason);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.btHome);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.comboBox1);
+            this.Controls.Add(this.btAddSeason);
+            this.Controls.Add(this.tbSeasonName);
+            this.Controls.Add(this.cbSeasonName);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.button10);
             this.Controls.Add(this.button9);
-            this.Controls.Add(this.button7);
+            this.Controls.Add(this.btTree3);
             this.Controls.Add(this.btTree2);
             this.Controls.Add(this.btTree1);
             this.Controls.Add(this.button1);
@@ -616,8 +623,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pbEndActuator)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
+            this.pnTimeForWater.ResumeLayout(false);
+            this.pnTimeForWater.PerformLayout();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
             this.panel4.ResumeLayout(false);
@@ -637,10 +644,10 @@
         private System.Windows.Forms.Button btExit;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ComboBox comboBox1;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.ComboBox cbSeasonName;
+        private System.Windows.Forms.TextBox tbSeasonName;
+        private System.Windows.Forms.Button btAddSeason;
+        private System.Windows.Forms.Button btLoadSeason;
         private System.Windows.Forms.PictureBox pbGarden;
         private System.Windows.Forms.PictureBox pbEndActuator;
         private System.Windows.Forms.Label lbX;
@@ -650,24 +657,24 @@
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button btTree1;
         private System.Windows.Forms.Button btTree2;
-        private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.Button btTree3;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.TextBox textBox4;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TextBox tbTreeName;
+        private System.Windows.Forms.Panel pnTimeForWater;
+        private System.Windows.Forms.TextBox tbMinuteWater;
+        private System.Windows.Forms.TextBox tbHourWater;
+        private System.Windows.Forms.Label lbTimeForWater1;
+        private System.Windows.Forms.Label lbColon;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Button button6;
-        private System.Windows.Forms.Button button8;
+        private System.Windows.Forms.Button btAddTimeForWater;
+        private System.Windows.Forms.Button btDeleteTimeForWater1;
         private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.TextBox textBox5;
+        private System.Windows.Forms.TextBox tbTempForWater;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Panel panel4;
-        private System.Windows.Forms.TextBox textBox6;
+        private System.Windows.Forms.TextBox tbHumiForWater;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Button button9;
