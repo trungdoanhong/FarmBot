@@ -12,9 +12,29 @@ namespace FarmBot_Software
 {
     public partial class DashBoard : Form
     {
+        private List<Season> SeasonsOfUser;
+        private Season LoadingSeason;
+        private Garden LoadingGarden;
+
         public DashBoard()
         {
             InitializeComponent();
+            InitVariable();
+        }
+
+        private void InitVariable()
+        {
+            // Init EndActuator Icon
+            pbEndActuator.Parent = pbGarden;
+            pbEndActuator.Location = new System.Drawing.Point(60 - pbEndActuator.Size.Width / 2, 60 - pbEndActuator.Size.Height / 2);
+
+            //Init Garden
+            LoadingGarden = new Garden(pbGarden, rbNone, rbTree1, rbTree2, rbTree3);
+        }
+
+        private void DashBoard_Load(object sender, EventArgs e)
+        {
+            // Load Data From XML (Database)
         }
 
         private void btExit_Click(object sender, EventArgs e)
@@ -44,47 +64,6 @@ namespace FarmBot_Software
                 SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
             }
 
-        }
-
-        private void DashBoard_Load(object sender, EventArgs e)
-        {
-            // Init EndActuator Icon
-            pbEndActuator.BackColor = Color.Transparent;
-            pbEndActuator.Parent = pbGarden;
-            pbEndActuator.Location = new System.Drawing.Point(60 - pbEndActuator.Size.Width/2, 60 - pbEndActuator.Size.Height/2);
-
-
-            // Load Data From XML (Database)
-
-            SeasonsOfUser = new List<Season>();
-
-            XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.Load("FarmBot_Database.xml");
-
-            foreach (XmlNode xmlSeason in xmlDoc.DocumentElement)
-            {
-                cbSeasonName.Items.Add(xmlSeason.Attributes[0].InnerText);
-
-                Season tempSeason = new Season();
-                tempSeason.Name = xmlSeason.Attributes[0].InnerText;
-
-                XmlNodeList xmlTreeList = xmlSeason.SelectNodes("Tree");
-                int order = 0;
-                foreach (XmlNode xmlTree in xmlTreeList)
-                {
-                    String treeName = xmlTree.Attributes[0].InnerText;
-
-                    order++;
-
-                    tempSeason.Tree[order - 1].Name = xmlTree.Attributes[0].Value.ToString();
-                    tempSeason.Tree[order - 1].MaxHumidity = int.Parse(xmlTree["MaxTemp"].Value);
-                    tempSeason.Tree[order - 1].MaxHumidity = int.Parse(xmlTree["MaxHumi"].Value);
-
-
-                }
-                SeasonsOfUser.Add(tempSeason);
-            }
-            cbSeasonName.SelectedIndex = 0;
         }
 
         private Point MouseDownLocation;
@@ -173,10 +152,7 @@ namespace FarmBot_Software
             {
                 TimeControlList[i].SetPosition(15 + (i % 2) * 145, 48 + 40 * (i / 2));
             }
-        }
-
-        List<Season> SeasonsOfUser;
-        Season LoadingSeason;
+        }        
 
         private void btLoadSeason_Click(object sender, EventArgs e)
         {
@@ -217,6 +193,23 @@ namespace FarmBot_Software
                 return;
             LoadTreeData(0);
         }
+
+        private void pbGarden_Click(object sender, EventArgs e)
+        {
+            if (rbNone.Checked == true)
+                return;
+            Point mousePosition = ((PictureBox)sender).PointToClient(Control.MousePosition);
+            int cellIndex = mousePosition.X / 60 + (mousePosition.Y / 60) * 3;
+
+            LoadingGarden.ShowTreeIcon(cellIndex);
+
+
+            
+
+            
+        }
+
+        
 
     }
 }

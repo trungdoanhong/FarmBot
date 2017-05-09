@@ -72,6 +72,13 @@
             this.btMinimize = new System.Windows.Forms.Button();
             this.panel6 = new System.Windows.Forms.Panel();
             this.label11 = new System.Windows.Forms.Label();
+            this.rbNone = new System.Windows.Forms.RadioButton();
+            this.rbTree1 = new System.Windows.Forms.RadioButton();
+            this.rbTree2 = new System.Windows.Forms.RadioButton();
+            this.rbTree3 = new System.Windows.Forms.RadioButton();
+            this.btSave = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.button2 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pbGarden)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbEndActuator)).BeginInit();
             this.panel1.SuspendLayout();
@@ -80,6 +87,7 @@
             this.panel4.SuspendLayout();
             this.panel5.SuspendLayout();
             this.panel6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // btTestControlBoard
@@ -137,15 +145,16 @@
             // 
             // cbSeasonName
             // 
+            this.cbSeasonName.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbSeasonName.FormattingEnabled = true;
-            this.cbSeasonName.Location = new System.Drawing.Point(108, 175);
+            this.cbSeasonName.Location = new System.Drawing.Point(27, 170);
             this.cbSeasonName.Name = "cbSeasonName";
-            this.cbSeasonName.Size = new System.Drawing.Size(111, 21);
+            this.cbSeasonName.Size = new System.Drawing.Size(180, 32);
             this.cbSeasonName.TabIndex = 4;
             // 
             // tbSeasonName
             // 
-            this.tbSeasonName.Location = new System.Drawing.Point(108, 137);
+            this.tbSeasonName.Location = new System.Drawing.Point(96, 137);
             this.tbSeasonName.Name = "tbSeasonName";
             this.tbSeasonName.Size = new System.Drawing.Size(111, 20);
             this.tbSeasonName.TabIndex = 5;
@@ -155,7 +164,7 @@
             this.btAddSeason.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(89)))), ((int)(((byte)(123)))));
             this.btAddSeason.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btAddSeason.ForeColor = System.Drawing.Color.White;
-            this.btAddSeason.Location = new System.Drawing.Point(229, 137);
+            this.btAddSeason.Location = new System.Drawing.Point(229, 136);
             this.btAddSeason.Name = "btAddSeason";
             this.btAddSeason.Size = new System.Drawing.Size(52, 20);
             this.btAddSeason.TabIndex = 6;
@@ -167,9 +176,9 @@
             this.btLoadSeason.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(89)))), ((int)(((byte)(123)))));
             this.btLoadSeason.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btLoadSeason.ForeColor = System.Drawing.Color.White;
-            this.btLoadSeason.Location = new System.Drawing.Point(229, 174);
+            this.btLoadSeason.Location = new System.Drawing.Point(229, 162);
             this.btLoadSeason.Name = "btLoadSeason";
-            this.btLoadSeason.Size = new System.Drawing.Size(52, 20);
+            this.btLoadSeason.Size = new System.Drawing.Size(52, 21);
             this.btLoadSeason.TabIndex = 6;
             this.btLoadSeason.Text = "Load";
             this.btLoadSeason.UseVisualStyleBackColor = false;
@@ -187,10 +196,11 @@
             this.pbGarden.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pbGarden.TabIndex = 7;
             this.pbGarden.TabStop = false;
+            this.pbGarden.Click += new System.EventHandler(this.pbGarden_Click);
             // 
             // pbEndActuator
             // 
-            this.pbEndActuator.BackColor = System.Drawing.Color.Transparent;
+            this.pbEndActuator.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(66)))), ((int)(((byte)(100)))));
             this.pbEndActuator.Image = global::FarmBot_Software.Properties.Resources.endDevice;
             this.pbEndActuator.Location = new System.Drawing.Point(68, 252);
             this.pbEndActuator.Name = "pbEndActuator";
@@ -205,7 +215,7 @@
             // 
             this.lbX.AutoSize = true;
             this.lbX.ForeColor = System.Drawing.Color.White;
-            this.lbX.Location = new System.Drawing.Point(226, 213);
+            this.lbX.Location = new System.Drawing.Point(226, 222);
             this.lbX.Name = "lbX";
             this.lbX.Size = new System.Drawing.Size(60, 13);
             this.lbX.TabIndex = 9;
@@ -215,7 +225,7 @@
             // 
             this.lbY.AutoSize = true;
             this.lbY.ForeColor = System.Drawing.Color.White;
-            this.lbY.Location = new System.Drawing.Point(226, 238);
+            this.lbY.Location = new System.Drawing.Point(226, 247);
             this.lbY.Name = "lbY";
             this.lbY.Size = new System.Drawing.Size(60, 13);
             this.lbY.TabIndex = 9;
@@ -506,7 +516,7 @@
             this.button9.Name = "button9";
             this.button9.Size = new System.Drawing.Size(123, 43);
             this.button9.TabIndex = 2;
-            this.button9.Text = "Load Data";
+            this.button9.Text = "Load";
             this.button9.UseVisualStyleBackColor = false;
             // 
             // button10
@@ -519,7 +529,7 @@
             this.button10.Name = "button10";
             this.button10.Size = new System.Drawing.Size(123, 43);
             this.button10.TabIndex = 2;
-            this.button10.Text = "Upload Data";
+            this.button10.Text = "Upload";
             this.button10.UseVisualStyleBackColor = false;
             // 
             // label10
@@ -567,7 +577,7 @@
             this.panel6.Controls.Add(this.label11);
             this.panel6.Location = new System.Drawing.Point(27, 137);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(69, 59);
+            this.panel6.Size = new System.Drawing.Size(63, 20);
             this.panel6.TabIndex = 14;
             // 
             // label11
@@ -576,11 +586,95 @@
             this.label11.BackColor = System.Drawing.Color.Transparent;
             this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label11.ForeColor = System.Drawing.Color.White;
-            this.label11.Location = new System.Drawing.Point(7, 19);
+            this.label11.Location = new System.Drawing.Point(5, 1);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(56, 17);
             this.label11.TabIndex = 9;
             this.label11.Text = "Season";
+            // 
+            // rbNone
+            // 
+            this.rbNone.AutoSize = true;
+            this.rbNone.Checked = true;
+            this.rbNone.ForeColor = System.Drawing.Color.White;
+            this.rbNone.Location = new System.Drawing.Point(231, 335);
+            this.rbNone.Name = "rbNone";
+            this.rbNone.Size = new System.Drawing.Size(51, 17);
+            this.rbNone.TabIndex = 15;
+            this.rbNone.TabStop = true;
+            this.rbNone.Text = "None";
+            this.rbNone.UseVisualStyleBackColor = true;
+            // 
+            // rbTree1
+            // 
+            this.rbTree1.AutoSize = true;
+            this.rbTree1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(79)))), ((int)(((byte)(196)))), ((int)(((byte)(246)))));
+            this.rbTree1.Location = new System.Drawing.Point(231, 358);
+            this.rbTree1.Name = "rbTree1";
+            this.rbTree1.Size = new System.Drawing.Size(56, 17);
+            this.rbTree1.TabIndex = 15;
+            this.rbTree1.Text = "Tree 1";
+            this.rbTree1.UseVisualStyleBackColor = true;
+            // 
+            // rbTree2
+            // 
+            this.rbTree2.AutoSize = true;
+            this.rbTree2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(76)))), ((int)(((byte)(101)))));
+            this.rbTree2.Location = new System.Drawing.Point(231, 381);
+            this.rbTree2.Name = "rbTree2";
+            this.rbTree2.Size = new System.Drawing.Size(56, 17);
+            this.rbTree2.TabIndex = 15;
+            this.rbTree2.Text = "Tree 2";
+            this.rbTree2.UseVisualStyleBackColor = true;
+            // 
+            // rbTree3
+            // 
+            this.rbTree3.AutoSize = true;
+            this.rbTree3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(177)))), ((int)(((byte)(80)))));
+            this.rbTree3.Location = new System.Drawing.Point(231, 404);
+            this.rbTree3.Name = "rbTree3";
+            this.rbTree3.Size = new System.Drawing.Size(56, 17);
+            this.rbTree3.TabIndex = 15;
+            this.rbTree3.Text = "Tree 3";
+            this.rbTree3.UseVisualStyleBackColor = true;
+            // 
+            // btSave
+            // 
+            this.btSave.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(76)))), ((int)(((byte)(101)))));
+            this.btSave.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btSave.ForeColor = System.Drawing.Color.White;
+            this.btSave.Location = new System.Drawing.Point(325, 634);
+            this.btSave.Name = "btSave";
+            this.btSave.Size = new System.Drawing.Size(123, 43);
+            this.btSave.TabIndex = 2;
+            this.btSave.Text = "Save";
+            this.btSave.UseVisualStyleBackColor = false;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(66)))), ((int)(((byte)(100)))));
+            this.pictureBox1.Image = global::FarmBot_Software.Properties.Resources.endDevice;
+            this.pictureBox1.Location = new System.Drawing.Point(-75, 252);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(40, 40);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 8;
+            this.pictureBox1.TabStop = false;
+            this.pictureBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pbEndActuator_MouseDown);
+            this.pictureBox1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pbEndActuator_MouseMove);
+            // 
+            // button2
+            // 
+            this.button2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(89)))), ((int)(((byte)(123)))));
+            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.button2.ForeColor = System.Drawing.Color.White;
+            this.button2.Location = new System.Drawing.Point(229, 189);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(52, 20);
+            this.button2.TabIndex = 6;
+            this.button2.Text = "Delete";
+            this.button2.UseVisualStyleBackColor = false;
             // 
             // DashBoard
             // 
@@ -588,6 +682,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(37)))), ((int)(((byte)(61)))));
             this.ClientSize = new System.Drawing.Size(771, 703);
+            this.Controls.Add(this.rbTree3);
+            this.Controls.Add(this.rbTree2);
+            this.Controls.Add(this.rbTree1);
+            this.Controls.Add(this.rbNone);
             this.Controls.Add(this.panel6);
             this.Controls.Add(this.panel5);
             this.Controls.Add(this.panel4);
@@ -596,16 +694,19 @@
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.lbY);
             this.Controls.Add(this.lbX);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.pbEndActuator);
             this.Controls.Add(this.pbGarden);
             this.Controls.Add(this.btLoadSeason);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.btHome);
+            this.Controls.Add(this.button2);
             this.Controls.Add(this.btAddSeason);
             this.Controls.Add(this.tbSeasonName);
             this.Controls.Add(this.cbSeasonName);
             this.Controls.Add(this.label1);
+            this.Controls.Add(this.btSave);
             this.Controls.Add(this.button10);
             this.Controls.Add(this.button9);
             this.Controls.Add(this.btTree3);
@@ -633,6 +734,7 @@
             this.panel5.PerformLayout();
             this.panel6.ResumeLayout(false);
             this.panel6.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -684,6 +786,13 @@
         private System.Windows.Forms.Button btMinimize;
         private System.Windows.Forms.Panel panel6;
         private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.RadioButton rbNone;
+        private System.Windows.Forms.RadioButton rbTree1;
+        private System.Windows.Forms.RadioButton rbTree2;
+        private System.Windows.Forms.RadioButton rbTree3;
+        private System.Windows.Forms.Button btSave;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Button button2;
     }
 }
 
