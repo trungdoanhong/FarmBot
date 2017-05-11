@@ -12,9 +12,10 @@ namespace FarmBot_Software
 {
     public partial class DashBoard : Form
     {
-        private List<Season> SeasonsOfUser;
         private Season LoadingSeason;
         private Garden LoadingGarden;
+        private FarmBotXml LoadingDatabaseXml;
+        private int LoadingTreeIndex;
 
         public DashBoard()
         {
@@ -30,11 +31,14 @@ namespace FarmBot_Software
 
             //Init Garden
             LoadingGarden = new Garden(pbGarden, rbNone, rbTree1, rbTree2, rbTree3);
+            LoadingDatabaseXml = new FarmBotXml(Constants.DatabaseFileName, true);
+
+            LoadingTreeIndex = 0;
         }
 
         private void DashBoard_Load(object sender, EventArgs e)
         {
-            // Load Data From XML (Database)
+            LoadingDatabaseXml.FillSeasonName(cbSeasonName);
         }
 
         private void btExit_Click(object sender, EventArgs e)
@@ -156,13 +160,7 @@ namespace FarmBot_Software
 
         private void btLoadSeason_Click(object sender, EventArgs e)
         {
-            foreach (Season season in SeasonsOfUser)
-            {
-                if (season.Name == cbSeasonName.Text)
-                {
-                    LoadingSeason = season;                    
-                }
-            }
+            LoadingSeason = LoadingDatabaseXml.LoadSeason(cbSeasonName.Text);
             LoadTreeData(0);
         }
 
@@ -171,6 +169,8 @@ namespace FarmBot_Software
             tbTreeName.Text = LoadingSeason.Tree[order].Name;
             tbTempForWater.Text = LoadingSeason.Tree[order].MaxTemperature.ToString();
             tbHumiForWater.Text = LoadingSeason.Tree[order].MaxHumidity.ToString();
+
+            LoadingTreeIndex = order;
         }
 
         private void btTree2_Click(object sender, EventArgs e)
@@ -202,11 +202,15 @@ namespace FarmBot_Software
             int cellIndex = mousePosition.X / 60 + (mousePosition.Y / 60) * 3;
 
             LoadingGarden.ShowTreeIcon(cellIndex);
+        }
 
+        private void btSave_Click(object sender, EventArgs e)
+        {
+            LoadingSeason.Tree[LoadingTreeIndex].Name = tbTreeName.Text;
+            LoadingSeason.Tree[LoadingTreeIndex].MaxTemperature = int.Parse(tbTempForWater.Text);
+            LoadingSeason.Tree[LoadingTreeIndex].MaxHumidity = int.Parse(tbHumiForWater.Text);
 
-            
-
-            
+            LoadingDatabaseXml.UpdateSeason(LoadingSeason);
         }
 
         

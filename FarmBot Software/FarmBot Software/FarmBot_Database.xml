@@ -1,35 +1,75 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <FarmBot>
-  <Season>
-  <Tree id="1">
-        <Name>"Tree 1"</Name>
-        <MaxTemp>40</MaxTemp>
-        <MaxHumi>50</MaxHumi>
-        <TimeForWater>
-          <ID>1</ID>
+  <Season id="1">
+    <Name>Season 1</Name>
+    <Tree id="1">
+      <Name>Tree 1</Name>
+      <MaxTemp>40</MaxTemp>
+      <MaxHumi>50</MaxHumi>
+      <TimeForWater>
+        <Time id="1">
           <Hour>12</Hour>
           <Minute>15</Minute>
-        </TimeForWater>
-      </Tree>
-      <Tree id="2">
-        <Name>"Tree 2"</Name>
-        <MaxTemp>50</MaxTemp>
-        <MaxHumi>40</MaxHumi>
-        <TimeForWater>
-          <ID>1</ID>
+        </Time>
+      </TimeForWater>
+    </Tree>
+    <Tree id="2">
+      <Name>Tree 2</Name>
+      <MaxTemp>50</MaxTemp>
+      <MaxHumi>40</MaxHumi>
+      <TimeForWater>
+        <Time id="1">
           <Hour>12</Hour>
           <Minute>15</Minute>
-        </TimeForWater>
-      </Tree>
-      <Tree id="3">
-        <Name>"Tree 3"</Name>
-        <MaxTemp>45</MaxTemp>
-        <MaxHumi>60</MaxHumi>
-        <TimeForWater>
-          <ID>1</ID>
+        </Time>
+      </TimeForWater>
+    </Tree>
+    <Tree id="3">
+      <Name>Tree 3</Name>
+      <MaxTemp>45</MaxTemp>
+      <MaxHumi>60</MaxHumi>
+      <TimeForWater>
+        <Time id="1">
           <Hour>12</Hour>
           <Minute>15</Minute>
-        </TimeForWater>
-      </Tree>
-    </Season>
+        </Time>
+      </TimeForWater>
+    </Tree>
+  </Season>
+  <Season id="2">
+    <Name>Season 2</Name>
+    <Tree id="1">
+      <Name>Tree 1</Name>
+      <MaxTemp>40</MaxTemp>
+      <MaxHumi>50</MaxHumi>
+      <TimeForWater>
+        <Time id="1">
+          <Hour>12</Hour>
+          <Minute>15</Minute>
+        </Time>
+      </TimeForWater>
+    </Tree>
+    <Tree id="2">
+      <Name>Tree 2</Name>
+      <MaxTemp>50</MaxTemp>
+      <MaxHumi>40</MaxHumi>
+      <TimeForWater>
+        <Time id="1">
+          <Hour>12</Hour>
+          <Minute>15</Minute>
+        </Time>
+      </TimeForWater>
+    </Tree>
+    <Tree id="3">
+      <Name>Tree 3</Name>
+      <MaxTemp>45</MaxTemp>
+      <MaxHumi>60</MaxHumi>
+      <TimeForWater>
+        <Time id="1">
+          <Hour>12</Hour>
+          <Minute>15</Minute>
+        </Time>
+      </TimeForWater>
+    </Tree>
+  </Season>
 </FarmBot>

@@ -9,8 +9,12 @@ namespace FarmBot_Software
         public Season()
         {
             Tree = new Tree[3];
+            Tree[0] = new Tree();
+            Tree[1] = new Tree();
+            Tree[2] = new Tree();
         }
         public String Name { get; set; }
+        public int Id {get; set;}
         public Tree[] Tree;
     }
     public class Tree

@@ -151,6 +151,7 @@
             this.cbSeasonName.Name = "cbSeasonName";
             this.cbSeasonName.Size = new System.Drawing.Size(180, 32);
             this.cbSeasonName.TabIndex = 4;
+            this.cbSeasonName.SelectedIndexChanged += new System.EventHandler(this.btLoadSeason_Click);
             // 
             // tbSeasonName
             // 
@@ -650,6 +651,7 @@
             this.btSave.TabIndex = 2;
             this.btSave.Text = "Save";
             this.btSave.UseVisualStyleBackColor = false;
+            this.btSave.Click += new System.EventHandler(this.btSave_Click);
             // 
             // pictureBox1
             // 

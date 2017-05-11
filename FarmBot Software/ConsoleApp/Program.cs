@@ -5,31 +5,58 @@ using System.Xml;
 
 namespace ConsoleApp
 {
+    class A
+    {
+        public A()
+        {
+            value = 1;
+        }
+
+        public int value;
+    }
+
+
     class Program
     {
-        static void Main(string[] args)
+        
+        public static void Main()
         {
+
             XmlDocument doc = new XmlDocument();
-            doc.LoadXml("<book ISBN='1-861001-57-5'>" +
-                        "<title><main>You</main><sub>me</sub></title>" +
-                        "<price>19.95</price>" +
-                        "</book>");
+            doc.Load("books.xml");
 
-            XmlNode root = doc.FirstChild;
+            const String seasonName = "Season 1";
 
-            //Display the contents of the child nodes.
-            if (root.HasChildNodes)
+            XmlNodeList seasons = doc.DocumentElement.ChildNodes;
+            for (int i = 0; i < seasons.Count; i++)
             {
-                for (int i = 0; i < root.ChildNodes.Count; i++)
+                if (seasons[i].Attributes["id"].InnerText == "1")
                 {
-                    if (root.ChildNodes[i].Name == "title")
-                        for (int j = 0; j < root.ChildNodes[i].ChildNodes.Count; j++)
+                    Console.WriteLine(seasons[i].Attributes["id"].InnerText);
+                    seasons[i].Attributes["id"].Value = "New Name";
+                    foreach (XmlNode nodeOfSeason in seasons[i])
+                    {
+                        if (nodeOfSeason.Name == "Tree")
                         {
-                            Console.WriteLine(root.ChildNodes[i].ChildNodes[j].InnerText);
+                            XmlNode timeForWater = nodeOfSeason["TimeForWater"];
+                            XmlNodeList times = timeForWater.ChildNodes;
+                            //XmlNode id = doc.CreateElement("ID");
+                            //XmlNode time = doc.CreateElement("Time");
+                            //time.AppendChild(id);
+                            //timeForWater.AppendChild(time);
+                            XmlNode deleteTime = times[1];
+                            timeForWater.RemoveChild(deleteTime);
                         }
+                    }
                 }
             }
+
+            doc.Save("books.xml");
+
             Console.ReadKey();
+
         }
+
+        
     }
 }

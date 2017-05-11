@@ -73,7 +73,7 @@
       <DependentUpon>TestControlBoard.cs</DependentUpon>
     </Compile>
     <Compile Include="TimeControl.cs" />
-    <Compile Include="XMLHelperMethods.cs" />
+    <Compile Include="FarmBotXml.cs" />
     <EmbeddedResource Include="DashBoard.resx">
       <DependentUpon>DashBoard.cs</DependentUpon>
     </EmbeddedResource>
