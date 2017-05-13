@@ -106,8 +106,8 @@ namespace FarmBot_Software
     enum GardenCell
     {
         NONE = 0,
-        TREE1,
-        TREE2,
-        TREE3,
+        TREE1 = 1,
+        TREE2 = 2,
+        TREE3 = 3,
     };
 }

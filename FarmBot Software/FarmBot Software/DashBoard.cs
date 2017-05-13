@@ -7,15 +7,19 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml;
+using System.IO.Ports;
+using System.Threading;
 
 namespace FarmBot_Software
 {
     public partial class DashBoard : Form
     {
-        private Season LoadingSeason;
-        private Garden LoadingGarden;
-        private FarmBotXml LoadingDatabaseXml;
-        private int LoadingTreeIndex;
+        Season LoadingSeason;
+        Garden LoadingGarden;
+        FarmBotXml LoadingDatabaseXml;
+        int LoadingTreeIndex;
+        bool IsFarmBotConnected = false;
+        List<SerialPort> SerialPortList;
 
         public DashBoard()
         {
@@ -33,7 +37,10 @@ namespace FarmBot_Software
             LoadingGarden = new Garden(pbGarden, rbNone, rbTree1, rbTree2, rbTree3);
             LoadingDatabaseXml = new FarmBotXml(Constants.DatabaseFileName, true);
 
-            LoadingTreeIndex = 0;
+            LoadingTreeIndex = -1;
+
+            // Init Serial Port
+            SerialPortList = new List<SerialPort>();
         }
 
         private void DashBoard_Load(object sender, EventArgs e)
@@ -135,6 +142,15 @@ namespace FarmBot_Software
                     minute = Int16.Parse(tbMinuteWater.Text);
             }
 
+            AddTimeControlToPanel(hour, minute);
+            Time addingTime = new Time();
+            addingTime.Hour = hour;
+            addingTime.Minute = minute;
+            LoadingSeason.Tree[LoadingTreeIndex].TimeForWaterList.Add(addingTime);
+        }
+
+        public void AddTimeControlToPanel(int hour, int minute)
+        {
             TimeControl timeControl = new TimeControl(pnTimeForWater);
             TimeControlList.Add(timeControl);
             timeControl.SetPosition(15 + ((TimeControlList.Count - 1) % 2) * 145, 48 + 40 * ((TimeControlList.Count - 1) / 2));
@@ -150,8 +166,10 @@ namespace FarmBot_Software
                 if (timeControl.btDeleteTime == (Button)sender)
                     order = TimeControlList.IndexOf(timeControl);
             }
-            TimeControlList[order].Delete();
+            TimeControlList[order].DeleteControls();
             TimeControlList.RemoveAt(order);
+            LoadingSeason.Tree[LoadingTreeIndex].TimeForWaterList.RemoveAt(order);
+
             for (int i = order; i < TimeControlList.Count; i++)
             {
                 TimeControlList[i].SetPosition(15 + (i % 2) * 145, 48 + 40 * (i / 2));
@@ -160,37 +178,74 @@ namespace FarmBot_Software
 
         private void btLoadSeason_Click(object sender, EventArgs e)
         {
+            if (cbSeasonName.Text == "")
+                return;
+            LoadingTreeIndex = -1;
             LoadingSeason = LoadingDatabaseXml.LoadSeason(cbSeasonName.Text);
-            LoadTreeData(0);
+            for (int i = 0; i < 24; i++ )
+            {
+                LoadingGarden.SetTreeIcon(i, (GardenCell)LoadingSeason.Garden[i]);
+            }
+            btTree1_Click(null, null);
         }
 
         public void LoadTreeData(int order)
         {
+            if (LoadingTreeIndex != -1)
+            {
+                LoadingSeason.Tree[LoadingTreeIndex].Name = tbTreeName.Text;
+                LoadingSeason.Tree[LoadingTreeIndex].MaxTemperature = int.Parse(tbTempForWater.Text);
+                LoadingSeason.Tree[LoadingTreeIndex].MaxHumidity = int.Parse(tbHumiForWater.Text);
+            }
+
+            RemoveAllTimeControls();
+
             tbTreeName.Text = LoadingSeason.Tree[order].Name;
             tbTempForWater.Text = LoadingSeason.Tree[order].MaxTemperature.ToString();
             tbHumiForWater.Text = LoadingSeason.Tree[order].MaxHumidity.ToString();
 
+            for( int i = 0; i < LoadingSeason.Tree[order].TimeForWaterList.Count; i++ )
+            {
+                int hour = LoadingSeason.Tree[order].TimeForWaterList[i].Hour;
+                int minute = LoadingSeason.Tree[order].TimeForWaterList[i].Minute;
+                AddTimeControlToPanel(hour, minute);
+            }
+
             LoadingTreeIndex = order;
         }
 
-        private void btTree2_Click(object sender, EventArgs e)
+
+        public void RemoveAllTimeControls()
         {
-            if (LoadingSeason == null)
-                return;
-            LoadTreeData(1);
+            foreach( TimeControl deleteTimeControl in TimeControlList)
+            {
+                deleteTimeControl.DeleteControls();
+            }
+            TimeControlList.Clear();
         }
 
         private void btTree3_Click(object sender, EventArgs e)
         {
             if (LoadingSeason == null)
                 return;
+            lbTreeName.ForeColor = Color.FromArgb(252, 177, 80);
             LoadTreeData(2);
+        }
+
+
+        private void btTree2_Click(object sender, EventArgs e)
+        {
+            if (LoadingSeason == null)
+                return;
+            lbTreeName.ForeColor = Color.FromArgb(230, 76, 101);
+            LoadTreeData(1);
         }
 
         private void btTree1_Click(object sender, EventArgs e)
         {
             if (LoadingSeason == null)
                 return;
+            lbTreeName.ForeColor = Color.FromArgb(79, 196, 246);
             LoadTreeData(0);
         }
 
@@ -206,11 +261,182 @@ namespace FarmBot_Software
 
         private void btSave_Click(object sender, EventArgs e)
         {
+            if (LoadingSeason == null)
+                return;
             LoadingSeason.Tree[LoadingTreeIndex].Name = tbTreeName.Text;
             LoadingSeason.Tree[LoadingTreeIndex].MaxTemperature = int.Parse(tbTempForWater.Text);
             LoadingSeason.Tree[LoadingTreeIndex].MaxHumidity = int.Parse(tbHumiForWater.Text);
 
+            for (int i = 0; i < 24; i++ )
+            {
+                LoadingSeason.Garden[i] = (int)LoadingGarden.Cells[i];
+            }
             LoadingDatabaseXml.UpdateSeason(LoadingSeason);
+            ShowMessage("Saved", 3000);
+        }
+
+        private void btAddSeason_Click(object sender, EventArgs e)
+        {
+            if (tbSeasonName.Text == "")
+                return;
+            LoadingSeason = LoadingDatabaseXml.CreateSeason(tbSeasonName.Text);
+            cbSeasonName.SelectedIndex = cbSeasonName.Items.Add(LoadingSeason.Name);
+            btLoadSeason_Click(null, null);
+
+            tbSeasonName.Text = "";
+        }
+
+        private void btDelet_Click(object sender, EventArgs e)
+        {
+            if (cbSeasonName.Text == "" || cbSeasonName.Items.Count == 0)
+                return;
+
+            LoadingDatabaseXml.DeleteSeason(cbSeasonName.Text);
+            cbSeasonName.Items.RemoveAt(cbSeasonName.SelectedIndex);
+
+            if (cbSeasonName.Items.Count > 0)
+            {
+                cbSeasonName.SelectedIndex = 0;
+            }
+            else
+            {
+                cbSeasonName.Text = "";
+                tbTreeName.Text = "";
+                tbTempForWater.Text = "";
+                tbHumiForWater.Text = "";
+                RemoveAllTimeControls();
+                LoadingSeason = null;
+            }
+        }
+        public void FindFamrBotPort()
+        {
+            foreach (String connectPortName in SerialPort.GetPortNames())
+            {
+                SerialPort serialPort = new SerialPort(this.components);                
+                serialPort.PortName = connectPortName;
+                serialPort.BaudRate = 9600;
+
+                try
+                {
+                    serialPort.Open();
+                }
+                catch
+                {
+                    continue;
+                }
+
+                SerialPortList.Add(serialPort);
+                serialPort.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.ReceiveDataFromSerialPort);
+                serialPort.WriteLine("IsFarmBot");
+            }
+
+            Thread closePortsThread = new Thread(ClosePorts);
+            closePortsThread.Start();
+        }
+
+        public void ClosePorts()
+        {
+            this.Invoke((MethodInvoker)delegate()
+            {
+                lbConnectState.Text = "";
+            });
+
+            for (int i = 0; i < 10; i++ )
+            {
+                this.Invoke((MethodInvoker)delegate()
+                {
+                    lbConnectState.Text += ".";
+                });
+                
+                Thread.Sleep(100);
+                if (IsFarmBotConnected == true)
+                {
+                    break;
+                }
+            }
+
+            this.Invoke((MethodInvoker)delegate()
+            {
+                if (IsFarmBotConnected == false)
+                {
+                    lbConnectState.Text = "FarmBot is not Availabel !";
+                }
+
+                foreach (SerialPort serialPort in SerialPortList)
+                {   
+                    serialPort.Close();
+                    serialPort.Dispose();
+                }
+                SerialPortList.Clear();
+
+                if (IsFarmBotConnected == true)
+                {
+                    FarmBotSerialPort.Open();
+                    ShowMessage("FarmBot on " + FarmBotSerialPort.PortName, 3000);
+                }
+                
+            });
+            
+
+        }
+
+        private void ReceiveDataFromSerialPort(object sender, SerialDataReceivedEventArgs e)
+        {
+            SerialPort portReceived = ((SerialPort)sender);
+            String receiveString = portReceived.ReadLine();
+
+            if (receiveString.Length >= "YesFarmBot".Length)
+            {
+                if (receiveString.Substring(0, "YesFarmBot".Length) == "YesFarmBot")
+                {
+                    FarmBotSerialPort.PortName = portReceived.PortName;
+                    this.Invoke((MethodInvoker)delegate()
+                    {
+                        lbConnectState.Text = "FarmBot is Connected !";
+                        btConnect.Text = "Disconnect";
+                    });
+                    
+                    IsFarmBotConnected = true;
+                }
+            }
+
+            
+        }
+
+        private void btConnect_Click(object sender, EventArgs e)
+        {
+            if (btConnect.Text == "Connect")
+            {
+                FindFamrBotPort();                
+            }
+            else
+            {
+                FarmBotSerialPort.Close();
+                IsFarmBotConnected = false;
+                btConnect.Text = "Connect";
+                lbConnectState.Text = "FarmBot is disconnected !";
+            }
+        }
+
+        public void ShowMessage(String msg, int time)
+        {
+            Thread messageThread = new Thread(() => ProcessMessageThread(msg, time));
+            messageThread.Start();
+        }
+
+        public void ProcessMessageThread(String msg, int time)
+        {
+            this.Invoke((MethodInvoker)delegate()
+            {
+                lbDebug.Text = msg;
+            });
+
+            Thread.Sleep(time);
+
+            this.Invoke((MethodInvoker)delegate()
+            {
+                lbDebug.Text = "";
+            });      
         }
 
         

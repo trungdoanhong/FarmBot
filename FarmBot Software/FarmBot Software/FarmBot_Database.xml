@@ -2,6 +2,7 @@
 <FarmBot>
   <Season id="1">
     <Name>Season 1</Name>
+    <Garden>0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0</Garden>
     <Tree id="1">
       <Name>Tree 1</Name>
       <MaxTemp>40</MaxTemp>
@@ -11,7 +12,7 @@
           <Hour>12</Hour>
           <Minute>15</Minute>
         </Time>
-      </TimeForWater>
+      </TimeForWater>     
     </Tree>
     <Tree id="2">
       <Name>Tree 2</Name>

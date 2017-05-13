@@ -43,6 +43,7 @@ void setup()
   serialCMD.AddCommand("MoveY", MoveY);
   serialCMD.AddCommand("Z", &Z);
   serialCMD.AddCommand("MoveZ", MoveZ);
+  serialCMD.AddCommand("IsFarmBot", Confirm);
 
   StepperInit();
 
@@ -52,6 +53,12 @@ void loop()
 {
   serialCMD.Execute();
 }
+
+void Confirm()
+{
+	Serial.println("YesFarmBot");
+}
+
 void StepperInit()
 {
   pinMode(X_DIR, OUTPUT);

@@ -28,10 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DashBoard));
             this.btTestControlBoard = new System.Windows.Forms.Button();
             this.btExit = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
+            this.btConnect = new System.Windows.Forms.Button();
+            this.lbConnectState = new System.Windows.Forms.Label();
             this.cbSeasonName = new System.Windows.Forms.ComboBox();
             this.tbSeasonName = new System.Windows.Forms.TextBox();
             this.btAddSeason = new System.Windows.Forms.Button();
@@ -48,7 +50,7 @@
             this.btTree3 = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.tbTreeName = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
+            this.lbTreeName = new System.Windows.Forms.Label();
             this.pnTimeForWater = new System.Windows.Forms.Panel();
             this.tbMinuteWater = new System.Windows.Forms.TextBox();
             this.tbHourWater = new System.Windows.Forms.TextBox();
@@ -78,7 +80,9 @@
             this.rbTree3 = new System.Windows.Forms.RadioButton();
             this.btSave = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.button2 = new System.Windows.Forms.Button();
+            this.btDelete = new System.Windows.Forms.Button();
+            this.FarmBotSerialPort = new System.IO.Ports.SerialPort(this.components);
+            this.lbDebug = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pbGarden)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbEndActuator)).BeginInit();
             this.panel1.SuspendLayout();
@@ -118,30 +122,31 @@
             this.btExit.UseVisualStyleBackColor = false;
             this.btExit.Click += new System.EventHandler(this.btExit_Click);
             // 
-            // button1
+            // btConnect
             // 
-            this.button1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(52)))), ((int)(((byte)(104)))), ((int)(((byte)(175)))));
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.ForeColor = System.Drawing.Color.White;
-            this.button1.Location = new System.Drawing.Point(195, 57);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(86, 61);
-            this.button1.TabIndex = 2;
-            this.button1.Text = "Connect";
-            this.button1.UseVisualStyleBackColor = false;
+            this.btConnect.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(52)))), ((int)(((byte)(104)))), ((int)(((byte)(175)))));
+            this.btConnect.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btConnect.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btConnect.ForeColor = System.Drawing.Color.White;
+            this.btConnect.Location = new System.Drawing.Point(195, 57);
+            this.btConnect.Name = "btConnect";
+            this.btConnect.Size = new System.Drawing.Size(86, 61);
+            this.btConnect.TabIndex = 2;
+            this.btConnect.Text = "Connect";
+            this.btConnect.UseVisualStyleBackColor = false;
+            this.btConnect.Click += new System.EventHandler(this.btConnect_Click);
             // 
-            // label1
+            // lbConnectState
             // 
-            this.label1.AutoSize = true;
-            this.label1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(89)))), ((int)(((byte)(123)))));
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(28, 100);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(144, 15);
-            this.label1.TabIndex = 3;
-            this.label1.Text = "FarmBot is not Available !";
+            this.lbConnectState.AutoSize = true;
+            this.lbConnectState.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(89)))), ((int)(((byte)(123)))));
+            this.lbConnectState.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbConnectState.ForeColor = System.Drawing.Color.White;
+            this.lbConnectState.Location = new System.Drawing.Point(28, 100);
+            this.lbConnectState.Name = "lbConnectState";
+            this.lbConnectState.Size = new System.Drawing.Size(144, 15);
+            this.lbConnectState.TabIndex = 3;
+            this.lbConnectState.Text = "FarmBot is not Available !";
             // 
             // cbSeasonName
             // 
@@ -171,6 +176,7 @@
             this.btAddSeason.TabIndex = 6;
             this.btAddSeason.Text = "Add";
             this.btAddSeason.UseVisualStyleBackColor = false;
+            this.btAddSeason.Click += new System.EventHandler(this.btAddSeason_Click);
             // 
             // btLoadSeason
             // 
@@ -314,7 +320,7 @@
             // 
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(66)))), ((int)(((byte)(100)))));
             this.panel1.Controls.Add(this.tbTreeName);
-            this.panel1.Controls.Add(this.label2);
+            this.panel1.Controls.Add(this.lbTreeName);
             this.panel1.Location = new System.Drawing.Point(465, 56);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(269, 56);
@@ -327,16 +333,16 @@
             this.tbTreeName.Size = new System.Drawing.Size(157, 20);
             this.tbTreeName.TabIndex = 1;
             // 
-            // label2
+            // lbTreeName
             // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.ForeColor = System.Drawing.Color.White;
-            this.label2.Location = new System.Drawing.Point(13, 20);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(79, 17);
-            this.label2.TabIndex = 0;
-            this.label2.Text = "Tree Name";
+            this.lbTreeName.AutoSize = true;
+            this.lbTreeName.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbTreeName.ForeColor = System.Drawing.Color.White;
+            this.lbTreeName.Location = new System.Drawing.Point(13, 20);
+            this.lbTreeName.Name = "lbTreeName";
+            this.lbTreeName.Size = new System.Drawing.Size(79, 17);
+            this.lbTreeName.TabIndex = 0;
+            this.lbTreeName.Text = "Tree Name";
             // 
             // pnTimeForWater
             // 
@@ -549,6 +555,7 @@
             // panel5
             // 
             this.panel5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(28)))), ((int)(((byte)(47)))));
+            this.panel5.Controls.Add(this.lbDebug);
             this.panel5.Controls.Add(this.label10);
             this.panel5.Controls.Add(this.btMinimize);
             this.panel5.Controls.Add(this.btExit);
@@ -666,17 +673,32 @@
             this.pictureBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pbEndActuator_MouseDown);
             this.pictureBox1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pbEndActuator_MouseMove);
             // 
-            // button2
+            // btDelete
             // 
-            this.button2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(89)))), ((int)(((byte)(123)))));
-            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button2.ForeColor = System.Drawing.Color.White;
-            this.button2.Location = new System.Drawing.Point(229, 189);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(52, 20);
-            this.button2.TabIndex = 6;
-            this.button2.Text = "Delete";
-            this.button2.UseVisualStyleBackColor = false;
+            this.btDelete.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(89)))), ((int)(((byte)(123)))));
+            this.btDelete.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btDelete.ForeColor = System.Drawing.Color.White;
+            this.btDelete.Location = new System.Drawing.Point(229, 189);
+            this.btDelete.Name = "btDelete";
+            this.btDelete.Size = new System.Drawing.Size(52, 20);
+            this.btDelete.TabIndex = 6;
+            this.btDelete.Text = "Delete";
+            this.btDelete.UseVisualStyleBackColor = false;
+            this.btDelete.Click += new System.EventHandler(this.btDelet_Click);
+            // 
+            // FarmBotSerialPort
+            // 
+            this.FarmBotSerialPort.PortName = "COM50";
+            this.FarmBotSerialPort.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.ReceiveDataFromSerialPort);
+            // 
+            // lbDebug
+            // 
+            this.lbDebug.AutoSize = true;
+            this.lbDebug.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(76)))), ((int)(((byte)(101)))));
+            this.lbDebug.Location = new System.Drawing.Point(14, 10);
+            this.lbDebug.Name = "lbDebug";
+            this.lbDebug.Size = new System.Drawing.Size(0, 13);
+            this.lbDebug.TabIndex = 10;
             // 
             // DashBoard
             // 
@@ -703,20 +725,21 @@
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.btHome);
-            this.Controls.Add(this.button2);
+            this.Controls.Add(this.btDelete);
             this.Controls.Add(this.btAddSeason);
             this.Controls.Add(this.tbSeasonName);
             this.Controls.Add(this.cbSeasonName);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.lbConnectState);
             this.Controls.Add(this.btSave);
             this.Controls.Add(this.button10);
             this.Controls.Add(this.button9);
             this.Controls.Add(this.btTree3);
             this.Controls.Add(this.btTree2);
             this.Controls.Add(this.btTree1);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.btConnect);
             this.Controls.Add(this.btTestControlBoard);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "DashBoard";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "DashBoard";
@@ -746,8 +769,8 @@
 
         private System.Windows.Forms.Button btTestControlBoard;
         private System.Windows.Forms.Button btExit;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button btConnect;
+        private System.Windows.Forms.Label lbConnectState;
         private System.Windows.Forms.ComboBox cbSeasonName;
         private System.Windows.Forms.TextBox tbSeasonName;
         private System.Windows.Forms.Button btAddSeason;
@@ -763,7 +786,7 @@
         private System.Windows.Forms.Button btTree2;
         private System.Windows.Forms.Button btTree3;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label lbTreeName;
         private System.Windows.Forms.TextBox tbTreeName;
         private System.Windows.Forms.Panel pnTimeForWater;
         private System.Windows.Forms.TextBox tbMinuteWater;
@@ -794,7 +817,9 @@
         private System.Windows.Forms.RadioButton rbTree3;
         private System.Windows.Forms.Button btSave;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button btDelete;
+        private System.IO.Ports.SerialPort FarmBotSerialPort;
+        private System.Windows.Forms.Label lbDebug;
     }
 }
 

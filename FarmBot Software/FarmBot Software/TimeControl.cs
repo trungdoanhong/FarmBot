@@ -69,7 +69,7 @@ namespace FarmBot_Software
 
         }
 
-        public void Delete()
+        public void DeleteControls()
         {
             pnParent.Controls.Remove(lbTimeForWater);
             pnParent.Controls.Remove(btDeleteTime);

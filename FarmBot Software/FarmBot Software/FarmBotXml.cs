@@ -35,6 +35,13 @@ namespace FarmBot_Software
                 tempSeason.Name = xmlSeasons[i]["Name"].InnerText;
                 tempSeason.Id = i + 1;
 
+                String[] treeStrings = xmlSeasons[i]["Garden"].InnerText.Split(',');
+
+                for (int index = 0; index < 24; index++)
+                {
+                    tempSeason.Garden[index] = int.Parse(treeStrings[index]);
+                }
+
                 int treeIndex = 0;
                 foreach (XmlNode nodeOfSeason in xmlSeasons[i])
                 {
@@ -51,7 +58,6 @@ namespace FarmBot_Software
                             time.Minute = int.Parse(timeForWaterNode.ChildNodes[index]["Minute"].InnerText);
                             tempSeason.Tree[treeIndex].TimeForWaterList.Add(time);
                         }
-
                         treeIndex++;
                     }
                 }
@@ -85,80 +91,8 @@ namespace FarmBot_Software
         private string generateXMLString()
         {
             string xml =
-                "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
-                "<FarmBot>" +
-                "  <Season id=\"New Name\">" +
-                "    <Name>\"Season 1\"</Name>" +
-                "    <Tree id=\"1\">" +
-                "      <Name>\"Tree 1\"</Name>" +
-                "      <MaxTemp>40</MaxTemp>" +
-                "      <MaxHumi>50</MaxHumi>" +
-                "      <TimeForWater>" +
-                "        <Time id=\"1\">" +
-                "          <Hour>12</Hour>" +
-                "          <Minute>15</Minute>" +
-                "        </Time>" +
-                "      </TimeForWater>" +
-                "    </Tree>" +
-                "    <Tree id=\"2\">" +
-                "      <Name>\"Tree 2\"</Name>" +
-                "      <MaxTemp>50</MaxTemp>" +
-                "      <MaxHumi>40</MaxHumi>" +
-                "      <TimeForWater>" +
-                "        <Time id=\"1\">" +
-                "          <Hour>12</Hour>" +
-                "          <Minute>15</Minute>" +
-                "        </Time>" +
-                "      </TimeForWater>" +
-                "    </Tree>" +
-                "    <Tree id=\"3\">" +
-                "      <Name>\"Tree 3\"</Name>" +
-                "      <MaxTemp>45</MaxTemp>" +
-                "      <MaxHumi>60</MaxHumi>" +
-                "      <TimeForWater>" +
-                "        <Time id=\"1\">" +
-                "          <Hour>12</Hour>" +
-                "          <Minute>15</Minute>" +
-                "        </Time>" +
-                "      </TimeForWater>" +
-                "    </Tree>" +
-                "  </Season>" +
-                "  <Season id=\"2\">" +
-                "    <Name>\"Season 2\"</Name>" +
-                "    <Tree id=\"1\">" +
-                "      <Name>\"Tree 1\"</Name>" +
-                "      <MaxTemp>40</MaxTemp>" +
-                "      <MaxHumi>50</MaxHumi>" +
-                "      <TimeForWater>" +
-                "        <Time id=\"1\">" +
-                "          <Hour>12</Hour>" +
-                "          <Minute>15</Minute>" +
-                "        </Time>" +
-                "      </TimeForWater>" +
-                "    </Tree>" +
-                "    <Tree id=\"2\">" +
-                "      <Name>\"Tree 2\"</Name>" +
-                "      <MaxTemp>50</MaxTemp>" +
-                "      <MaxHumi>40</MaxHumi>" +
-                "      <TimeForWater>" +
-                "        <Time id=\"1\">" +
-                "          <Hour>12</Hour>" +
-                "          <Minute>15</Minute>" +
-                "        </Time>" +
-                "      </TimeForWater>" +
-                "    </Tree>" +
-                "    <Tree id=\"3\">" +
-                "      <Name>\"Tree 3\"</Name>" +
-                "      <MaxTemp>45</MaxTemp>" +
-                "      <MaxHumi>60</MaxHumi>" +
-                "      <TimeForWater>" +
-                "        <Time id=\"1\">" +
-                "          <Hour>12</Hour>" +
-                "          <Minute>15</Minute>" +
-                "        </Time>" +
-                "      </TimeForWater>" +
-                "    </Tree>" +
-                "  </Season>" +
+                "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
+                "<FarmBot>\n" +              
                 "</FarmBot>";
 
             return xml;
@@ -170,7 +104,8 @@ namespace FarmBot_Software
             {
                 cbSeasonName.Items.Add(season.Name);
             }
-            cbSeasonName.SelectedIndex = 0;
+            if (cbSeasonName.Items.Count > 0)
+                cbSeasonName.SelectedIndex = 0;
         }
 
         public Season LoadSeason(string seasonName)
@@ -189,42 +124,160 @@ namespace FarmBot_Software
         {
             this.LoadingSeason = loadingSeason;
 
-            XmlNode newSeasonNode = LoadingXML.CreateElement("Season");
-            XmlNode newSeasonName = LoadingXML.CreateElement("Name");
-            XmlAttribute newSeasonId = LoadingXML.CreateAttribute("id");
-
-            newSeasonName.InnerText = LoadingSeason.Name;            
-            newSeasonId.InnerText = LoadingSeason.Id.ToString();
-
-            newSeasonNode.AppendChild(newSeasonName);
-            newSeasonNode.Attributes.Append(newSeasonId);
-
-            XmlNode[] newTree = new XmlNode[3];
-            for(int index = 0; index < 3; index++)
-            {
-                newTree[index] = LoadingXML.CreateElement("Tree");
-                XmlNode newTreeName = LoadingXML.CreateElement("Name");
-                XmlNode newMaxTemp = LoadingXML.CreateElement("MaxTemp");
-                XmlNode newMaxHumi = LoadingXML.CreateElement("MaxHumi");
-                XmlAttribute newTreeId = LoadingXML.CreateAttribute("id");
-
-                newTreeName.InnerText = LoadingSeason.Tree[index].Name;
-                newMaxTemp.InnerText = LoadingSeason.Tree[index].MaxTemperature.ToString();
-                newMaxHumi.InnerText = LoadingSeason.Tree[index].MaxHumidity.ToString();
-                newTreeId.InnerText = (index + 1).ToString();
-
-                newTree[index].AppendChild(newTreeName);
-                newTree[index].AppendChild(newMaxTemp);
-                newTree[index].AppendChild(newMaxHumi);
-
-                newSeasonNode.AppendChild(newTree[index]);
-            }
+            XmlNode newSeasonNode = CreateSeasonNode(loadingSeason);
 
             XmlNode replaceNode = LoadingXML.DocumentElement.ChildNodes[LoadingSeason.Id - 1];
             LoadingXML.DocumentElement.ReplaceChild(newSeasonNode, replaceNode);
 
             LoadingXML.Save(XmlFileName);
              
+        }
+
+        private XmlNode CreateSeasonNode(Season seasonForCreateNode)
+        {
+            XmlNode newSeasonNode = LoadingXML.CreateElement("Season");
+            XmlNode newSeasonName = LoadingXML.CreateElement("Name");
+            XmlNode newGarden = LoadingXML.CreateElement("Garden");
+            XmlAttribute newSeasonId = LoadingXML.CreateAttribute("id");
+
+            newSeasonName.InnerText = seasonForCreateNode.Name;
+            newSeasonId.InnerText = seasonForCreateNode.Id.ToString();
+
+            String gardenString = "";
+
+            for (int i = 0; i < 24; i++)
+            {
+                gardenString += seasonForCreateNode.Garden[i];
+                if (i < 23)
+                {
+                    gardenString += ",";
+                }
+            }
+            newGarden.InnerText = gardenString;
+
+            newSeasonNode.AppendChild(newSeasonName);
+            newSeasonNode.AppendChild(newGarden);
+            newSeasonNode.Attributes.Append(newSeasonId);
+
+            XmlNode[] newTree = new XmlNode[3];
+            for (int index = 0; index < 3; index++)
+            {
+                newTree[index] = LoadingXML.CreateElement("Tree");
+                XmlNode newTreeName = LoadingXML.CreateElement("Name");
+                XmlNode newMaxTemp = LoadingXML.CreateElement("MaxTemp");
+                XmlNode newMaxHumi = LoadingXML.CreateElement("MaxHumi");
+                XmlNode newTimeForWater = LoadingXML.CreateElement("TimeForWater");
+                XmlAttribute newTreeId = LoadingXML.CreateAttribute("id");
+
+                newTreeName.InnerText = seasonForCreateNode.Tree[index].Name;
+                newMaxTemp.InnerText = seasonForCreateNode.Tree[index].MaxTemperature.ToString();
+                newMaxHumi.InnerText = seasonForCreateNode.Tree[index].MaxHumidity.ToString();
+                newTreeId.InnerText = (index + 1).ToString();
+
+                // Add parameter into Tree
+
+                newTree[index].AppendChild(newTreeName);
+                newTree[index].AppendChild(newMaxTemp);
+                newTree[index].AppendChild(newMaxHumi);
+                newTree[index].AppendChild(newTimeForWater);
+                newTree[index].Attributes.Append(newTreeId);
+
+                // Add time into TimeForWater
+                for (int i = 0; i < seasonForCreateNode.Tree[index].TimeForWaterList.Count; i++)
+                {
+                    XmlNode newTime = LoadingXML.CreateElement("Time");
+                    XmlNode newHour = LoadingXML.CreateElement("Hour");
+                    XmlNode newMinute = LoadingXML.CreateElement("Minute");
+                    XmlAttribute newTimeId = LoadingXML.CreateAttribute("id");
+
+                    newHour.InnerText = seasonForCreateNode.Tree[index].TimeForWaterList[i].Hour.ToString();
+                    newMinute.InnerText = seasonForCreateNode.Tree[index].TimeForWaterList[i].Minute.ToString();
+                    newTimeId.InnerText = (i + 1).ToString();
+
+                    newTime.AppendChild(newHour);
+                    newTime.AppendChild(newMinute);
+                    newTime.Attributes.Append(newTimeId);
+
+                    newTimeForWater.AppendChild(newTime);
+
+                }
+
+                // Add Tree into Season
+                newSeasonNode.AppendChild(newTree[index]);
+            }
+            return newSeasonNode;
+        }
+
+        public Season CreateSeason(String SeasonName)
+        {
+            Season creatingSeason = new Season();
+            creatingSeason.Name = SeasonName;
+            creatingSeason.Id = Seasons.Count + 1;
+
+            Seasons.Add(creatingSeason);
+
+            XmlNode creatingSeasonNode = CreateSeasonNode(creatingSeason);
+            LoadingXML.DocumentElement.AppendChild(creatingSeasonNode);
+
+            LoadingXML.Save(XmlFileName);
+
+            return creatingSeason;
+        }
+
+        public bool DeleteSeason(String seasonName)
+        {
+            int deleteSeasonOrder = -1;
+            for (int index = 0; index < Seasons.Count; index++ )
+            {
+                if (Seasons[index].Name == seasonName)
+                {
+                    deleteSeasonOrder = index;
+                    break;
+                }
+            }            
+
+            if (deleteSeasonOrder == -1)
+                return false;
+
+            for (int index = 0; index < Seasons.Count; index++)
+            {
+                Seasons[index].Id = index + 1;
+            }
+
+            Seasons.RemoveAt(deleteSeasonOrder);
+            DeleteSeasonNode(seasonName);
+
+            return true;
+        }
+
+        public bool DeleteSeasonNode(String seasonName)
+        {
+            XmlNode deleteSeasonNode = null;
+            XmlNodeList seasonNodes = LoadingXML.DocumentElement.ChildNodes;
+
+            for (int i = 0; i < seasonNodes.Count; i++ )
+            {
+                if (seasonNodes[i]["Name"].InnerText == seasonName)
+                {
+                    deleteSeasonNode = seasonNodes[i];
+                }
+            }
+
+            if (deleteSeasonNode == null)
+                return false;
+            
+            LoadingXML.DocumentElement.RemoveChild(deleteSeasonNode);
+
+            seasonNodes = LoadingXML.DocumentElement.ChildNodes;
+
+            for (int i = 0; i < seasonNodes.Count; i++)
+            {
+                seasonNodes[i].Attributes["id"].InnerText = (i + 1).ToString();                
+            }
+
+            LoadingXML.Save(XmlFileName);
+
+            return true;
         }
     }
 }

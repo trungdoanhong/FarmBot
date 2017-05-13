@@ -15,6 +15,7 @@ class SerialCommand
 {
 public:
   HardwareSerial* _Serial;
+  HardwareSerial* ForwardSerial = NULL;
   Command* cmdContainer;
   uint8_t cmdCounter = 0;
   
@@ -25,6 +26,7 @@ public:
   void AddCommand(String message, void(*function)());
   void AddCommand(String message, float* value);
   void Execute();
+  void ForwardData(HardwareSerial*, uint16_t);
   
 private:
   boolean stringComplete;

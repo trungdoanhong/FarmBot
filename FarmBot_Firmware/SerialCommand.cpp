@@ -34,6 +34,12 @@ SerialCommand::~SerialCommand()
   delete[] cmdContainer;
 }
 
+void SerialCommand::ForwardData(HardwareSerial* forwardSerial, uint16_t baudrate)
+{
+	ForwardSerial = forwardSerial;
+	ForwardSerial->begin(baudrate);
+}
+
 void SerialCommand::AddCommand(String message, void(*function)())
 {
   cmdCounter++;
@@ -85,6 +91,10 @@ void SerialCommand::Execute()
   while (_Serial->available()) 
   {
     char inChar = (char)_Serial->read();
+	if (ForwardSerial != NULL)
+	{
+		ForwardSerial->print(inChar);
+	}
     
     if (inChar == '\n') 
     {

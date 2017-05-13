@@ -15,6 +15,7 @@
 #define ENTER   8 
 
 SerialCommand SerialCMD;
+SerialCommand SerialCMD1;
 
 uint8_t ButtonArray[] = { RETURN, LEFT, RIGHT, UP, DOWN, ENTER };
 
@@ -83,8 +84,11 @@ uint8_t NumberOfTime[3] = { 0, 0, 0 };
 
 void setup()
 {
-	Serial.begin(9600);
+	SerialCMD = SerialCommand(&Serial, 9600);
+	SerialCMD1 = SerialCommand(&Serial1, 9600);
+
 	SerialCMD.ForwardData(&Serial1, 9600);
+	SerialCMD1.ForwardData(&Serial, 9600);
 
 	FirstMenu = new OriginMenu();
 	{
@@ -172,6 +176,7 @@ void loop()
 	LCDMenu.ExecuteEffect();	
 	LCDMenu.UpdateScreen();
 	SerialCMD.Execute();
+	SerialCMD1.Execute();
 }
 
 void AddTime(uint8_t treeOrder)
