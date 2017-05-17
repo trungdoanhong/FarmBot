@@ -68,9 +68,10 @@
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.button9 = new System.Windows.Forms.Button();
-            this.button10 = new System.Windows.Forms.Button();
+            this.btUpload = new System.Windows.Forms.Button();
             this.label10 = new System.Windows.Forms.Label();
             this.panel5 = new System.Windows.Forms.Panel();
+            this.lbDebug = new System.Windows.Forms.Label();
             this.btMinimize = new System.Windows.Forms.Button();
             this.panel6 = new System.Windows.Forms.Panel();
             this.label11 = new System.Windows.Forms.Label();
@@ -82,7 +83,6 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.btDelete = new System.Windows.Forms.Button();
             this.FarmBotSerialPort = new System.IO.Ports.SerialPort(this.components);
-            this.lbDebug = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pbGarden)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbEndActuator)).BeginInit();
             this.panel1.SuspendLayout();
@@ -526,18 +526,19 @@
             this.button9.Text = "Load";
             this.button9.UseVisualStyleBackColor = false;
             // 
-            // button10
+            // btUpload
             // 
-            this.button10.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
-            this.button10.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button10.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button10.ForeColor = System.Drawing.Color.White;
-            this.button10.Location = new System.Drawing.Point(618, 634);
-            this.button10.Name = "button10";
-            this.button10.Size = new System.Drawing.Size(123, 43);
-            this.button10.TabIndex = 2;
-            this.button10.Text = "Upload";
-            this.button10.UseVisualStyleBackColor = false;
+            this.btUpload.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
+            this.btUpload.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btUpload.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btUpload.ForeColor = System.Drawing.Color.White;
+            this.btUpload.Location = new System.Drawing.Point(618, 634);
+            this.btUpload.Name = "btUpload";
+            this.btUpload.Size = new System.Drawing.Size(123, 43);
+            this.btUpload.TabIndex = 2;
+            this.btUpload.Text = "Upload";
+            this.btUpload.UseVisualStyleBackColor = false;
+            this.btUpload.Click += new System.EventHandler(this.btUpload_Click);
             // 
             // label10
             // 
@@ -564,6 +565,15 @@
             this.panel5.Size = new System.Drawing.Size(775, 35);
             this.panel5.TabIndex = 13;
             this.panel5.MouseDown += new System.Windows.Forms.MouseEventHandler(this.DashBoard_MouseDown);
+            // 
+            // lbDebug
+            // 
+            this.lbDebug.AutoSize = true;
+            this.lbDebug.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(76)))), ((int)(((byte)(101)))));
+            this.lbDebug.Location = new System.Drawing.Point(14, 10);
+            this.lbDebug.Name = "lbDebug";
+            this.lbDebug.Size = new System.Drawing.Size(0, 13);
+            this.lbDebug.TabIndex = 10;
             // 
             // btMinimize
             // 
@@ -691,15 +701,6 @@
             this.FarmBotSerialPort.PortName = "COM50";
             this.FarmBotSerialPort.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.ReceiveDataFromSerialPort);
             // 
-            // lbDebug
-            // 
-            this.lbDebug.AutoSize = true;
-            this.lbDebug.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(76)))), ((int)(((byte)(101)))));
-            this.lbDebug.Location = new System.Drawing.Point(14, 10);
-            this.lbDebug.Name = "lbDebug";
-            this.lbDebug.Size = new System.Drawing.Size(0, 13);
-            this.lbDebug.TabIndex = 10;
-            // 
             // DashBoard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -731,7 +732,7 @@
             this.Controls.Add(this.cbSeasonName);
             this.Controls.Add(this.lbConnectState);
             this.Controls.Add(this.btSave);
-            this.Controls.Add(this.button10);
+            this.Controls.Add(this.btUpload);
             this.Controls.Add(this.button9);
             this.Controls.Add(this.btTree3);
             this.Controls.Add(this.btTree2);
@@ -805,7 +806,7 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Button button9;
-        private System.Windows.Forms.Button button10;
+        private System.Windows.Forms.Button btUpload;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Panel panel5;
         private System.Windows.Forms.Button btMinimize;

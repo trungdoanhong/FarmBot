@@ -1,0 +1,64 @@
+﻿{
+	"Season":
+	{
+		"Name":"Season 1",
+		"Garden":"0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0",
+		"Tree":
+		{
+			"Name":"Tree 1",
+			"MaxTemp":40,
+			"MaxHumi":40,
+			"TimeForWater"
+			{
+				"Time":
+				{
+					"hour":0,
+					"min":0
+				},
+				"Time":
+				{
+					"hour":0,
+					"min":0
+				}
+			}
+		},
+		"Tree":
+		{
+			"Name":"Tree 2",
+			"MaxTemp":40,
+			"MaxHumi":40,
+			"TimeForWater"
+			{
+				"Time":
+				{
+					"hour":0,
+					"min":0
+				},
+				"Time":
+				{
+					"hour":0,
+					"min":0
+				}
+			}
+		},
+		"Tree":
+		{
+			"Name":"Tree 3",
+			"MaxTemp":40,
+			"MaxHumi":40,
+			"TimeForWater"
+			{
+				"Time":
+				{
+					"hour":0,
+					"min":0
+				},
+				"Time":
+				{
+					"hour":0,
+					"min":0
+				}
+			}
+		}
+	}
+}

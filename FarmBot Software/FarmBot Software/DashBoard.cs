@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.Xml;
 using System.IO.Ports;
 using System.Threading;
+using System.Web.Script.Serialization;
 
 namespace FarmBot_Software
 {
@@ -439,7 +440,19 @@ namespace FarmBot_Software
             });      
         }
 
-        
+        private void btUpload_Click(object sender, EventArgs e)
+        {
+            ShowMessage("Uploading ...", 5000);
+            String jsonString = ""; // We will send this tring to Farmbot Control Box
 
+            var serializeObject = new JavaScriptSerializer();
+            jsonString = serializeObject.Serialize(LoadingSeason);
+            Season seasonFomJson = serializeObject.Deserialize<Season>(jsonString);
+            FarmBotSerialPort.BaudRate = 9600;
+            FarmBotSerialPort.PortName = "COM2";
+            FarmBotSerialPort.Open();
+            FarmBotSerialPort.WriteLine(jsonString);
+            ShowMessage("Done", 1000);
+        }
     }
 }
