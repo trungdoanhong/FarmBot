@@ -9,23 +9,71 @@
 	#include "WProgram.h"
 #endif
 
+#include <StandardCplusplus.h>
+#include <vector>
+
+using namespace std;
+
+class KeyValue
+{
+public:
+	char Key;
+	float Value;
+};
+
+class ThreeArgumentFunction
+{
+public:
+	String Code;
+	char Keys[3];
+	float Agruments[3];
+	void(*Function)(float, float, float);
+};
+
+class TwoArgumentFunction
+{
+public:
+	String Code;
+	char Keys[2];
+	float Agruments[2];
+	void(*Function)(float, float);
+};
+
+class OneArgumentFunction
+{
+public:
+	String Code;
+	char Key;
+	float Agrument;
+	void(*Function)(float);
+};
+
+class NoArgumentFunction
+{
+public:
+	String Code;
+	void(*Function)();
+};
+
 class GCodeExecute
 {
 public:
 	void Init(vector<String>*);
-	void Add(String, String, String, String, void(*)(float, float, float));
-	void Add(String, String, String, void(*)(float, float));
-	void Add(String, String, void(*)(float));
-	void Add(String, void(*func)());
+	void Add(String Code, char argu1, char argu2, char argu3, void(*func)(float, float, float));
+	void Add(String Code, char argu1, char argu2, void(*func)(float, float));
+	void Add(String Code, char argu1, void(*func)(float));
+	void Add(String Code, void(*func)());
 	void Run();
 
 	vector<String>* GCodeQueue;
 	bool IsRunning;
 private:
-	vector<void(*)(float, float, float)> ThreeArgumentFunctions;
-	vector <void(*)(float, float)> TwoArgumentFunctions;
-	vector <void(*)(float)> OneArgumentFunctions;
-	vector<void(*)> NoArgumentFunctions;
+	vector<KeyValue> getKeyValues(String code);
+
+	vector<ThreeArgumentFunction> ThreeArgumentFunctions;
+	vector <TwoArgumentFunction> TwoArgumentFunctions;
+	vector <OneArgumentFunction> OneArgumentFunctions;
+	vector<NoArgumentFunction> NoArgumentFunctions;
 };
 
 #endif
