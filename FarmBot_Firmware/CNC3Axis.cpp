@@ -50,6 +50,14 @@ void CNC3AxisClass::Init()
 	TCCR5B |= (1 << CS51);
 
 	interrupts();
+
+	pinMode(X_ENABLE_PIN, OUTPUT);
+	pinMode(Y_ENABLE_PIN, OUTPUT);
+	pinMode(Z_ENABLE_PIN, OUTPUT);
+
+	digitalWrite(X_ENABLE_PIN, LOW);
+	digitalWrite(Y_ENABLE_PIN, LOW);
+	digitalWrite(Z_ENABLE_PIN, LOW);
 }
 
 
@@ -223,10 +231,31 @@ void CNC3AxisClass::SetEndstopHomeVoltage(uint8_t value)
 void CNC3AxisClass::MoveHome()
 {
 	IsRunningHome = true;
-	X_Position = 10000;
-	Y_Position = 10000;
-	Z_Position = 10000;
+	X_Position = 5000;
+	Y_Position = 5000;
+	Z_Position = 5000;
 	Move(0, 0, 0);
+}
+
+void CNC3AxisClass::MoveXHome()
+{
+	IsRunningHome = true;
+	X_Position = 5000;
+	MoveX(0);
+}
+
+void CNC3AxisClass::MoveYHome()
+{
+	IsRunningHome = true;
+	Y_Position = 5000;
+	MoveY(0);
+}
+
+void CNC3AxisClass::MoveZHome()
+{
+	IsRunningHome = true;
+	Z_Position = 5000;
+	MoveZ(0);
 }
 
 int CNC3AxisClass::GetXPosition()
@@ -249,10 +278,6 @@ void CNC3AxisClass::Move(uint16_t xPos, uint16_t yPos, uint16_t zPos)
 	int x_Offset = xPos - X_Position;
 	int y_Offset = yPos - Y_Position;
 	int z_Offset = zPos - Z_Position;
-
-	X_Position = xPos;
-	Y_Position = yPos;
-	Z_Position = zPos;
 
 	if (x_Offset > 0)
 	{
@@ -288,6 +313,9 @@ void CNC3AxisClass::Move(uint16_t xPos, uint16_t yPos, uint16_t zPos)
 	double lengthOfRoad = sqrt(pow(x_Offset, 2) + pow(y_Offset, 2) + pow(z_Offset, 2));
 	double timeForCompleteRoad = lengthOfRoad / FeedRate;
 	double timeForCompleteXRoad = x_Offset / X_MaxFeedRate;
+	double timeForCompleteYRoad = y_Offset / Y_MaxFeedRate;
+	double timeForCompleteZRoad = z_Offset / Z_MaxFeedRate;
+
 	if (timeForCompleteRoad < timeForCompleteXRoad)
 	{
 		timeForCompleteRoad = timeForCompleteXRoad;
@@ -295,8 +323,18 @@ void CNC3AxisClass::Move(uint16_t xPos, uint16_t yPos, uint16_t zPos)
 
 	if (x_Offset != 0)
 	{
-		X_StepsToJumpAllRoad = x_Offset * X_StepsPerMm;
+		X_Position = xPos;
+		X_StepsToJumpAllRoad = (uint32_t)x_Offset * (uint32_t)X_StepsPerMm;
 		double x_TimeForJumpOneStep = timeForCompleteRoad / X_StepsToJumpAllRoad;
+
+		Serial.println();
+		Serial.println(X_StepsToJumpAllRoad);
+
+		if (IsRunningHome == true)
+		{
+			x_TimeForJumpOneStep = (float)1 / (X_MaxFeedRate * X_StepsPerMm);
+		}
+
 		X_COMPARE_VALUE = calCompareValue(x_TimeForJumpOneStep);
 
 		X_StepsToJumpAllRoad *= 2;
@@ -307,8 +345,15 @@ void CNC3AxisClass::Move(uint16_t xPos, uint16_t yPos, uint16_t zPos)
 	}
 	if (y_Offset != 0)
 	{
-		Y_StepsToJumpAllRoad = y_Offset * Y_StepsPerMm;
+		Y_Position = yPos;
+		Y_StepsToJumpAllRoad = (uint32_t)y_Offset * (uint32_t)Y_StepsPerMm;
 		double y_TimeForJumpOneStep = timeForCompleteRoad / Y_StepsToJumpAllRoad;
+
+		if (IsRunningHome == true)
+		{
+			y_TimeForJumpOneStep = (float)1 / (Y_MaxFeedRate * Y_StepsPerMm);
+		}
+
 		Y_COMPARE_VALUE = calCompareValue(y_TimeForJumpOneStep);
 
 		Y_StepsToJumpAllRoad *= 2;
@@ -319,8 +364,15 @@ void CNC3AxisClass::Move(uint16_t xPos, uint16_t yPos, uint16_t zPos)
 	}
 	if (z_Offset != 0)
 	{
-		Z_StepsToJumpAllRoad = z_Offset * Z_StepsPerMm;
-		double z_TimeForJumpOneStep = timeForCompleteRoad / Z_StepsToJumpAllRoad;
+		Z_Position = zPos;
+		Z_StepsToJumpAllRoad = (uint32_t)z_Offset * (uint32_t)Z_StepsPerMm;
+		double z_TimeForJumpOneStep = timeForCompleteZRoad / Z_StepsToJumpAllRoad;
+
+		if (IsRunningHome == true)
+		{
+			z_TimeForJumpOneStep = (float)1 / (Z_MaxFeedRate * Z_StepsPerMm);
+		}
+
 		Z_COMPARE_VALUE = calCompareValue(z_TimeForJumpOneStep);
 
 		Z_StepsToJumpAllRoad *= 2;

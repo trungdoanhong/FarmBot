@@ -19,7 +19,7 @@ SerialCommand SerialCMD1;
 
 uint8_t ButtonArray[] = { RETURN, LEFT, RIGHT, UP, DOWN, ENTER };
 
-LiquidCrystal_I2C lcd(0x27, 16, 4);
+LiquidCrystal_I2C lcd(0x27, 20, 4);
 
 tmElements_t TodayTime;
 

@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FarmBot_Controller", "..\Fa
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FarmBot_Firmware", "FarmBot_Firmware.vcxproj", "{C5F80730-F44F-4478-BDAE-6634EFC2CA88}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "On_off_base_on_Time_Temperature_Humidity", "C:\Users\hoainiemthoau\Documents\Arduino\On_off_base_on_Time_Temperature_Humidity\On_off_base_on_Time_Temperature_Humidity.vcxproj", "{9A086671-80D4-42D4-90D7-A7B52CEBFA86}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -21,6 +23,10 @@ Global
 		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Debug|Win32.Build.0 = Debug|Win32
 		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Release|Win32.ActiveCfg = Release|Win32
 		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Release|Win32.Build.0 = Release|Win32
+		{9A086671-80D4-42D4-90D7-A7B52CEBFA86}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9A086671-80D4-42D4-90D7-A7B52CEBFA86}.Debug|Win32.Build.0 = Debug|Win32
+		{9A086671-80D4-42D4-90D7-A7B52CEBFA86}.Release|Win32.ActiveCfg = Release|Win32
+		{9A086671-80D4-42D4-90D7-A7B52CEBFA86}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

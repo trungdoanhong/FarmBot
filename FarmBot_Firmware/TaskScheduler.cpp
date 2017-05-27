@@ -19,6 +19,12 @@ void TaskSchedulerClass::Init()
 	TCNT2 = 7;
 	TIMSK2 = (1 << TOIE2);                  // Overflow interrupt enable 
 
+	threadNumber = 0;
+	interruptTime = 0;
+	timeCounter = 0;
+	funcCallingTime = 0;
+	nearestThreadOrder = 0;
+
 }
 
 //Add a function into Thread Array and run every time
@@ -43,10 +49,15 @@ void TaskSchedulerClass::Add(void(*func)(), uint16_t time)
 	Thread thread;
 	thread.Func = func;
 	thread.Time = time;
-	thread.CountDown = 0;
+	thread.CountDown = time;
  
 	// Add new thread into array
 	ThreadArray[threadNumber - 1] = thread;
+
+	if (funcCallingTime == 0 || funcCallingTime > time)
+	{
+		funcCallingTime = time;
+	}
 }
 
 // Sort every thread increase from small to big base on time.
@@ -78,7 +89,10 @@ void TaskSchedulerClass::Run()
 
 void TaskSchedulerClass::Stop()
 {
-	cli();
+	for (uint8_t index = 0; index < threadNumber; index++)
+	{
+		ThreadArray[index].Enough = false;
+	}
 }
 
 void TaskSchedulerClass::Execute()
@@ -99,6 +113,8 @@ void TaskSchedulerClass::Execute()
 
 	for (uint8_t index = 0; index < threadNumber; index++)
 	{
+		if (ThreadArray[index].Enough == false)
+			continue;
 		// Set count down time every thread
 		ThreadArray[index].CountDown -= funcCallingTime;
 	}
@@ -109,6 +125,8 @@ void TaskSchedulerClass::Execute()
 
 	for (uint8_t index = 1; index < threadNumber; index++)
 	{
+		if (ThreadArray[index].Enough == false)
+			continue;
 		// Find thread order has count down time is smallest
 		if (ThreadArray[index].CountDown < ThreadArray[nearestThreadOrder].CountDown)
 		{
@@ -126,9 +144,10 @@ void TaskSchedulerClass::Change(void(*func)(), uint16_t time)
 	if (!this->IsFunctionExit(func))
 	{
 		this->Add(func, time);
+		sort();
 		return;
-	}
-		
+	}	
+	
 
 	for (uint8_t index = 0; index < threadNumber; index++)
 	{ 
@@ -158,8 +177,35 @@ void TaskSchedulerClass::Resum(void(*func)())
 		if (ThreadArray[index].Func == func)
 		{
 			ThreadArray[index].Enough = true;
+			ThreadArray[index].CountDown = ThreadArray[index].Time;
 		}
 	}
+
+	for (uint8_t index = 0; index < threadNumber; index++)
+	{
+		if (ThreadArray[index].Enough == false || ThreadArray[index].Func == func)
+			continue;
+		// Set count down time every thread
+		ThreadArray[index].CountDown -= (timeCounter + 1);
+	}
+
+	nearestThreadOrder = 0;
+
+	for (uint8_t index = 1; index < threadNumber; index++)
+	{
+		if (ThreadArray[index].Enough == false)
+			continue;
+		// Find thread order has count down time is smallest
+		if (ThreadArray[index].CountDown < ThreadArray[nearestThreadOrder].CountDown)
+		{
+			nearestThreadOrder = index;
+		}
+	}
+
+	// Set time to call function in next time
+	funcCallingTime = ThreadArray[nearestThreadOrder].CountDown;
+
+	timeCounter = 0;
 }
 
 void TaskSchedulerClass::Delete(void(*func)())
@@ -205,7 +251,7 @@ bool TaskSchedulerClass::IsFunctionExit(void(*func)())
 
 ISR(TIMER2_OVF_vect)
 {
-	TCNT2 = 7;	// Interrupt function was called every 0.001 s
+	TCNT2 = 6;	// Interrupt function was called every 0.001 s
 	TaskScheduler.Execute();
 }
 

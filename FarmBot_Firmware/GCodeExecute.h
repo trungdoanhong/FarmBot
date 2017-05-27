@@ -11,6 +11,7 @@
 
 #include <StandardCplusplus.h>
 #include <vector>
+#include "Constants.h"
 
 using namespace std;
 
@@ -69,6 +70,10 @@ public:
 	bool IsRunning;
 private:
 	vector<KeyValue> getKeyValues(String code);
+	void checkAndRunFunction3Argument(String prefix, vector<KeyValue> keyValues);
+	void checkAndRunFunction2Argument(String prefix, vector<KeyValue> keyValues);
+	void checkAndRunFunction1Argument(String prefix, vector<KeyValue> keyValues);
+	void checkAndRunFunction0Argument(String prefix, vector<KeyValue> keyValues);
 
 	vector<ThreeArgumentFunction> ThreeArgumentFunctions;
 	vector <TwoArgumentFunction> TwoArgumentFunctions;

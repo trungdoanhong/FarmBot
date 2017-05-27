@@ -43,8 +43,8 @@
             this.lbX = new System.Windows.Forms.Label();
             this.lbY = new System.Windows.Forms.Label();
             this.btHome = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
-            this.button5 = new System.Windows.Forms.Button();
+            this.btX = new System.Windows.Forms.Button();
+            this.btY = new System.Windows.Forms.Button();
             this.btTree1 = new System.Windows.Forms.Button();
             this.btTree2 = new System.Windows.Forms.Button();
             this.btTree3 = new System.Windows.Forms.Button();
@@ -83,6 +83,20 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.btDelete = new System.Windows.Forms.Button();
             this.FarmBotSerialPort = new System.IO.Ports.SerialPort(this.components);
+            this.btZ = new System.Windows.Forms.Button();
+            this.tbX = new System.Windows.Forms.TextBox();
+            this.lbZ = new System.Windows.Forms.Label();
+            this.tbY = new System.Windows.Forms.TextBox();
+            this.tbZ = new System.Windows.Forms.TextBox();
+            this.btPump = new System.Windows.Forms.Button();
+            this.tbWaterSpendTime = new System.Windows.Forms.TextBox();
+            this.cbFan = new System.Windows.Forms.CheckBox();
+            this.cbLamp = new System.Windows.Forms.CheckBox();
+            this.cbVaccum = new System.Windows.Forms.CheckBox();
+            this.cbSoilSensor = new System.Windows.Forms.CheckBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.panel7 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.pbGarden)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbEndActuator)).BeginInit();
             this.panel1.SuspendLayout();
@@ -92,6 +106,8 @@
             this.panel5.SuspendLayout();
             this.panel6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.panel2.SuspendLayout();
+            this.panel7.SuspendLayout();
             this.SuspendLayout();
             // 
             // btTestControlBoard
@@ -170,9 +186,9 @@
             this.btAddSeason.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(89)))), ((int)(((byte)(123)))));
             this.btAddSeason.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btAddSeason.ForeColor = System.Drawing.Color.White;
-            this.btAddSeason.Location = new System.Drawing.Point(229, 136);
+            this.btAddSeason.Location = new System.Drawing.Point(221, 136);
             this.btAddSeason.Name = "btAddSeason";
-            this.btAddSeason.Size = new System.Drawing.Size(52, 20);
+            this.btAddSeason.Size = new System.Drawing.Size(60, 20);
             this.btAddSeason.TabIndex = 6;
             this.btAddSeason.Text = "Add";
             this.btAddSeason.UseVisualStyleBackColor = false;
@@ -183,9 +199,9 @@
             this.btLoadSeason.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(89)))), ((int)(((byte)(123)))));
             this.btLoadSeason.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btLoadSeason.ForeColor = System.Drawing.Color.White;
-            this.btLoadSeason.Location = new System.Drawing.Point(229, 162);
+            this.btLoadSeason.Location = new System.Drawing.Point(221, 162);
             this.btLoadSeason.Name = "btLoadSeason";
-            this.btLoadSeason.Size = new System.Drawing.Size(52, 21);
+            this.btLoadSeason.Size = new System.Drawing.Size(60, 21);
             this.btLoadSeason.TabIndex = 6;
             this.btLoadSeason.Text = "Load";
             this.btLoadSeason.UseVisualStyleBackColor = false;
@@ -217,12 +233,13 @@
             this.pbEndActuator.TabStop = false;
             this.pbEndActuator.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pbEndActuator_MouseDown);
             this.pbEndActuator.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pbEndActuator_MouseMove);
+            this.pbEndActuator.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pbEndActuator_MouseUp);
             // 
             // lbX
             // 
             this.lbX.AutoSize = true;
             this.lbX.ForeColor = System.Drawing.Color.White;
-            this.lbX.Location = new System.Drawing.Point(226, 222);
+            this.lbX.Location = new System.Drawing.Point(221, 217);
             this.lbX.Name = "lbX";
             this.lbX.Size = new System.Drawing.Size(60, 13);
             this.lbX.TabIndex = 9;
@@ -232,7 +249,7 @@
             // 
             this.lbY.AutoSize = true;
             this.lbY.ForeColor = System.Drawing.Color.White;
-            this.lbY.Location = new System.Drawing.Point(226, 247);
+            this.lbY.Location = new System.Drawing.Point(221, 234);
             this.lbY.Name = "lbY";
             this.lbY.Size = new System.Drawing.Size(60, 13);
             this.lbY.TabIndex = 9;
@@ -243,36 +260,39 @@
             this.btHome.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(89)))), ((int)(((byte)(123)))));
             this.btHome.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btHome.ForeColor = System.Drawing.Color.White;
-            this.btHome.Location = new System.Drawing.Point(229, 272);
+            this.btHome.Location = new System.Drawing.Point(221, 272);
             this.btHome.Name = "btHome";
-            this.btHome.Size = new System.Drawing.Size(52, 20);
+            this.btHome.Size = new System.Drawing.Size(60, 20);
             this.btHome.TabIndex = 6;
             this.btHome.Text = "Home";
             this.btHome.UseVisualStyleBackColor = false;
+            this.btHome.Click += new System.EventHandler(this.btHome_Click);
             // 
-            // button4
+            // btX
             // 
-            this.button4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(89)))), ((int)(((byte)(123)))));
-            this.button4.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button4.ForeColor = System.Drawing.Color.White;
-            this.button4.Location = new System.Drawing.Point(229, 298);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(25, 20);
-            this.button4.TabIndex = 6;
-            this.button4.Text = "X";
-            this.button4.UseVisualStyleBackColor = false;
+            this.btX.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(89)))), ((int)(((byte)(123)))));
+            this.btX.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btX.ForeColor = System.Drawing.Color.White;
+            this.btX.Location = new System.Drawing.Point(256, 297);
+            this.btX.Name = "btX";
+            this.btX.Size = new System.Drawing.Size(25, 20);
+            this.btX.TabIndex = 6;
+            this.btX.Text = "X";
+            this.btX.UseVisualStyleBackColor = false;
+            this.btX.Click += new System.EventHandler(this.btX_Click);
             // 
-            // button5
+            // btY
             // 
-            this.button5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(89)))), ((int)(((byte)(123)))));
-            this.button5.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button5.ForeColor = System.Drawing.Color.White;
-            this.button5.Location = new System.Drawing.Point(256, 298);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(25, 20);
-            this.button5.TabIndex = 6;
-            this.button5.Text = "Y";
-            this.button5.UseVisualStyleBackColor = false;
+            this.btY.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(89)))), ((int)(((byte)(123)))));
+            this.btY.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btY.ForeColor = System.Drawing.Color.White;
+            this.btY.Location = new System.Drawing.Point(256, 323);
+            this.btY.Name = "btY";
+            this.btY.Size = new System.Drawing.Size(25, 20);
+            this.btY.TabIndex = 6;
+            this.btY.Text = "Y";
+            this.btY.UseVisualStyleBackColor = false;
+            this.btY.Click += new System.EventHandler(this.btY_Click);
             // 
             // btTree1
             // 
@@ -615,7 +635,7 @@
             this.rbNone.AutoSize = true;
             this.rbNone.Checked = true;
             this.rbNone.ForeColor = System.Drawing.Color.White;
-            this.rbNone.Location = new System.Drawing.Point(231, 335);
+            this.rbNone.Location = new System.Drawing.Point(224, 377);
             this.rbNone.Name = "rbNone";
             this.rbNone.Size = new System.Drawing.Size(51, 17);
             this.rbNone.TabIndex = 15;
@@ -627,7 +647,7 @@
             // 
             this.rbTree1.AutoSize = true;
             this.rbTree1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(79)))), ((int)(((byte)(196)))), ((int)(((byte)(246)))));
-            this.rbTree1.Location = new System.Drawing.Point(231, 358);
+            this.rbTree1.Location = new System.Drawing.Point(224, 400);
             this.rbTree1.Name = "rbTree1";
             this.rbTree1.Size = new System.Drawing.Size(56, 17);
             this.rbTree1.TabIndex = 15;
@@ -638,7 +658,7 @@
             // 
             this.rbTree2.AutoSize = true;
             this.rbTree2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(76)))), ((int)(((byte)(101)))));
-            this.rbTree2.Location = new System.Drawing.Point(231, 381);
+            this.rbTree2.Location = new System.Drawing.Point(224, 423);
             this.rbTree2.Name = "rbTree2";
             this.rbTree2.Size = new System.Drawing.Size(56, 17);
             this.rbTree2.TabIndex = 15;
@@ -649,7 +669,7 @@
             // 
             this.rbTree3.AutoSize = true;
             this.rbTree3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(177)))), ((int)(((byte)(80)))));
-            this.rbTree3.Location = new System.Drawing.Point(231, 404);
+            this.rbTree3.Location = new System.Drawing.Point(224, 446);
             this.rbTree3.Name = "rbTree3";
             this.rbTree3.Size = new System.Drawing.Size(56, 17);
             this.rbTree3.TabIndex = 15;
@@ -688,9 +708,9 @@
             this.btDelete.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(89)))), ((int)(((byte)(123)))));
             this.btDelete.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btDelete.ForeColor = System.Drawing.Color.White;
-            this.btDelete.Location = new System.Drawing.Point(229, 189);
+            this.btDelete.Location = new System.Drawing.Point(221, 189);
             this.btDelete.Name = "btDelete";
-            this.btDelete.Size = new System.Drawing.Size(52, 20);
+            this.btDelete.Size = new System.Drawing.Size(60, 20);
             this.btDelete.TabIndex = 6;
             this.btDelete.Text = "Delete";
             this.btDelete.UseVisualStyleBackColor = false;
@@ -701,12 +721,166 @@
             this.FarmBotSerialPort.PortName = "COM50";
             this.FarmBotSerialPort.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.ReceiveDataFromSerialPort);
             // 
+            // btZ
+            // 
+            this.btZ.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(89)))), ((int)(((byte)(123)))));
+            this.btZ.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btZ.ForeColor = System.Drawing.Color.White;
+            this.btZ.Location = new System.Drawing.Point(256, 349);
+            this.btZ.Name = "btZ";
+            this.btZ.Size = new System.Drawing.Size(25, 20);
+            this.btZ.TabIndex = 6;
+            this.btZ.Text = "Z";
+            this.btZ.UseVisualStyleBackColor = false;
+            this.btZ.Click += new System.EventHandler(this.btZ_Click);
+            // 
+            // tbX
+            // 
+            this.tbX.Location = new System.Drawing.Point(221, 297);
+            this.tbX.Name = "tbX";
+            this.tbX.Size = new System.Drawing.Size(30, 20);
+            this.tbX.TabIndex = 16;
+            this.tbX.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tbX_KeyDown);
+            // 
+            // lbZ
+            // 
+            this.lbZ.AutoSize = true;
+            this.lbZ.ForeColor = System.Drawing.Color.White;
+            this.lbZ.Location = new System.Drawing.Point(221, 252);
+            this.lbZ.Name = "lbZ";
+            this.lbZ.Size = new System.Drawing.Size(48, 13);
+            this.lbZ.TabIndex = 9;
+            this.lbZ.Text = "Z : 0 mm";
+            // 
+            // tbY
+            // 
+            this.tbY.Location = new System.Drawing.Point(221, 323);
+            this.tbY.Name = "tbY";
+            this.tbY.Size = new System.Drawing.Size(30, 20);
+            this.tbY.TabIndex = 16;
+            this.tbY.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tbY_KeyDown);
+            // 
+            // tbZ
+            // 
+            this.tbZ.Location = new System.Drawing.Point(221, 349);
+            this.tbZ.Name = "tbZ";
+            this.tbZ.Size = new System.Drawing.Size(30, 20);
+            this.tbZ.TabIndex = 16;
+            this.tbZ.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tbZ_KeyDown);
+            // 
+            // btPump
+            // 
+            this.btPump.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(89)))), ((int)(((byte)(123)))));
+            this.btPump.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btPump.ForeColor = System.Drawing.Color.White;
+            this.btPump.Location = new System.Drawing.Point(9, 36);
+            this.btPump.Name = "btPump";
+            this.btPump.Size = new System.Drawing.Size(60, 20);
+            this.btPump.TabIndex = 6;
+            this.btPump.Text = "Pump";
+            this.btPump.UseVisualStyleBackColor = false;
+            this.btPump.Click += new System.EventHandler(this.btPump_Click);
+            // 
+            // tbWaterSpendTime
+            // 
+            this.tbWaterSpendTime.Location = new System.Drawing.Point(9, 10);
+            this.tbWaterSpendTime.Name = "tbWaterSpendTime";
+            this.tbWaterSpendTime.Size = new System.Drawing.Size(35, 20);
+            this.tbWaterSpendTime.TabIndex = 16;
+            this.tbWaterSpendTime.Text = "1000";
+            // 
+            // cbFan
+            // 
+            this.cbFan.AutoSize = true;
+            this.cbFan.ForeColor = System.Drawing.Color.White;
+            this.cbFan.Location = new System.Drawing.Point(6, 12);
+            this.cbFan.Name = "cbFan";
+            this.cbFan.Size = new System.Drawing.Size(44, 17);
+            this.cbFan.TabIndex = 17;
+            this.cbFan.Text = "Fan";
+            this.cbFan.UseVisualStyleBackColor = true;
+            this.cbFan.CheckedChanged += new System.EventHandler(this.cbFan_CheckedChanged);
+            // 
+            // cbLamp
+            // 
+            this.cbLamp.AutoSize = true;
+            this.cbLamp.ForeColor = System.Drawing.Color.White;
+            this.cbLamp.Location = new System.Drawing.Point(6, 35);
+            this.cbLamp.Name = "cbLamp";
+            this.cbLamp.Size = new System.Drawing.Size(52, 17);
+            this.cbLamp.TabIndex = 17;
+            this.cbLamp.Text = "Lamp";
+            this.cbLamp.UseVisualStyleBackColor = true;
+            this.cbLamp.CheckedChanged += new System.EventHandler(this.cbLamp_CheckedChanged);
+            // 
+            // cbVaccum
+            // 
+            this.cbVaccum.AutoSize = true;
+            this.cbVaccum.ForeColor = System.Drawing.Color.White;
+            this.cbVaccum.Location = new System.Drawing.Point(6, 58);
+            this.cbVaccum.Name = "cbVaccum";
+            this.cbVaccum.Size = new System.Drawing.Size(65, 17);
+            this.cbVaccum.TabIndex = 17;
+            this.cbVaccum.Text = "Vaccum";
+            this.cbVaccum.UseVisualStyleBackColor = true;
+            this.cbVaccum.CheckedChanged += new System.EventHandler(this.cbVaccum_CheckedChanged);
+            // 
+            // cbSoilSensor
+            // 
+            this.cbSoilSensor.AutoSize = true;
+            this.cbSoilSensor.ForeColor = System.Drawing.Color.White;
+            this.cbSoilSensor.Location = new System.Drawing.Point(6, 81);
+            this.cbSoilSensor.Name = "cbSoilSensor";
+            this.cbSoilSensor.Size = new System.Drawing.Size(79, 17);
+            this.cbSoilSensor.TabIndex = 17;
+            this.cbSoilSensor.Text = "Soil Sensor";
+            this.cbSoilSensor.UseVisualStyleBackColor = true;
+            this.cbSoilSensor.CheckedChanged += new System.EventHandler(this.cbSoilSensor_CheckedChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.ForeColor = System.Drawing.Color.White;
+            this.label1.Location = new System.Drawing.Point(50, 17);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(21, 13);
+            this.label1.TabIndex = 18;
+            this.label1.Text = "Ms";
+            // 
+            // panel2
+            // 
+            this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(66)))), ((int)(((byte)(100)))));
+            this.panel2.Controls.Add(this.tbWaterSpendTime);
+            this.panel2.Controls.Add(this.label1);
+            this.panel2.Controls.Add(this.btPump);
+            this.panel2.Location = new System.Drawing.Point(221, 486);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(86, 65);
+            this.panel2.TabIndex = 19;
+            // 
+            // panel7
+            // 
+            this.panel7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(66)))), ((int)(((byte)(100)))));
+            this.panel7.Controls.Add(this.cbFan);
+            this.panel7.Controls.Add(this.cbLamp);
+            this.panel7.Controls.Add(this.cbSoilSensor);
+            this.panel7.Controls.Add(this.cbVaccum);
+            this.panel7.Location = new System.Drawing.Point(221, 569);
+            this.panel7.Name = "panel7";
+            this.panel7.Size = new System.Drawing.Size(86, 108);
+            this.panel7.TabIndex = 20;
+            // 
             // DashBoard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(37)))), ((int)(((byte)(61)))));
             this.ClientSize = new System.Drawing.Size(771, 703);
+            this.Controls.Add(this.panel7);
+            this.Controls.Add(this.panel2);
+            this.Controls.Add(this.tbZ);
+            this.Controls.Add(this.tbY);
+            this.Controls.Add(this.tbX);
             this.Controls.Add(this.rbTree3);
             this.Controls.Add(this.rbTree2);
             this.Controls.Add(this.rbTree1);
@@ -717,14 +891,16 @@
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.pnTimeForWater);
             this.Controls.Add(this.panel1);
+            this.Controls.Add(this.lbZ);
             this.Controls.Add(this.lbY);
             this.Controls.Add(this.lbX);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.pbEndActuator);
             this.Controls.Add(this.pbGarden);
             this.Controls.Add(this.btLoadSeason);
-            this.Controls.Add(this.button5);
-            this.Controls.Add(this.button4);
+            this.Controls.Add(this.btZ);
+            this.Controls.Add(this.btY);
+            this.Controls.Add(this.btX);
             this.Controls.Add(this.btHome);
             this.Controls.Add(this.btDelete);
             this.Controls.Add(this.btAddSeason);
@@ -761,6 +937,10 @@
             this.panel6.ResumeLayout(false);
             this.panel6.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
+            this.panel7.ResumeLayout(false);
+            this.panel7.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -781,8 +961,8 @@
         private System.Windows.Forms.Label lbX;
         private System.Windows.Forms.Label lbY;
         private System.Windows.Forms.Button btHome;
-        private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button btX;
+        private System.Windows.Forms.Button btY;
         private System.Windows.Forms.Button btTree1;
         private System.Windows.Forms.Button btTree2;
         private System.Windows.Forms.Button btTree3;
@@ -821,6 +1001,20 @@
         private System.Windows.Forms.Button btDelete;
         private System.IO.Ports.SerialPort FarmBotSerialPort;
         private System.Windows.Forms.Label lbDebug;
+        private System.Windows.Forms.Button btZ;
+        private System.Windows.Forms.TextBox tbX;
+        private System.Windows.Forms.Label lbZ;
+        private System.Windows.Forms.TextBox tbY;
+        private System.Windows.Forms.TextBox tbZ;
+        private System.Windows.Forms.Button btPump;
+        private System.Windows.Forms.TextBox tbWaterSpendTime;
+        private System.Windows.Forms.CheckBox cbFan;
+        private System.Windows.Forms.CheckBox cbLamp;
+        private System.Windows.Forms.CheckBox cbVaccum;
+        private System.Windows.Forms.CheckBox cbSoilSensor;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel panel7;
     }
 }
 

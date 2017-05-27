@@ -79,13 +79,28 @@ void GCodeExecute::Run()
 	}
 
 	// Find corresponding function with prefix 
+	
+	checkAndRunFunction3Argument(prefix, keyValues);
+	checkAndRunFunction2Argument(prefix, keyValues);
+	checkAndRunFunction1Argument(prefix, keyValues);
+	checkAndRunFunction0Argument(prefix, keyValues);
+
+	//------
+
+	GCodeQueue->erase(GCodeQueue->begin());
+	IsRunning = true;
+
+}
+
+void GCodeExecute::checkAndRunFunction3Argument(String prefix, vector<KeyValue> keyValues)
+{
 	for (uint8_t index = 0; index < ThreeArgumentFunctions.size(); index++)
 	{
 		if (prefix == ThreeArgumentFunctions[index].Code)		// find out 
 		{
 			for (uint8_t index2 = 0; index2 < 3; index2++)		// Find values for arguments
 			{
-				ThreeArgumentFunctions[index].Agruments[index2] = 98765;
+				ThreeArgumentFunctions[index].Agruments[index2] = NULL_NUMBER;
 
 				for (uint8_t index3 = 0; index3 < keyValues.size(); index3++) // Browse key-value pairs
 				{
@@ -94,7 +109,7 @@ void GCodeExecute::Run()
 						ThreeArgumentFunctions[index].Agruments[index2] = keyValues[index3].Value;
 					}
 				}
-				
+
 			}
 
 			float argu1 = ThreeArgumentFunctions[index].Agruments[0];
@@ -110,10 +125,73 @@ void GCodeExecute::Run()
 			ThreeArgumentFunctions[index].Function(argu1, argu2, argu3);
 		}
 	}
+}
 
-	GCodeQueue->erase(GCodeQueue->begin());
-	IsRunning = true;
+void GCodeExecute::checkAndRunFunction2Argument(String prefix, vector<KeyValue> keyValues)
+{
+	for (uint8_t index = 0; index < TwoArgumentFunctions.size(); index++)
+	{
+		if (prefix != TwoArgumentFunctions[index].Code)		// find out 
+			return;
+		for (uint8_t index2 = 0; index2 < 2; index2++)		// Find values for arguments
+		{
+			TwoArgumentFunctions[index].Agruments[index2] = NULL_NUMBER;
 
+			for (uint8_t index3 = 0; index3 < keyValues.size(); index3++) // Browse key-value pairs
+			{
+				if (TwoArgumentFunctions[index].Keys[index2] == keyValues[index3].Key) // Have a corresponding key
+				{
+					TwoArgumentFunctions[index].Agruments[index2] = keyValues[index3].Value;
+				}
+			}
+
+		}
+
+		float argu1 = TwoArgumentFunctions[index].Agruments[0];
+		float argu2 = TwoArgumentFunctions[index].Agruments[1];
+
+		Serial.print(argu1);
+		Serial.print(", ");
+		Serial.println(argu2);
+
+		TwoArgumentFunctions[index].Function(argu1, argu2);
+		
+	}
+}
+
+void GCodeExecute::checkAndRunFunction1Argument(String prefix, vector<KeyValue> keyValues)
+{
+	for (uint8_t index = 0; index < OneArgumentFunctions.size(); index++)
+	{
+		if (prefix != OneArgumentFunctions[index].Code)		// find out 
+			continue;
+		OneArgumentFunctions[index].Agrument = NULL_NUMBER;
+
+		for (uint8_t index3 = 0; index3 < keyValues.size(); index3++) // Browse key-value pairs
+		{
+			if (OneArgumentFunctions[index].Key == keyValues[index3].Key) // Have a corresponding key
+			{
+				OneArgumentFunctions[index].Agrument = keyValues[index3].Value;
+			}
+		}
+
+		float argu1 = OneArgumentFunctions[index].Agrument;
+
+		Serial.println(argu1);
+
+		OneArgumentFunctions[index].Function(argu1);
+	}
+}
+
+void GCodeExecute::checkAndRunFunction0Argument(String prefix, vector<KeyValue> keyValues)
+{
+	for (uint8_t index = 0; index < NoArgumentFunctions.size(); index++)
+	{
+		if (prefix != NoArgumentFunctions[index].Code)		// find out 
+			continue;
+
+		NoArgumentFunctions[index].Function();
+	}
 }
 
 vector<KeyValue> GCodeExecute::getKeyValues(String code)

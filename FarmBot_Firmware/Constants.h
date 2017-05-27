@@ -1,0 +1,1 @@
+#define NULL_NUMBER 98765

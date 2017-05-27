@@ -11,13 +11,17 @@
 
 #include "fastio.h"
 
-#define X_PULSE_PIN 54
-#define Y_PULSE_PIN 60
-#define Z_PULSE_PIN 46
+#define X_PULSE_PIN 60
+#define Y_PULSE_PIN 46
+#define Z_PULSE_PIN 54
 
-#define X_DIRECTION_PIN 55
-#define Y_DIRECTION_PIN 61
-#define Z_DIRECTION_PIN 48
+#define X_DIRECTION_PIN 61
+#define Y_DIRECTION_PIN 48
+#define Z_DIRECTION_PIN 55
+
+#define X_ENABLE_PIN 56
+#define Y_ENABLE_PIN 62
+#define Z_ENABLE_PIN 38
 
 #define X_ENDSTOP_PIN 3
 #define Y_ENDSTOP_PIN 14
@@ -79,6 +83,9 @@ class CNC3AxisClass
 	void SetEndstopHomeVoltage(uint8_t value);
 	uint32_t GetStepsToJumpAllRoad(AXIS axis);
 	void MoveHome();
+	void MoveXHome();
+	void MoveYHome();
+	void MoveZHome();
 	void MoveX(uint16_t xPos);
 	void MoveY(uint16_t yPos);
 	void MoveZ(uint16_t zPos);

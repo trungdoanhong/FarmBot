@@ -22,6 +22,10 @@ namespace FarmBot_Software
         bool IsFarmBotConnected = false;
         List<SerialPort> SerialPortList;
 
+        int X_EndActuator;
+        int Y_EndActuator;
+        int Z_EndActuator;
+
         public DashBoard()
         {
             InitializeComponent();
@@ -104,9 +108,24 @@ namespace FarmBot_Software
                 if (pbEndActuator.Top > 460)
                     pbEndActuator.Top = 460;
 
-                lbX.Text = "X : " + ((pbEndActuator.Left + 20) * 10) / 6 + " mm";
-                lbY.Text = "Y : " + ((pbEndActuator.Top + 20) * 10) / 6 + " mm";
+                X_EndActuator = ((pbEndActuator.Left + 20) * 10) / 6;
+                Y_EndActuator = ((pbEndActuator.Top + 20) * 10) / 6;
+
+                UpdatePositionDisplay();
             }
+        }
+
+        void UpdatePositionDisplay()
+        {
+            lbX.Text = "X : " + X_EndActuator + " mm";
+            lbY.Text = "Y : " + Y_EndActuator + " mm";
+            lbZ.Text = "Z : " + Z_EndActuator + " mm";
+        }
+
+        void UpdatePbEndActuator()
+        {
+            pbEndActuator.Left = (X_EndActuator * 6) / 10 - 20;
+            pbEndActuator.Top = (Y_EndActuator * 6) / 10 - 20;
         }
 
         private void btMinimize_Click(object sender, EventArgs e)
@@ -384,7 +403,15 @@ namespace FarmBot_Software
         private void ReceiveDataFromSerialPort(object sender, SerialDataReceivedEventArgs e)
         {
             SerialPort portReceived = ((SerialPort)sender);
-            String receiveString = portReceived.ReadLine();
+            String receiveString;
+            try
+            {
+                receiveString = portReceived.ReadLine();
+            }
+            catch
+            {
+                return;
+            }
 
             if (receiveString.Length >= "YesFarmBot".Length)
             {
@@ -412,10 +439,12 @@ namespace FarmBot_Software
             }
             else
             {
+                ShowMessage("FarmBot closed " + FarmBotSerialPort.PortName, 2000);
                 FarmBotSerialPort.Close();
                 IsFarmBotConnected = false;
                 btConnect.Text = "Connect";
                 lbConnectState.Text = "FarmBot is disconnected !";
+                
             }
         }
 
@@ -454,5 +483,156 @@ namespace FarmBot_Software
             FarmBotSerialPort.WriteLine(jsonString);
             ShowMessage("Done", 1000);
         }
+
+        private void pbEndActuator_MouseUp(object sender, MouseEventArgs e)
+        {
+            String gcode = "G00 X" + X_EndActuator.ToString() + " Y" + Y_EndActuator.ToString();
+            SendGCode(gcode);
+        }
+
+        private void btHome_Click(object sender, EventArgs e)
+        {
+            String gcode = "G28 X Y Z";
+            X_EndActuator = 0;
+            Y_EndActuator = 0;
+            Z_EndActuator = 0;
+            SendGCode(gcode);
+            UpdatePbEndActuator();
+            UpdatePositionDisplay();
+        }
+
+        private void btX_Click(object sender, EventArgs e)
+        {
+            String gcode = "G28 X";
+            X_EndActuator = 0;
+            SendGCode(gcode);
+            UpdatePbEndActuator();
+            UpdatePositionDisplay();
+        }
+
+        public void SendGCode(string gcode)
+        {
+            if (IsFarmBotConnected == false)
+                return;
+
+            ShowMessage(gcode, 1000);
+            FarmBotSerialPort.WriteLine(gcode);
+        }
+
+        private void btY_Click(object sender, EventArgs e)
+        {
+            String gcode = "G28 Y";
+            Y_EndActuator = 0;
+            SendGCode(gcode);
+            UpdatePbEndActuator();
+            UpdatePositionDisplay();
+        }
+
+        private void btZ_Click(object sender, EventArgs e)
+        {
+            String gcode = "G28 Z";
+            Z_EndActuator = 0;
+            SendGCode(gcode);
+            UpdatePbEndActuator();
+            UpdatePositionDisplay();
+        }
+
+        private void tbZ_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                int.TryParse(tbZ.Text, out Z_EndActuator);
+                SendGCode("G00 Z" + Z_EndActuator.ToString());
+
+                UpdatePositionDisplay();
+            }
+        }
+
+        private void tbY_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                int.TryParse(tbY.Text, out Y_EndActuator);
+                SendGCode("G00 Y" + Y_EndActuator.ToString());
+
+                UpdatePositionDisplay();
+                UpdatePbEndActuator();
+            }
+        }
+
+        private void tbX_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                int.TryParse(tbX.Text, out X_EndActuator);
+                SendGCode("G00 X" + X_EndActuator.ToString());
+
+                UpdatePositionDisplay();
+                UpdatePbEndActuator();
+            }
+        }
+
+        private void btPump_Click(object sender, EventArgs e)
+        {
+            string gcode = "G41 P" + tbWaterSpendTime.Text;
+            SendGCode(gcode);
+        }
+
+        private void cbFan_CheckedChanged(object sender, EventArgs e)
+        {
+            string gcode = "G43 F";
+            if (cbFan.Checked == true)
+            {
+                gcode += "1";
+            }
+            else
+            {
+                gcode += "0";
+            }
+            SendGCode(gcode);
+        }
+
+        private void cbLamp_CheckedChanged(object sender, EventArgs e)
+        {
+            string gcode = "G44 L";
+            if (cbLamp.Checked == true)
+            {
+                gcode += "1";
+            }
+            else
+            {
+                gcode += "0";
+            }
+            SendGCode(gcode);
+        }
+
+        private void cbVaccum_CheckedChanged(object sender, EventArgs e)
+        {
+            string gcode = "G42 V";
+            if (cbVaccum.Checked == true)
+            {
+                gcode += "1";
+            }
+            else
+            {
+                gcode += "0";
+            }
+            SendGCode(gcode);
+        }
+
+        private void cbSoilSensor_CheckedChanged(object sender, EventArgs e)
+        {
+            string gcode = "G40 S";
+            if (cbSoilSensor.Checked == true)
+            {
+                gcode += "90";
+            }
+            else
+            {
+                gcode += "0";
+            }
+            SendGCode(gcode);
+        }
+
     }
 }
