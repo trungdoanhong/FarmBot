@@ -597,7 +597,6 @@ void VariableText::SetValue(float value)
 	{
 		SetText(String(mValue));
 	}
-	IsTextChanged = true;
 }
 
 float VariableText::GetValue()
@@ -632,7 +631,6 @@ void VariableText::Decrease()
 	{
 		SetText(String(mValue));
 	}
-	IsTextChanged = true;
 
 	
 }
@@ -664,7 +662,6 @@ void VariableText::Increase()
 	{
 		SetText(String(mValue));
 	}
-	IsTextChanged = true;
 }
 
 void VariableText::SetText(String text)

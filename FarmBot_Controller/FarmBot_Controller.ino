@@ -59,13 +59,13 @@ VariableText* vtZ;
 FunctionText* ftPump;
 VariableText* vtPumpValue;
 FunctionText* ftVaccum;
-VariableText* vtVaccumValue;
+Label* lbVaccumValue;
 FunctionText* ftLamp;
-VariableText* vtLampValue;
+Label* lbLampValue;
 FunctionText* ftFan;
-VariableText* vtFanValue;
+Label* lbFanValue;
 FunctionText* ftServo;
-VariableText* vtServoValue;
+Label* lbServoValue;
 
 SubMenu* smWaterTime[3];
 Label* lbMaxTemp[3];
@@ -160,7 +160,7 @@ void setup()
 
 		lbMove = new Label(ThirdMenu, "Move:", 1, 1);
 		vtMoveValue = new VariableText(ThirdMenu, 1, 8, 1);
-		lbUnit = new Label(ThirdMenu, "mm", 11, 1);
+		lbUnit = new Label(ThirdMenu, "mm", 12, 1);
 
 		lbX = new Label(ThirdMenu, "X", 0, 2);
 		vtX = new VariableText(ThirdMenu, 0, 1, 2);
@@ -171,14 +171,14 @@ void setup()
 
 		ftPump = new FunctionText(ThirdMenu, "P", 0, 3);
 		vtPumpValue = new VariableText(ThirdMenu, 1, 1, 3);
-		ftVaccum = new FunctionText(ThirdMenu, "V", 6, 3);
-		vtVaccumValue = new VariableText(ThirdMenu, 0, 7, 3);
-		ftFan = new FunctionText(ThirdMenu, "F", 10, 3);
-		vtFanValue = new VariableText(ThirdMenu, 0, 11, 3);
-		ftLamp = new FunctionText(ThirdMenu, "L", 14, 3);
-		vtLampValue = new VariableText(ThirdMenu, 0, 15, 3);
-		ftServo = new FunctionText(ThirdMenu, "S", 18, 3);
-		vtServoValue = new VariableText(ThirdMenu, 90, 19, 3);
+		ftVaccum = new FunctionText(ThirdMenu, "V", 4, 3);
+		lbVaccumValue = new Label(ThirdMenu, "0", 5, 3);
+		ftFan = new FunctionText(ThirdMenu, "F", 8, 3);
+		lbFanValue = new Label(ThirdMenu, "0", 9, 3);
+		ftLamp = new FunctionText(ThirdMenu, "L", 12, 3);
+		lbLampValue = new Label(ThirdMenu, "0", 13, 3);
+		ftServo = new FunctionText(ThirdMenu, "S", 16, 3);
+		lbServoValue = new Label(ThirdMenu, "0", 17, 3);
 
 		ftHome->Function = SendHomeGCode;
 		ftX->Function = SendXHomeGCode;
@@ -196,11 +196,6 @@ void setup()
 		ftLamp->Function = SendLampGcode;
 		ftServo->Function = SendServoGcode;
 		vtPumpValue->Max = 0;
-		vtVaccumValue->Max = 0;
-		vtFanValue->Max = 0;
-		vtLampValue->Max = 0;
-		vtServoValue->Max = 90;
-		vtServoValue->Resolution = 90;
 	}
 	
 	LCDMenu.Init(&lcd, "FarmBot Controller");
@@ -427,25 +422,66 @@ void ChangeMovingWidth()
 
 void SendPumpGcode()
 {
-
+	String gcode = String("") + "G41 P" + String((int)vtPumpValue->GetValue()*1000);
+	Serial1.println(gcode);
 }
 
 void SendVaccumGcode()
 {
+	if (lbVaccumValue->Text == "0")
+	{
+		lbVaccumValue->SetText("1");
+	}
+	else
+	{
+		lbVaccumValue->SetText("0");
+	}
 
+	String gcode = String("") + "G42 V" + lbVaccumValue->Text;
+	Serial1.println(gcode);
 }
 
 void SendFanGcode()
 {
+	if (lbFanValue->Text == "0")
+	{
+		lbFanValue->SetText("1");
+	}
+	else
+	{
+		lbFanValue->SetText("0");
+	}
 
+	String gcode = String("") + "G43 F" + lbFanValue->Text;
+	Serial1.println(gcode);
 }
 
 void SendLampGcode()
 {
+	if (lbLampValue->Text == "0")
+	{
+		lbLampValue->SetText("1");
+	}
+	else
+	{
+		lbLampValue->SetText("0");
+	}
 
+	String gcode = String("") + "G44 L" + lbLampValue->Text;
+	Serial1.println(gcode);
 }
 
 void SendServoGcode()
 {
+	if (lbServoValue->Text == "0")
+	{
+		lbServoValue->SetText("90");
+	}
+	else
+	{
+		lbServoValue->SetText("0");
+	}
 
+	String gcode = String("") + "G40 S" + lbServoValue->Text;
+	Serial1.println(gcode);
 }

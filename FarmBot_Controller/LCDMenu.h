@@ -65,6 +65,8 @@ public:
 	uint8_t Row;
 	String Text;
 	String oldText;
+private:
+
 
 };
 
