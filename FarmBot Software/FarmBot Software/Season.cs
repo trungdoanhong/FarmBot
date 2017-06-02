@@ -40,6 +40,7 @@ namespace FarmBot_Software
         public String Name { get; set; }
         public int MaxTemperature { get; set; }
         public int MaxHumidity { get; set; }
+        public int MinHumidity { get; set; }
         public List<Time> TimeForWaterList;
     }
 

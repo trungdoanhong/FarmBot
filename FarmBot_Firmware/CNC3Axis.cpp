@@ -308,13 +308,13 @@ void CNC3AxisClass::Move(uint16_t xPos, uint16_t yPos, uint16_t zPos)
 
 	x_Offset = abs(x_Offset);
 	y_Offset = abs(y_Offset);
-	y_Offset = abs(y_Offset);
+	z_Offset = abs(z_Offset);
 
 	double lengthOfRoad = sqrt(pow(x_Offset, 2) + pow(y_Offset, 2) + pow(z_Offset, 2));
 	double timeForCompleteRoad = lengthOfRoad / FeedRate;
-	double timeForCompleteXRoad = x_Offset / X_MaxFeedRate;
-	double timeForCompleteYRoad = y_Offset / Y_MaxFeedRate;
-	double timeForCompleteZRoad = z_Offset / Z_MaxFeedRate;
+	double timeForCompleteXRoad = (double)x_Offset / X_MaxFeedRate;
+	double timeForCompleteYRoad = (double)y_Offset / Y_MaxFeedRate;
+	double timeForCompleteZRoad = (double)z_Offset / Z_MaxFeedRate;
 
 	if (timeForCompleteRoad < timeForCompleteXRoad)
 	{
@@ -366,7 +366,7 @@ void CNC3AxisClass::Move(uint16_t xPos, uint16_t yPos, uint16_t zPos)
 	{
 		Z_Position = zPos;
 		Z_StepsToJumpAllRoad = (uint32_t)z_Offset * (uint32_t)Z_StepsPerMm;
-		double z_TimeForJumpOneStep = timeForCompleteZRoad / Z_StepsToJumpAllRoad;
+		double z_TimeForJumpOneStep = (float)1 / (Z_MaxFeedRate * Z_StepsPerMm); //timeForCompleteZRoad / Z_StepsToJumpAllRoad;
 
 		if (IsRunningHome == true)
 		{

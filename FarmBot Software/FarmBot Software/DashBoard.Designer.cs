@@ -64,7 +64,7 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
-            this.tbHumiForWater = new System.Windows.Forms.TextBox();
+            this.tbHumiForFan = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.button9 = new System.Windows.Forms.Button();
@@ -97,6 +97,10 @@
             this.label1 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel7 = new System.Windows.Forms.Panel();
+            this.panel8 = new System.Windows.Forms.Panel();
+            this.tbHumiForMist = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pbGarden)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbEndActuator)).BeginInit();
             this.panel1.SuspendLayout();
@@ -108,6 +112,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel2.SuspendLayout();
             this.panel7.SuspendLayout();
+            this.panel8.SuspendLayout();
             this.SuspendLayout();
             // 
             // btTestControlBoard
@@ -352,6 +357,7 @@
             this.tbTreeName.Name = "tbTreeName";
             this.tbTreeName.Size = new System.Drawing.Size(157, 20);
             this.tbTreeName.TabIndex = 1;
+            this.tbTreeName.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tbTreeName_KeyDown);
             // 
             // lbTreeName
             // 
@@ -470,6 +476,7 @@
             this.tbTempForWater.Name = "tbTempForWater";
             this.tbTempForWater.Size = new System.Drawing.Size(54, 20);
             this.tbTempForWater.TabIndex = 1;
+            this.tbTempForWater.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tbTempForWater_KeyDown);
             // 
             // label7
             // 
@@ -496,7 +503,7 @@
             // panel4
             // 
             this.panel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(66)))), ((int)(((byte)(100)))));
-            this.panel4.Controls.Add(this.tbHumiForWater);
+            this.panel4.Controls.Add(this.tbHumiForFan);
             this.panel4.Controls.Add(this.label8);
             this.panel4.Controls.Add(this.label9);
             this.panel4.Location = new System.Drawing.Point(465, 377);
@@ -504,12 +511,13 @@
             this.panel4.Size = new System.Drawing.Size(269, 51);
             this.panel4.TabIndex = 12;
             // 
-            // tbHumiForWater
+            // tbHumiForFan
             // 
-            this.tbHumiForWater.Location = new System.Drawing.Point(171, 16);
-            this.tbHumiForWater.Name = "tbHumiForWater";
-            this.tbHumiForWater.Size = new System.Drawing.Size(54, 20);
-            this.tbHumiForWater.TabIndex = 1;
+            this.tbHumiForFan.Location = new System.Drawing.Point(171, 16);
+            this.tbHumiForFan.Name = "tbHumiForFan";
+            this.tbHumiForFan.Size = new System.Drawing.Size(54, 20);
+            this.tbHumiForFan.TabIndex = 1;
+            this.tbHumiForFan.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tbHumiForFan_KeyDown);
             // 
             // label8
             // 
@@ -529,9 +537,9 @@
             this.label9.ForeColor = System.Drawing.Color.White;
             this.label9.Location = new System.Drawing.Point(12, 17);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(129, 17);
+            this.label9.Size = new System.Drawing.Size(115, 17);
             this.label9.TabIndex = 0;
-            this.label9.Text = "Humidity For Water";
+            this.label9.Text = "Humidity For Fan";
             // 
             // button9
             // 
@@ -545,6 +553,7 @@
             this.button9.TabIndex = 2;
             this.button9.Text = "Load";
             this.button9.UseVisualStyleBackColor = false;
+            this.button9.Click += new System.EventHandler(this.button9_Click);
             // 
             // btUpload
             // 
@@ -870,6 +879,47 @@
             this.panel7.Size = new System.Drawing.Size(86, 108);
             this.panel7.TabIndex = 20;
             // 
+            // panel8
+            // 
+            this.panel8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(66)))), ((int)(((byte)(100)))));
+            this.panel8.Controls.Add(this.tbHumiForMist);
+            this.panel8.Controls.Add(this.label2);
+            this.panel8.Controls.Add(this.label4);
+            this.panel8.Location = new System.Drawing.Point(465, 446);
+            this.panel8.Name = "panel8";
+            this.panel8.Size = new System.Drawing.Size(269, 51);
+            this.panel8.TabIndex = 12;
+            // 
+            // tbHumiForMist
+            // 
+            this.tbHumiForMist.Location = new System.Drawing.Point(171, 16);
+            this.tbHumiForMist.Name = "tbHumiForMist";
+            this.tbHumiForMist.Size = new System.Drawing.Size(54, 20);
+            this.tbHumiForMist.TabIndex = 1;
+            this.tbHumiForMist.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tbHumiForMist_KeyDown);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.ForeColor = System.Drawing.Color.White;
+            this.label2.Location = new System.Drawing.Point(234, 18);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(20, 17);
+            this.label2.TabIndex = 0;
+            this.label2.Text = "%";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.ForeColor = System.Drawing.Color.White;
+            this.label4.Location = new System.Drawing.Point(12, 17);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(116, 17);
+            this.label4.TabIndex = 0;
+            this.label4.Text = "Humidity For Mist";
+            // 
             // DashBoard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -887,6 +937,7 @@
             this.Controls.Add(this.rbNone);
             this.Controls.Add(this.panel6);
             this.Controls.Add(this.panel5);
+            this.Controls.Add(this.panel8);
             this.Controls.Add(this.panel4);
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.pnTimeForWater);
@@ -941,6 +992,8 @@
             this.panel2.PerformLayout();
             this.panel7.ResumeLayout(false);
             this.panel7.PerformLayout();
+            this.panel8.ResumeLayout(false);
+            this.panel8.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -982,7 +1035,7 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Panel panel4;
-        private System.Windows.Forms.TextBox tbHumiForWater;
+        private System.Windows.Forms.TextBox tbHumiForFan;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Button button9;
@@ -1015,6 +1068,10 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel panel7;
+        private System.Windows.Forms.Panel panel8;
+        private System.Windows.Forms.TextBox tbHumiForMist;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label4;
     }
 }
 

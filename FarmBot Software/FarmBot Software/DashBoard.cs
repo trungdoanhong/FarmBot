@@ -55,7 +55,7 @@ namespace FarmBot_Software
 
         private void btExit_Click(object sender, EventArgs e)
         {
-            Application.Exit();
+            Environment.Exit(Environment.ExitCode);
         }
 
         private void btTestControlBoard_Click(object sender, EventArgs e)
@@ -202,11 +202,23 @@ namespace FarmBot_Software
                 return;
             LoadingTreeIndex = -1;
             LoadingSeason = LoadingDatabaseXml.LoadSeason(cbSeasonName.Text);
-            for (int i = 0; i < 24; i++ )
+
+            UpdateDisplay();
+        }
+
+        private void UpdateDisplay()
+        {
+            LoadingTreeIndex = -1;
+            UpdateGardenDisplay();            
+            btTree1_Click(null, null);
+        }
+
+        private void UpdateGardenDisplay()
+        {
+            for (int i = 0; i < 24; i++)
             {
                 LoadingGarden.SetTreeIcon(i, (GardenCell)LoadingSeason.Garden[i]);
             }
-            btTree1_Click(null, null);
         }
 
         public void LoadTreeData(int order)
@@ -215,14 +227,15 @@ namespace FarmBot_Software
             {
                 LoadingSeason.Tree[LoadingTreeIndex].Name = tbTreeName.Text;
                 LoadingSeason.Tree[LoadingTreeIndex].MaxTemperature = int.Parse(tbTempForWater.Text);
-                LoadingSeason.Tree[LoadingTreeIndex].MaxHumidity = int.Parse(tbHumiForWater.Text);
+                LoadingSeason.Tree[LoadingTreeIndex].MaxHumidity = int.Parse(tbHumiForFan.Text);
             }
 
             RemoveAllTimeControls();
 
             tbTreeName.Text = LoadingSeason.Tree[order].Name;
             tbTempForWater.Text = LoadingSeason.Tree[order].MaxTemperature.ToString();
-            tbHumiForWater.Text = LoadingSeason.Tree[order].MaxHumidity.ToString();
+            tbHumiForFan.Text = LoadingSeason.Tree[order].MaxHumidity.ToString();
+            tbHumiForMist.Text = LoadingSeason.Tree[order].MinHumidity.ToString();
 
             for( int i = 0; i < LoadingSeason.Tree[order].TimeForWaterList.Count; i++ )
             {
@@ -283,9 +296,11 @@ namespace FarmBot_Software
         {
             if (LoadingSeason == null)
                 return;
+
             LoadingSeason.Tree[LoadingTreeIndex].Name = tbTreeName.Text;
             LoadingSeason.Tree[LoadingTreeIndex].MaxTemperature = int.Parse(tbTempForWater.Text);
-            LoadingSeason.Tree[LoadingTreeIndex].MaxHumidity = int.Parse(tbHumiForWater.Text);
+            LoadingSeason.Tree[LoadingTreeIndex].MaxHumidity = int.Parse(tbHumiForFan.Text);
+            LoadingSeason.Tree[LoadingTreeIndex].MinHumidity = int.Parse(tbHumiForMist.Text);
 
             for (int i = 0; i < 24; i++ )
             {
@@ -323,7 +338,7 @@ namespace FarmBot_Software
                 cbSeasonName.Text = "";
                 tbTreeName.Text = "";
                 tbTempForWater.Text = "";
-                tbHumiForWater.Text = "";
+                tbHumiForFan.Text = "";
                 RemoveAllTimeControls();
                 LoadingSeason = null;
             }
@@ -428,6 +443,21 @@ namespace FarmBot_Software
                 }
             }
 
+            if (receiveString.Length > "Json".Length)
+            {
+                if (receiveString.Substring(0, "Json".Length) == "Json")
+                {
+                    receiveString = receiveString.Substring("Json".Length + 1);
+                    var serializeObject = new JavaScriptSerializer();
+                    LoadingSeason = serializeObject.Deserialize<Season>(receiveString);
+                    this.Invoke((MethodInvoker)delegate()
+                    {
+                        UpdateDisplay();
+                    }); 
+                    ShowMessage("Load Done", 3000);
+                }
+            }
+
             
         }
 
@@ -440,7 +470,14 @@ namespace FarmBot_Software
             else
             {
                 ShowMessage("FarmBot closed " + FarmBotSerialPort.PortName, 2000);
-                FarmBotSerialPort.Close();
+                try
+                {
+                    FarmBotSerialPort.Close();
+                }
+                catch
+                {
+
+                }
                 IsFarmBotConnected = false;
                 btConnect.Text = "Connect";
                 lbConnectState.Text = "FarmBot is disconnected !";
@@ -471,15 +508,14 @@ namespace FarmBot_Software
 
         private void btUpload_Click(object sender, EventArgs e)
         {
+            if (FarmBotSerialPort.IsOpen == false)
+                return;
             ShowMessage("Uploading ...", 5000);
             String jsonString = ""; // We will send this tring to Farmbot Control Box
 
             var serializeObject = new JavaScriptSerializer();
             jsonString = serializeObject.Serialize(LoadingSeason);
-            Season seasonFomJson = serializeObject.Deserialize<Season>(jsonString);
-            FarmBotSerialPort.BaudRate = 9600;
-            FarmBotSerialPort.PortName = "COM2";
-            FarmBotSerialPort.Open();
+            Season seasonFromJson = serializeObject.Deserialize<Season>(jsonString);
             FarmBotSerialPort.WriteLine(jsonString);
             ShowMessage("Done", 1000);
         }
@@ -496,7 +532,10 @@ namespace FarmBot_Software
             X_EndActuator = 0;
             Y_EndActuator = 0;
             Z_EndActuator = 0;
-            SendGCode(gcode);
+            //SendGCode(gcode);
+            SendGCode("G28 Z");
+            Thread.Sleep(100);
+            SendGCode("G28 X Y");
             UpdatePbEndActuator();
             UpdatePositionDisplay();
         }
@@ -632,6 +671,50 @@ namespace FarmBot_Software
                 gcode += "0";
             }
             SendGCode(gcode);
+        }
+
+        private void tbTreeName_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData != Keys.Enter)
+                return;
+
+            LoadingSeason.Tree[LoadingTreeIndex].Name = tbTreeName.Text;
+            ShowMessage("Edit", 1000);
+        }
+
+        private void tbTempForWater_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData != Keys.Enter)
+                return;
+
+            LoadingSeason.Tree[LoadingTreeIndex].MaxTemperature = int.Parse(tbTempForWater.Text);
+            ShowMessage("Edit", 1000);
+        }
+
+        private void tbHumiForFan_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData != Keys.Enter)
+                return;
+
+            LoadingSeason.Tree[LoadingTreeIndex].MaxHumidity = int.Parse(tbHumiForFan.Text);
+            ShowMessage("Edit", 1000);
+        }
+
+        private void tbHumiForMist_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData != Keys.Enter)
+                return;
+
+            LoadingSeason.Tree[LoadingTreeIndex].MinHumidity = int.Parse(tbHumiForMist.Text);
+            ShowMessage("Edit", 1000);
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            if (FarmBotSerialPort.IsOpen == false)
+                return;
+            FarmBotSerialPort.WriteLine("Load");
+            ShowMessage("Loading ...", 1000);
         }
 
     }

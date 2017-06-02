@@ -8,8 +8,8 @@
 
 #define SOIL_SENSOR_SERVO_PIN 6
 #define SOIL_SENSOR_PIN A13
-#define LAMP_PIN 11
-#define FAN_PIN 8
+#define LAMP_PIN 26
+#define FAN_PIN 28
 #define VACCUM_PIN 9
 #define PUMP_PIN 10
 
@@ -40,7 +40,7 @@ void setup()
 
 	CNC3Axis.Init();
 	CNC3Axis.SetAxisStepsPerUnit(80, 80, 400);
-	CNC3Axis.SetMaxFeedRate(50, 50, 5);
+	CNC3Axis.SetMaxFeedRate(50, 50, 10);
 	CNC3Axis.SetMaxPosition(300, 800, 200);
 	CNC3Axis.SetHomeDirection(LEFT, BACKWARD, UP);
 	CNC3Axis.FeedRate = 50;

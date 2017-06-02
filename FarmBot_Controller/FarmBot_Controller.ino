@@ -6,6 +6,8 @@
 #include "DS1307RTC.h"
 #include "TaskScheduler.h"
 #include "SerialCommand.h"
+#include <StandardCplusplus.h> // Copy StandardCplusplus folder to Mydocument\Arduino\libraries to use below libraries
+#include <vector>
 
 #define RETURN  7
 #define LEFT    9
@@ -13,6 +15,8 @@
 #define DOWN    10
 #define UP      12
 #define ENTER   8 
+
+using namespace std;
 
 SerialCommand SerialCMD;
 SerialCommand SerialCMD1;
@@ -23,6 +27,12 @@ LiquidCrystal_I2C lcd(0x27, 20, 4);
 
 tmElements_t TodayTime;
 
+typedef struct
+{
+	Label* lbTime;
+	FunctionText* ftDelete;
+} TimeControl;
+
 OriginMenu* FirstMenu;
 Label* lbToday;
 Label* lbDateValue;
@@ -30,65 +40,67 @@ Label* lbTimeValue;
 
 OriginMenu* SecondMenu;
 Label* lbSeasonName;
-SubMenu* smTree1;
-SubMenu* smTree2;
-SubMenu* smTree3;
+SubMenu* smTree[3];
 
-SubMenu* smWaterTime1;
-Label* lbMaxTemp1;
-Label* lbMaxHumi1;
-VariableText* vtMaxTempValue1;
-VariableText* vtMaxHumiValue1;
+OriginMenu* ThirdMenu;
+FunctionText* ftHome;
+FunctionText* ftX;
+FunctionText* ftY;
+FunctionText* ftZ;
+Label* lbMove;
+VariableText* vtMoveValue;
+Label* lbUnit;
+Label* lbX;
+Label* lbY;
+Label* lbZ;
+VariableText* vtX;
+VariableText* vtY;
+VariableText* vtZ;
+FunctionText* ftPump;
+VariableText* vtPumpValue;
+FunctionText* ftVaccum;
+FunctionText* ftLamp;
+FunctionText* ftFan;
+FunctionText* ftServo;
 
-SubMenu* smWaterTime2;
-Label* lbMaxTemp2;
-Label* lbMaxHumi2;
-VariableText* vtMaxTempValue2;
-VariableText* vtMaxHumiValue2;
 
-SubMenu* smWaterTime3;
-Label* lbMaxTemp3;
-Label* lbMaxHumi3;
-VariableText* vtMaxTempValue3;
-VariableText* vtMaxHumiValue3;
+SubMenu* smWaterTime[3];
+Label* lbMaxTemp[3];
+Label* lbMaxHumi[3];
+Label* lbMinHumi[3];
+VariableText* vtMaxTempValue[3];
+VariableText* vtMaxHumiValue[3];
+VariableText* vtMinHumiValue[3];
 
-FunctionText* ftAddTime1;
-FunctionText* ftAddTime2;
-FunctionText* ftAddTime3;
+FunctionText* ftAddTime[3];
+VariableText* vtAddHour[3];
+Label* lbAddColon[3];
+VariableText* vtAddMinute[3];
 
-typedef struct
-{
-	float* Hour;
-	float* Minute;
-} TimeInDay;
-
-typedef struct
-{
-	VariableText* vtHour;
-	Label* lbColon;
-	VariableText* vtMinute;
-	FunctionText* ftDelete;
-} TimeInDayWidget;
-
-typedef struct
-{
-	uint8_t TimeNumber = 0;
-	TimeInDay TimeList[6];
-	float* MaxTemp_ptr;
-	float* MaxHumi_ptr;
-} Tree;
-
-Tree TreeList[3];
-TimeInDayWidget TimeWidgetList[3][6];
-uint8_t NumberOfTime[3] = { 0, 0, 0 };
+void(*AddTimes[3])();
+void(*DeleteTimes[3])();
+vector<TimeControl> TimeControls[3];
 
 void setup()
 {
+	AddTimes[0] = AddTime1;
+	AddTimes[1] = AddTime2;
+	AddTimes[2] = AddTime3;
+	
+	DeleteTimes[0] = DeleteTime1;
+	DeleteTimes[1] = DeleteTime2;
+	DeleteTimes[2] = DeleteTime3;
+
+	Serial.begin(9600);
+	Serial1.begin(9600);
+
 	SerialCMD = SerialCommand(&Serial, 9600);
 	SerialCMD1 = SerialCommand(&Serial1, 9600);
 
 	SerialCMD.ForwardData(&Serial1, 9600);
 	SerialCMD1.ForwardData(&Serial, 9600);
+
+	
 
 	FirstMenu = new OriginMenu();
 	{
@@ -100,62 +112,77 @@ void setup()
 	SecondMenu = new OriginMenu();
 	{
 		lbSeasonName = new Label(SecondMenu, "Season 1", 7, 0);
-		smTree1 = new SubMenu(SecondMenu, "Tree 1", 0, 2);
+
+		for (uint8_t i = 0; i < 3; i++)
 		{
-			smWaterTime1 = new SubMenu(smTree1->Container, "Time for water", 3, 0);
+			smTree[i] = new SubMenu(SecondMenu, "Tree" + String(i + 1), 7 * i, 2);
 			{
-				ftAddTime1 = new FunctionText(smWaterTime1->Container, "Add", 0, 0);
-				ftAddTime1->Function = AddTime1;
+				smWaterTime[i] = new SubMenu(smTree[i]->Container, "Time for water", 3, 0);
+				{
+					ftAddTime[i] = new FunctionText(smWaterTime[i]->Container, "Add", 0, 0);
+					ftAddTime[i]->Function = AddTimes[i];
+
+					vtAddHour[i] = new VariableText(smWaterTime[i]->Container, 12, 10, 0);
+					lbAddColon[i] = new Label(smWaterTime[i]->Container, ":", 12, 0);
+					vtAddMinute[i] = new VariableText(smWaterTime[i]->Container, 15, 13, 0);
+
+					vtAddHour[i]->Max = 23;
+					vtAddHour[i]->Min = 0;
+
+					vtAddMinute[i]->Max = 59;
+					vtAddMinute[i]->Min = 0;
+				}
+
+				lbMaxTemp[i] = new Label(smTree[i]->Container, "Max temp", 0, 1);
+
+				vtMaxTempValue[i] = new VariableText(smTree[i]->Container, 40, 10, 1);
+
+				lbMaxHumi[i] = new Label(smTree[i]->Container, "Max humi", 0, 2);
+
+				vtMaxHumiValue[i] = new VariableText(smTree[i]->Container, 60, 10, 2);
+
+				lbMinHumi[i] = new Label(smTree[i]->Container, "Min humi", 0, 3);
+
+				vtMinHumiValue[i] = new VariableText(smTree[i]->Container, 40, 10, 3);
 			}
-			lbMaxTemp1 = new Label(smTree1->Container, "Max temp", 0, 1);
-
-			vtMaxTempValue1 = new VariableText(smTree1->Container, 33.21, 10, 1); 
-			TreeList[0].MaxTemp_ptr = &vtMaxTempValue1->Value;
-
-			lbMaxHumi1 = new Label(smTree1->Container, "Max humi" ,0 , 2);
-
-			vtMaxHumiValue1 = new VariableText(smTree1->Container, 60.2, 10, 2); 
-			TreeList[0].MaxHumi_ptr = &vtMaxHumiValue1->Value;
 		}
-		smTree2 = new SubMenu(SecondMenu, "Tree 2", 7, 2);
-		{
-			smWaterTime2 = new SubMenu(smTree2->Container, "Time for water", 3, 0);
-			{
-				ftAddTime2 = new FunctionText(smWaterTime2->Container, "Add", 0, 0);
-				ftAddTime2->Function = AddTime2;
-			}
-			lbMaxTemp2 = new Label(smTree2->Container, "Max temp", 0, 1);
+	}
 
-			vtMaxTempValue2 = new VariableText(smTree2->Container, 33, 10, 1);
-			TreeList[1].MaxTemp_ptr = &vtMaxTempValue2->Value;
+	ThirdMenu = new OriginMenu();
+	{
+		ftHome = new FunctionText(ThirdMenu, "Home", 1, 0);
+		ftX = new FunctionText(ThirdMenu, "X", 8, 0);
+		ftY = new FunctionText(ThirdMenu, "Y", 12, 0);
+		ftZ = new FunctionText(ThirdMenu, "Z", 16, 0);
 
-			lbMaxHumi2 = new Label(smTree2->Container, "Max humi", 0, 2);
+		lbMove = new Label(ThirdMenu, "Move:", 1, 1);
+		vtMoveValue = new VariableText(ThirdMenu, 1, 8, 1);
+		lbUnit = new Label(ThirdMenu, "mm", 11, 1);
 
-			vtMaxHumiValue2 = new VariableText(smTree2->Container, 60, 10, 2);
-			TreeList[1].MaxHumi_ptr = &vtMaxHumiValue2->Value;
-		}
-		smTree3 = new SubMenu(SecondMenu, "Tree 3", 14, 2);
-		{
-			smWaterTime3 = new SubMenu(smTree3->Container, "Time for water", 3, 0);
-			{
-				ftAddTime3 = new FunctionText(smWaterTime3->Container, "Add", 0, 0);
-				ftAddTime3->Function = AddTime3;
-			}
-			lbMaxTemp3 = new Label(smTree3->Container, "Max temp", 0, 1);
+		lbX = new Label(ThirdMenu, "X", 0, 2);
+		vtX = new VariableText(ThirdMenu, 0, 1, 2);
+		lbY = new Label(ThirdMenu, "Y", 7, 2);
+		vtY = new VariableText(ThirdMenu, 0, 8, 2);
+		lbZ = new Label(ThirdMenu, "Z", 14, 2);
+		vtZ = new VariableText(ThirdMenu, 0, 15, 2);
 
-			vtMaxTempValue3 = new VariableText(smTree3->Container, 33, 10, 1);
-			TreeList[2].MaxTemp_ptr = &vtMaxTempValue3->Value;
+		ftPump = new FunctionText(ThirdMenu, "P", 0, 3);
+		vtPumpValue = new VariableText(ThirdMenu, 1, 1, 3);
+		ftVaccum = new FunctionText(ThirdMenu, "V", 6, 3);
+		ftFan = new FunctionText(ThirdMenu, "F", 10, 3);
+		ftLamp = new FunctionText(ThirdMenu, "L", 14, 3);
+		ftServo = new FunctionText(ThirdMenu, "S", 18, 3);
 
-			lbMaxHumi3 = new Label(smTree3->Container, "Max humi", 0, 2);
+		ftHome->Function = SendHomeGCode;
+		vtX->HandleWhenValueChange = SendMoveXGCode;
+		
 
-			vtMaxHumiValue3 = new VariableText(smTree3->Container, 60, 10, 2);
-			TreeList[2].MaxHumi_ptr = &vtMaxHumiValue3->Value;
-		}
 	}
 	
 	LCDMenu.Init(&lcd, "FarmBot Controller");
 	LCDMenu.AddMenu(FirstMenu);
 	LCDMenu.AddMenu(SecondMenu);
+	LCDMenu.AddMenu(ThirdMenu);
 	LCDMenu.SetCurrentMenu(FirstMenu);
 	LCDMenu.UpdateScreen();
 
@@ -181,99 +208,43 @@ void loop()
 
 void AddTime(uint8_t treeOrder)
 {
-	if (NumberOfTime[treeOrder] == 6)
-		return;
+	if (TimeControls[treeOrder].size() == 6)
+				return;
 
-	uint8_t x = (NumberOfTime[treeOrder] % 2) * 10;
-	uint8_t y = NumberOfTime[treeOrder] / 2 + 1;
+	uint8_t x = (TimeControls[treeOrder].size() % 2) * 10;
+	uint8_t y = TimeControls[treeOrder].size() / 2 + 1;
 
-	AbstractMenu* tempMenu;
+	TimeControl addingTimeControl;
+	addingTimeControl.lbTime = new Label(smWaterTime[treeOrder]->Container, vtAddHour[treeOrder]->Text + ":" + vtAddMinute[treeOrder]->Text, x, y);
+	addingTimeControl.ftDelete = new FunctionText(smWaterTime[treeOrder]->Container, "x", x + 6, y);
+	addingTimeControl.ftDelete->Function = DeleteTimes[treeOrder];
 
-	switch (treeOrder)
-	{
-	case 0:
-		tempMenu = smWaterTime1->Container;
-		break;
-	case 1:
-		tempMenu = smWaterTime2->Container;
-		break;
-	case 2:
-		tempMenu = smWaterTime3->Container;
-		break;
-	default:
-		break;
-	}
+	TimeControls[treeOrder].push_back(addingTimeControl);
 
-	TimeWidgetList[treeOrder][NumberOfTime[treeOrder]].vtHour = new VariableText(tempMenu, 12, x, y);
-	TimeWidgetList[treeOrder][NumberOfTime[treeOrder]].vtHour->Max = 12;
-	TimeWidgetList[treeOrder][NumberOfTime[treeOrder]].lbColon = new Label(tempMenu, ":", x + 2, y);
-	TimeWidgetList[treeOrder][NumberOfTime[treeOrder]].vtMinute = new VariableText(tempMenu, 15, x + 3, y);
-	TimeWidgetList[treeOrder][NumberOfTime[treeOrder]].vtMinute->Max = 59;
-	TimeWidgetList[treeOrder][NumberOfTime[treeOrder]].ftDelete = new FunctionText(tempMenu, "x", x + 6, y);
-	switch (treeOrder)
-	{
-	case 0:
-		TimeWidgetList[treeOrder][NumberOfTime[treeOrder]].ftDelete->Function = DeleteTime1;
-		break;
-	case 1:
-		TimeWidgetList[treeOrder][NumberOfTime[treeOrder]].ftDelete->Function = DeleteTime2;
-		break;
-	case 2:
-		TimeWidgetList[treeOrder][NumberOfTime[treeOrder]].ftDelete->Function = DeleteTime3;
-		break;
-	default:
-		break;
-	}
-
-	NumberOfTime[treeOrder]++;
-
-	TreeList[treeOrder].TimeNumber++;
-	uint8_t index = TreeList[treeOrder].TimeNumber - 1;
-	TreeList[treeOrder].TimeList[index].Hour = &(TimeWidgetList[treeOrder][index].vtHour->Value);
-	TreeList[treeOrder].TimeList[index].Minute = &(TimeWidgetList[treeOrder][index].vtMinute->Value);
 }
 
 void DeleteTime(uint8_t treeOder)
 {
-	uint8_t selectedTimeOrder = (LCDMenu.CurrentCursor.Y - 1) * 2 + (LCDMenu.CurrentCursor.X - 6) / 10;	
+	uint8_t selectedTimeOrder = (LCDMenu.CurrentCursor.Y - 1) * 2 + (LCDMenu.CurrentCursor.X - 6) / 10;
 
-	TimeInDayWidget tempTimeWidget;
-	tempTimeWidget.vtHour = TimeWidgetList[treeOder][selectedTimeOrder].vtHour;
-	tempTimeWidget.lbColon = TimeWidgetList[treeOder][selectedTimeOrder].lbColon;
-	tempTimeWidget.vtMinute = TimeWidgetList[treeOder][selectedTimeOrder].vtMinute;
-	tempTimeWidget.ftDelete = TimeWidgetList[treeOder][selectedTimeOrder].ftDelete;
+	smWaterTime[treeOder]->Container->DeleteElement(TimeControls[treeOder][selectedTimeOrder].lbTime);
+	smWaterTime[treeOder]->Container->DeleteElement(TimeControls[treeOder][selectedTimeOrder].ftDelete);
 
-	for (uint8_t i = selectedTimeOrder; i < NumberOfTime[treeOder] - 1; i++)
-	{	
+	TimeControls[treeOder].erase(TimeControls[treeOder].begin() + selectedTimeOrder);
+	UpdatePositionTimeControl(treeOder);
+	LCDMenu.ReLoadMenu();
+}
+
+void UpdatePositionTimeControl(uint8_t treeOder)
+{
+	for (uint8_t i = 0; i < TimeControls[treeOder].size(); i++)
+	{
 		uint8_t x = (i % 2) * 10;
 		uint8_t y = i / 2 + 1;
 
-		TimeWidgetList[treeOder][i].vtHour = TimeWidgetList[treeOder][i + 1].vtHour;
-		TimeWidgetList[treeOder][i].lbColon = TimeWidgetList[treeOder][i + 1].lbColon;
-		TimeWidgetList[treeOder][i].vtMinute = TimeWidgetList[treeOder][i + 1].vtMinute;
-		TimeWidgetList[treeOder][i].ftDelete = TimeWidgetList[treeOder][i + 1].ftDelete;
-
-		TimeWidgetList[treeOder][i].vtHour->SetPosition(x, y);
-		TimeWidgetList[treeOder][i].lbColon->SetPosition(x + 2, y);
-		TimeWidgetList[treeOder][i].vtMinute->SetPosition(x + 3, y);
-		TimeWidgetList[treeOder][i].ftDelete->SetPosition(x + 6, y);
+		TimeControls[treeOder][i].lbTime->SetPosition(x, y);
+		TimeControls[treeOder][i].ftDelete->SetPosition(x + 6, y);
 	}
-
-	smWaterTime1->Container->DeleteElement(tempTimeWidget.vtHour);
-	smWaterTime1->Container->DeleteElement(tempTimeWidget.lbColon);
-	smWaterTime1->Container->DeleteElement(tempTimeWidget.vtMinute);
-	smWaterTime1->Container->DeleteElement(tempTimeWidget.ftDelete);
-
-	LCDMenu.ReLoadMenu();
-
-	NumberOfTime[treeOder]--;
-
-	for (uint8_t i = selectedTimeOrder; i < TreeList[treeOder].TimeNumber - 1; i++)
-	{
-		TreeList[treeOder].TimeList[i].Hour = TreeList[treeOder].TimeList[i + 1].Hour;
-		TreeList[treeOder].TimeList[i].Minute = TreeList[treeOder].TimeList[i + 1].Minute;
-	}
-	TreeList[treeOder].TimeNumber--;
 }
 
 void DeleteTime1()
@@ -382,4 +353,66 @@ void ExecuteMenuButton()
 	{
 		LCDMenu.Enter();
 	}
+}
+
+void SendHomeGCode()
+{
+	Serial1.println("G28 Z");
+	Serial1.println("G28 X Y");
+}
+
+void SendXHomeGCode()
+{
+	Serial1.println("G28 X");
+}
+
+void SendYHomeGCode()
+{
+	Serial1.println("G28 Y");
+}
+
+void SendZHomeGCode()
+{
+	Serial1.println("G28 Z");
+}
+
+void SendMoveXGCode()
+{
+	String gcode = String("") + "G00 X" + String((int)vtX->GetValue());
+	Serial1.println(gcode);
+}
+
+void SendMoveYGCode()
+{
+
+}
+
+void SendMoveZGCode()
+{
+
+}
+
+void SendPumpGcode()
+{
+
+}
+
+void SendVaccumGcode()
+{
+
+}
+
+void SendFanGcode()
+{
+
+}
+
+void SendLampGcode()
+{
+
+}
+
+void SendServoGcode()
+{
+
 }

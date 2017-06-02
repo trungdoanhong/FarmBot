@@ -94,12 +94,18 @@ public:
 	void Increase();
 	DisplayElementType GetElementType();
 	void SetText(String text);
-
+	void SetValue(float value);
+	float GetValue();
+	void SetExternalValue(float* pExVal);
+	
 	float Resolution;
-	float Value;
 	bool IsSelected;
 	float Max;
 	float Min;
+	void(*HandleWhenValueChange)(void);
+private:
+	float* pExternalValue;
+	float mValue;
 };
 
 class FunctionText : public DisplayElement

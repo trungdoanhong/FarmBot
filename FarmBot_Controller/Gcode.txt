@@ -1,0 +1,9 @@
+Move: G00 [X] [Y] [Z]
+	  G01 [X] [Y] [Z]
+Home: G28 [X] [Y] [Z]
+Servo: G40 [S<value>]
+Pump:  G41 [P<value>]
+Vaccum:G42 [V<value>]
+Fan:   G43 [F<value>]
+Lamp:  G44 [L<value>]
+

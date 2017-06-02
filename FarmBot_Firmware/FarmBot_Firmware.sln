@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FarmBot_Firmware", "FarmBot
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "On_off_base_on_Time_Temperature_Humidity", "C:\Users\hoainiemthoau\Documents\Arduino\On_off_base_on_Time_Temperature_Humidity\On_off_base_on_Time_Temperature_Humidity.vcxproj", "{9A086671-80D4-42D4-90D7-A7B52CEBFA86}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Json_Serial_Serialize_and_Deserialize", "C:\Users\hoainiemthoau\Documents\Arduino\Json_Serial_Serialize_and_Deserialize\Json_Serial_Serialize_and_Deserialize.vcxproj", "{354855DB-CD8E-4E4F-A41F-C9F8DCBE24DD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -27,6 +29,10 @@ Global
 		{9A086671-80D4-42D4-90D7-A7B52CEBFA86}.Debug|Win32.Build.0 = Debug|Win32
 		{9A086671-80D4-42D4-90D7-A7B52CEBFA86}.Release|Win32.ActiveCfg = Release|Win32
 		{9A086671-80D4-42D4-90D7-A7B52CEBFA86}.Release|Win32.Build.0 = Release|Win32
+		{354855DB-CD8E-4E4F-A41F-C9F8DCBE24DD}.Debug|Win32.ActiveCfg = Debug|Win32
+		{354855DB-CD8E-4E4F-A41F-C9F8DCBE24DD}.Debug|Win32.Build.0 = Debug|Win32
+		{354855DB-CD8E-4E4F-A41F-C9F8DCBE24DD}.Release|Win32.ActiveCfg = Release|Win32
+		{354855DB-CD8E-4E4F-A41F-C9F8DCBE24DD}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

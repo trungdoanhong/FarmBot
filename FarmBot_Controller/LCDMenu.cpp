@@ -325,6 +325,8 @@ void LCDMenuClass::Enter()
 				return;							
 				break;
 			case FUNCTIONTEXT:
+				if (((FunctionText*)procEle)->Function == NULL)
+					break;
 				((FunctionText*)procEle)->Function();
 				break;
 			case VARIABLETEXT:
@@ -547,18 +549,20 @@ VariableText::VariableText(AbstractMenu* parent, float value, uint8_t col, uint8
 		}
 	}
 
-	Value = value;
+	mValue = value;
 	if ((Resolution - (int)Resolution) == 0)
 	{
-		SetText(String((int)Value));
+		SetText(String((int)mValue));
 	}
 	else
 	{
-		SetText(String(Value));
+		SetText(String(mValue));
 	}
 	IsSelected = false;
 
-	
+	HandleWhenValueChange = NULL;
+
+	pExternalValue = NULL;
 }
 
 DisplayElementType VariableText::GetElementType()
@@ -566,42 +570,99 @@ DisplayElementType VariableText::GetElementType()
 	return VARIABLETEXT;
 }
 
-void VariableText::Decrease()
+void VariableText::SetExternalValue(float* pExVal)
 {
-	Value = Value - Resolution;
+	this->pExternalValue = pExVal;
+}
 
-	if (Value < Min && Min < Max)
+void VariableText::SetValue(float value)
+{ 
+	mValue = value;
+
+	if (pExternalValue != NULL)
 	{
-		Value = Max;
+		*pExternalValue = mValue;
 	}
 
+	if (HandleWhenValueChange != NULL)
+	{
+		HandleWhenValueChange();
+	}
+	
 	if ((Resolution - (int)Resolution) == 0)
 	{
-		SetText(String((int)Value));
+		SetText(String((int)mValue));
 	}
 	else
 	{
-		SetText(String(Value));
+		SetText(String(mValue));
 	}
 	IsTextChanged = true;
 }
 
-void VariableText::Increase()
+float VariableText::GetValue()
 {
-	Value = Value + Resolution;
+	return mValue;
+}
 
-	if (Value > Max && Min < Max)
+void VariableText::Decrease()
+{
+	mValue = mValue - Resolution;
+
+	if (mValue < Min && Min < Max)
 	{
-		Value = Min;
+		mValue = Max;
+	}
+
+	if (pExternalValue != NULL)
+	{
+		*pExternalValue = mValue;
+	}
+
+	if (HandleWhenValueChange != NULL)
+	{
+		HandleWhenValueChange();
 	}
 
 	if ((Resolution - (int)Resolution) == 0)
 	{
-		SetText(String((int)Value));
+		SetText(String((int)mValue));
 	}
 	else
 	{
-		SetText(String(Value));
+		SetText(String(mValue));
+	}
+	IsTextChanged = true;
+
+	
+}
+
+void VariableText::Increase()
+{
+	mValue = mValue + Resolution;
+
+	if (mValue > Max && Min < Max)
+	{
+		mValue = Min;
+	}
+
+	if (pExternalValue != NULL)
+	{
+		*pExternalValue = mValue;
+	}
+
+	if (HandleWhenValueChange != NULL)
+	{
+		HandleWhenValueChange();
+	}
+
+	if ((Resolution - (int)Resolution) == 0)
+	{
+		SetText(String((int)mValue));
+	}
+	else
+	{
+		SetText(String(mValue));
 	}
 	IsTextChanged = true;
 }
