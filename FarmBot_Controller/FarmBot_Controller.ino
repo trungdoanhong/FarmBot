@@ -59,10 +59,13 @@ VariableText* vtZ;
 FunctionText* ftPump;
 VariableText* vtPumpValue;
 FunctionText* ftVaccum;
+VariableText* vtVaccumValue;
 FunctionText* ftLamp;
+VariableText* vtLampValue;
 FunctionText* ftFan;
+VariableText* vtFanValue;
 FunctionText* ftServo;
-
+VariableText* vtServoValue;
 
 SubMenu* smWaterTime[3];
 Label* lbMaxTemp[3];
@@ -169,14 +172,35 @@ void setup()
 		ftPump = new FunctionText(ThirdMenu, "P", 0, 3);
 		vtPumpValue = new VariableText(ThirdMenu, 1, 1, 3);
 		ftVaccum = new FunctionText(ThirdMenu, "V", 6, 3);
+		vtVaccumValue = new VariableText(ThirdMenu, 0, 7, 3);
 		ftFan = new FunctionText(ThirdMenu, "F", 10, 3);
+		vtFanValue = new VariableText(ThirdMenu, 0, 11, 3);
 		ftLamp = new FunctionText(ThirdMenu, "L", 14, 3);
+		vtLampValue = new VariableText(ThirdMenu, 0, 15, 3);
 		ftServo = new FunctionText(ThirdMenu, "S", 18, 3);
+		vtServoValue = new VariableText(ThirdMenu, 90, 19, 3);
 
 		ftHome->Function = SendHomeGCode;
+		ftX->Function = SendXHomeGCode;
+		ftY->Function = SendYHomeGCode;
+		ftZ->Function = SendZHomeGCode;
+		vtMoveValue->Max = 100;
+		vtMoveValue->Min = 1;
+		vtMoveValue->HandleWhenValueChange = ChangeMovingWidth;
 		vtX->HandleWhenValueChange = SendMoveXGCode;
-		
-
+		vtY->HandleWhenValueChange = SendMoveYGCode;
+		vtZ->HandleWhenValueChange = SendMoveZGCode;
+		ftPump->Function = SendPumpGcode;
+		ftVaccum->Function = SendVaccumGcode;
+		ftFan->Function = SendFanGcode;
+		ftLamp->Function = SendLampGcode;
+		ftServo->Function = SendServoGcode;
+		vtPumpValue->Max = 0;
+		vtVaccumValue->Max = 0;
+		vtFanValue->Max = 0;
+		vtLampValue->Max = 0;
+		vtServoValue->Max = 90;
+		vtServoValue->Resolution = 90;
 	}
 	
 	LCDMenu.Init(&lcd, "FarmBot Controller");
@@ -384,12 +408,21 @@ void SendMoveXGCode()
 
 void SendMoveYGCode()
 {
-
+	String gcode = String("") + "G00 Y" + String((int)vtY->GetValue());
+	Serial1.println(gcode);
 }
 
 void SendMoveZGCode()
 {
+	String gcode = String("") + "G00 Z" + String((int)vtZ->GetValue());
+	Serial1.println(gcode);
+}
 
+void ChangeMovingWidth()
+{
+	vtX->Resolution = vtMoveValue->GetValue();
+	vtY->Resolution = vtMoveValue->GetValue();
+	vtZ->Resolution = vtMoveValue->GetValue();
 }
 
 void SendPumpGcode()
