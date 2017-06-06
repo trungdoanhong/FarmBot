@@ -1,10 +1,11 @@
 #include "SerialCommand.h"
+#include <ArduinoJson.h>
 
 SerialCommand::SerialCommand()
 {
 	_Serial = &Serial;
 	_Serial->begin(9600);
-	inputString.reserve(100);
+	//inputString.reserve(100);
 
 	boolean stringComplete = false;
 	String inputString = "";
@@ -18,7 +19,7 @@ SerialCommand::SerialCommand(HardwareSerial* serial, uint16_t baudrate)
 {
 	_Serial = serial;
 	_Serial->begin(baudrate);
-	inputString.reserve(100);
+	//inputString.reserve(100);
 
 	boolean stringComplete = false;
 	String inputString = "";
@@ -61,6 +62,7 @@ void SerialCommand::AddCommand(String message, void(*function)())
   cmdContainer[cmdCounter - 1].message = message;
   cmdContainer[cmdCounter - 1].function = function;
   cmdContainer[cmdCounter - 1].value = NULL;
+  cmdContainer[cmdCounter - 1].contain = NULL;
 }
 
 void SerialCommand::AddCommand(String message, float* value)
@@ -82,6 +84,29 @@ void SerialCommand::AddCommand(String message, float* value)
   cmdContainer[cmdCounter - 1].message = message;
   cmdContainer[cmdCounter - 1].value = value;
   cmdContainer[cmdCounter - 1].function = NULL;
+  cmdContainer[cmdCounter - 1].contain = NULL;
+}
+
+void SerialCommand::AddCommand(String message, char* contain)
+{
+	cmdCounter++;
+	//cmdContainer = (Command *) realloc(cmdContainer, cmdCounter * sizeof(Command));
+
+	Command* newContainer = new Command[cmdCounter];
+	for (uint8_t i = 0; i < cmdCounter - 1; i++)
+	{
+		newContainer[i] = cmdContainer[i];
+	}
+	if (cmdContainer != NULL)
+	{
+		delete[] cmdContainer;
+	}
+	cmdContainer = newContainer;
+
+	cmdContainer[cmdCounter - 1].message = message;
+	cmdContainer[cmdCounter - 1].value = NULL;
+	cmdContainer[cmdCounter - 1].function = NULL;
+	cmdContainer[cmdCounter - 1].contain = contain;
 }
 
 
@@ -107,8 +132,6 @@ void SerialCommand::Execute()
   
   if (!stringComplete)
     return;
-
-  String s = "speed";
    
   // when complete receiving
   for( uint8_t index = 0; index < cmdCounter; index++ )
@@ -119,6 +142,16 @@ void SerialCommand::Execute()
       {
         *cmdContainer[index].value = inputString.substring(cmdContainer[index].message.length() + 1).toFloat();        
       }
+	  else if (cmdContainer[index].contain != NULL)
+	  {
+		//String s(inputString.substring(cmdContainer[index].message.length() + 1));
+
+		  uint16_t num = inputString.length() - cmdContainer[index].message.length();
+		  
+		  inputString.toCharArray(cmdContainer[index].contain, num + 1, 5);
+		  
+		  //Serial.println("Done");
+	  }
       else
       {
         cmdContainer[index].function();

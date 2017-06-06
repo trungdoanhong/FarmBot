@@ -6,9 +6,10 @@
 
 struct Command
 {
-  String message;
+  String message = "";
   void(*function)() = NULL;
   float* value = NULL;
+  char* contain;
 };
 
 class SerialCommand
@@ -25,6 +26,7 @@ public:
   
   void AddCommand(String message, void(*function)());
   void AddCommand(String message, float* value);
+  void AddCommand(String message, char* contain);
   void Execute();
   void ForwardData(HardwareSerial*, uint16_t);
   

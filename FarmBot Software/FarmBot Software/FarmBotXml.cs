@@ -50,6 +50,7 @@ namespace FarmBot_Software
                         tempSeason.Tree[treeIndex].Name = nodeOfSeason["Name"].InnerText;
                         tempSeason.Tree[treeIndex].MaxTemperature = int.Parse(nodeOfSeason["MaxTemp"].InnerText);
                         tempSeason.Tree[treeIndex].MaxHumidity = int.Parse(nodeOfSeason["MaxHumi"].InnerText);
+                        tempSeason.Tree[treeIndex].MinHumidity = int.Parse(nodeOfSeason["MinHumi"].InnerText);
                         XmlNode timeForWaterNode = nodeOfSeason["TimeForWater"];
                         for (int index = 0; index < timeForWaterNode.ChildNodes.Count; index++)
                         {
@@ -166,12 +167,14 @@ namespace FarmBot_Software
                 XmlNode newTreeName = LoadingXML.CreateElement("Name");
                 XmlNode newMaxTemp = LoadingXML.CreateElement("MaxTemp");
                 XmlNode newMaxHumi = LoadingXML.CreateElement("MaxHumi");
+                XmlNode newMinHumi = LoadingXML.CreateElement("MinHumi");
                 XmlNode newTimeForWater = LoadingXML.CreateElement("TimeForWater");
                 XmlAttribute newTreeId = LoadingXML.CreateAttribute("id");
 
                 newTreeName.InnerText = seasonForCreateNode.Tree[index].Name;
                 newMaxTemp.InnerText = seasonForCreateNode.Tree[index].MaxTemperature.ToString();
                 newMaxHumi.InnerText = seasonForCreateNode.Tree[index].MaxHumidity.ToString();
+                newMinHumi.InnerText = seasonForCreateNode.Tree[index].MinHumidity.ToString();
                 newTreeId.InnerText = (index + 1).ToString();
 
                 // Add parameter into Tree
@@ -179,6 +182,7 @@ namespace FarmBot_Software
                 newTree[index].AppendChild(newTreeName);
                 newTree[index].AppendChild(newMaxTemp);
                 newTree[index].AppendChild(newMaxHumi);
+                newTree[index].AppendChild(newMinHumi);
                 newTree[index].AppendChild(newTimeForWater);
                 newTree[index].Attributes.Append(newTreeId);
 

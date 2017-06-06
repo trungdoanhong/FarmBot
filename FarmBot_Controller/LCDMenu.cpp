@@ -562,7 +562,8 @@ VariableText::VariableText(AbstractMenu* parent, float value, uint8_t col, uint8
 
 	HandleWhenValueChange = NULL;
 
-	pExternalValue = NULL;
+	pExternalValue_float = NULL;
+	pExternalValue_int = NULL;
 }
 
 DisplayElementType VariableText::GetElementType()
@@ -572,16 +573,25 @@ DisplayElementType VariableText::GetElementType()
 
 void VariableText::SetExternalValue(float* pExVal)
 {
-	this->pExternalValue = pExVal;
+	this->pExternalValue_float = pExVal;
+}
+
+void VariableText::SetExternalValue(uint16_t* pExVal)
+{
+	this->pExternalValue_int = pExVal;
 }
 
 void VariableText::SetValue(float value)
 { 
 	mValue = value;
 
-	if (pExternalValue != NULL)
+	if (pExternalValue_float != NULL)
 	{
-		*pExternalValue = mValue;
+		*pExternalValue_float = mValue;
+	}
+	if (pExternalValue_int != NULL)
+	{
+		*pExternalValue_int = mValue;
 	}
 
 	if (HandleWhenValueChange != NULL)
@@ -613,9 +623,14 @@ void VariableText::Decrease()
 		mValue = Max;
 	}
 
-	if (pExternalValue != NULL)
+	if (pExternalValue_float != NULL)
 	{
-		*pExternalValue = mValue;
+		*pExternalValue_float = mValue;
+	}
+
+	if (pExternalValue_int != NULL)
+	{
+		*pExternalValue_int = mValue;
 	}
 
 	if (HandleWhenValueChange != NULL)
@@ -644,9 +659,14 @@ void VariableText::Increase()
 		mValue = Min;
 	}
 
-	if (pExternalValue != NULL)
+	if (pExternalValue_float != NULL)
 	{
-		*pExternalValue = mValue;
+		*pExternalValue_float = mValue;
+	}
+
+	if (pExternalValue_int != NULL)
+	{
+		*pExternalValue_int = mValue;
 	}
 
 	if (HandleWhenValueChange != NULL)

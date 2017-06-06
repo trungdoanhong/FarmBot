@@ -228,6 +228,7 @@ namespace FarmBot_Software
                 LoadingSeason.Tree[LoadingTreeIndex].Name = tbTreeName.Text;
                 LoadingSeason.Tree[LoadingTreeIndex].MaxTemperature = int.Parse(tbTempForWater.Text);
                 LoadingSeason.Tree[LoadingTreeIndex].MaxHumidity = int.Parse(tbHumiForFan.Text);
+                LoadingSeason.Tree[LoadingTreeIndex].MinHumidity = int.Parse(tbHumiForMist.Text);
             }
 
             RemoveAllTimeControls();
@@ -409,6 +410,8 @@ namespace FarmBot_Software
                     FarmBotSerialPort.Open();
                     ShowMessage("FarmBot on " + FarmBotSerialPort.PortName, 3000);
                 }
+
+                btConnect.Enabled = true;
                 
             });
             
@@ -427,6 +430,7 @@ namespace FarmBot_Software
             {
                 return;
             }
+            ShowMessage(receiveString, 1000);
 
             if (receiveString.Length >= "YesFarmBot".Length)
             {
@@ -465,7 +469,8 @@ namespace FarmBot_Software
         {
             if (btConnect.Text == "Connect")
             {
-                FindFamrBotPort();                
+                FindFamrBotPort();
+                btConnect.Enabled = false;
             }
             else
             {
@@ -510,14 +515,16 @@ namespace FarmBot_Software
         {
             if (FarmBotSerialPort.IsOpen == false)
                 return;
-            ShowMessage("Uploading ...", 5000);
+            //ShowMessage("Uploading ...", 5000);
             String jsonString = ""; // We will send this tring to Farmbot Control Box
 
             var serializeObject = new JavaScriptSerializer();
             jsonString = serializeObject.Serialize(LoadingSeason);
             Season seasonFromJson = serializeObject.Deserialize<Season>(jsonString);
-            FarmBotSerialPort.WriteLine(jsonString);
-            ShowMessage("Done", 1000);
+            FarmBotSerialPort.WriteLine("Json-" + jsonString);
+            Thread.Sleep(1000);
+            FarmBotSerialPort.WriteLine("UploadDone");
+            ShowMessage("Upload Done", 1000);
         }
 
         private void pbEndActuator_MouseUp(object sender, MouseEventArgs e)

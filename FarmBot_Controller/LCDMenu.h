@@ -99,6 +99,7 @@ public:
 	void SetValue(float value);
 	float GetValue();
 	void SetExternalValue(float* pExVal);
+	void SetExternalValue(uint16_t* pExVal);
 	
 	float Resolution;
 	bool IsSelected;
@@ -106,7 +107,8 @@ public:
 	float Min;
 	void(*HandleWhenValueChange)(void);
 private:
-	float* pExternalValue;
+	float* pExternalValue_float;
+	uint16_t* pExternalValue_int;
 	float mValue;
 };
 
