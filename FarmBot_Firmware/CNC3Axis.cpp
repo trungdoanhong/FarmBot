@@ -69,10 +69,10 @@ ISR(TIMER3_COMPA_vect)
 	{
 		TurnOnInterrupt(X_TIMER, false);
 		X_StepCounter = 0;
-		CNC3Axis.NumberOfRunningMotor--;
+		--CNC3Axis.NumberOfRunningMotor;
 		if (CNC3Axis.NumberOfRunningMotor == 0)
 		{
-			CNC3Axis.IsRunningHome = false;
+			CNC3Axis.IsRunningHome = false;			
 		}
 		return;
 	}
@@ -88,7 +88,7 @@ ISR(TIMER4_COMPA_vect)
 	{
 		TurnOnInterrupt(Y_TIMER, false);
 		Y_StepCounter = 0;
-		CNC3Axis.NumberOfRunningMotor--;
+		--CNC3Axis.NumberOfRunningMotor;
 		if (CNC3Axis.NumberOfRunningMotor == 0)
 		{
 			CNC3Axis.IsRunningHome = false;
@@ -108,7 +108,7 @@ ISR(TIMER5_COMPA_vect)
 	{
 		TurnOnInterrupt(Z_TIMER, false);
 		Z_StepCounter = 0;
-		CNC3Axis.NumberOfRunningMotor--;
+		--CNC3Axis.NumberOfRunningMotor;
 		if (CNC3Axis.NumberOfRunningMotor == 0)
 		{
 			CNC3Axis.IsRunningHome = false;
@@ -327,8 +327,8 @@ void CNC3AxisClass::Move(uint16_t xPos, uint16_t yPos, uint16_t zPos)
 		X_StepsToJumpAllRoad = (uint32_t)x_Offset * (uint32_t)X_StepsPerMm;
 		double x_TimeForJumpOneStep = timeForCompleteRoad / X_StepsToJumpAllRoad;
 
-		Serial.println();
-		Serial.println(X_StepsToJumpAllRoad);
+		//Serial.println();
+		//Serial.println(X_StepsToJumpAllRoad);
 
 		if (IsRunningHome == true)
 		{

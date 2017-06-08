@@ -5,9 +5,10 @@
 #include <StandardCplusplus.h> // Copy StandardCplusplus folder to Mydocument\Arduino\libraries to use below libraries
 #include <vector>
 #include "Constants.h"
+#include "idDHTLib.h"
 
 #define SOIL_SENSOR_SERVO_PIN 6
-#define SOIL_SENSOR_PIN A13
+#define SOIL_SENSOR_PIN A15
 #define LAMP_PIN 26
 #define FAN_PIN 28
 #define VACCUM_PIN 9
@@ -15,6 +16,9 @@
 
 #define ON HIGH
 #define OFF LOW
+
+#define RELAY_ON LOW
+#define RELAY_OFF HIGH
 
 #define SERVO_COMPARE_VALUE OCR1A
 
@@ -28,6 +32,25 @@ uint16_t ValueForServoFallingEdge = 10; // 1 ms = 1000 us
 
 GCodeReceiver GcodeReceiver;
 GCodeExecute GcodeExecute;
+
+bool IsPause = false;
+
+// Sensor
+
+int idDHTLibPin = 2; 
+int idDHTLibIntNumber = 0;
+
+void dhtLib_wrapper(); 
+
+idDHTLib DHTLib(idDHTLibPin, idDHTLibIntNumber, dhtLib_wrapper);
+
+void dhtLib_wrapper() {
+	DHTLib.dht11Callback(); 
+}
+
+float HumidityValue = 0;
+float TemperatureValue = 0;
+float SoilMoistureValue = 0;
 
 void setup()
 {
@@ -57,11 +80,16 @@ void setup()
 	GcodeExecute.Add("G01", 'X', 'Y', 'Z', MoveEndActuator);
 	GcodeExecute.Add("G28", 'X', 'Y', 'Z', AutoHome);
 
+	GcodeExecute.Add("G04", 'P', 'S', Pause);
 	GcodeExecute.Add("G40", 'S', ReverseSoilSensor);
 	GcodeExecute.Add("G41", 'P', TurnOnPump);
 	GcodeExecute.Add("G42", 'V', TurnVaccum);
 	GcodeExecute.Add("G43", 'F', TurnFan);
 	GcodeExecute.Add("G44", 'L', TurnLamp);
+
+	GcodeExecute.Add("M10", ReadSoilSensor);
+	GcodeExecute.Add("M11", ReadAirTemperature);
+	GcodeExecute.Add("M12", ReadAirHumidity);
 
 	Serial.println(" Init Success !");
 
@@ -128,6 +156,9 @@ void InitPinMode()
 	pinMode(PUMP_PIN, OUTPUT);
 	pinMode(VACCUM_PIN, OUTPUT);
 	pinMode(FAN_PIN, OUTPUT);
+
+	digitalWrite(FAN_PIN, RELAY_OFF);
+	digitalWrite(LAMP_PIN, RELAY_OFF);
 }
 
 void Confirm()
@@ -139,17 +170,17 @@ void GetGCodeState()
 {
 	if (GcodeExecute.IsRunning == true)
 	{
-		Serial.println("GCode is running");
+		//Serial.println("GcodeRunning");
 	}
 	else
 	{
-		Serial.println("GcCode is not running");
+		Serial.println("GcodeDone");
 	}
 }
 
 void WhenFinishMove()
 {
-	if (CNC3Axis.NumberOfRunningMotor == 0)
+	if (CNC3Axis.NumberOfRunningMotor == 0 & IsPause == false)
 	{
 		GcodeExecute.IsRunning = false;
 	}
@@ -172,11 +203,11 @@ void MoveEndActuator(float xPos, float yPos, float zPos)
 		zPos = CNC3Axis.GetZPosition();
 	}
 
-	Serial.print(xPos);
-	Serial.print(", ");
-	Serial.print(yPos);
-	Serial.print(", ");
-	Serial.print(zPos);
+	//Serial.print(xPos);
+	//Serial.print(", ");
+	//Serial.print(yPos);
+	//Serial.print(", ");
+	//Serial.print(zPos);
 
 	CNC3Axis.Move((uint16_t)xPos, (uint16_t)yPos, (uint16_t)zPos);
 }
@@ -202,10 +233,33 @@ void AutoHome(float xHome, float yHome, float zHome)
 	}
 }
 
+void Pause(float sec, float milisec)
+{
+	if (sec == NULL_NUMBER)
+	{
+		sec = 0;
+	}
+	if (milisec == NULL_NUMBER)
+	{
+		milisec = 0;
+	}
+	IsPause = true;
+	TaskScheduler.Change(Resume, sec * 1000 + milisec);
+	TaskScheduler.Resum(Resume);
+}
+
+void Resume()
+{
+	IsPause = false;
+	TaskScheduler.Stop(Resume);
+}
+
 void ReverseSoilSensor(float turnAngle)
 {
 	TurnOnServo();
 	RotateServo(turnAngle);
+
+	GcodeExecute.IsRunning = false;
 }
 
 void TurnFan(float value)
@@ -250,7 +304,6 @@ void TurnOnPump(float time)
 	TaskScheduler.Change(StopPump, time);
 	TaskScheduler.Resum(StopPump);
 	Serial.println("Pump On");
-	Serial.println(millis());
 }
 
 void StopPump()
@@ -258,7 +311,31 @@ void StopPump()
 	digitalWrite(PUMP_PIN, OFF);
 	TaskScheduler.Stop(StopPump);
 	Serial.println("Pump Off");
-	Serial.println(millis());
+}
+
+void ReadSoilSensor()
+{
+	uint16_t analogValue = analogRead(SOIL_SENSOR_PIN);
+	SoilMoistureValue = map(analogValue, 0, 1023, 0, 100);
+	Serial.println(String("Soil-") + analogValue);
+}
+
+void ReadAirTemperature()
+{
+	DHTLib.acquire();
+	while (DHTLib.acquiring())
+		;
+	TemperatureValue = DHTLib.getCelsius();
+	Serial.println(String("Temp-") + TemperatureValue);
+}
+
+void ReadAirHumidity()
+{
+	DHTLib.acquire();
+	while (DHTLib.acquiring())
+		;
+	HumidityValue = DHTLib.getHumidity();
+	Serial.println(String("Humi-") + HumidityValue);
 }
 
 void WatchDog()

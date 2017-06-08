@@ -8,45 +8,45 @@ namespace FarmBot_Software
     {
         public Season()
         {
-            Tree = new Tree[3];
+            T = new Tree[3];
             
-            for(int i = 0; i < Tree.Length; i++)
+            for(int i = 0; i < T.Length; i++)
             {
-                Tree[i] = new Tree();
-                Tree[i].Name = "Tree " + (i + 1).ToString();
-                Tree[i].MaxHumidity = 40;
-                Tree[i].MaxTemperature = 40;
+                T[i] = new Tree();
+                T[i].N = "Tree " + (i + 1).ToString();
+                T[i].MaxH = 40;
+                T[i].MaxT = 40;
 
             }
-            Garden = new int[24];
+            G = new int[24];
             for( int i = 0; i < 24; i++)
             {
-                Garden[i] = 0;
+                G[i] = 0;
             }
 
         }
-        public String Name { get; set; }
-        public int Id {get; set;}
-        public Tree[] Tree;
-        public int[] Garden;
+        public String N { get; set; }
+        public int I {get; set;}
+        public Tree[] T;
+        public int[] G;
     }
     public class Tree
     {
         public Tree()
         {
-            TimeForWaterList = new List<Time>();
+            Times = new List<Time>();
 
         }
-        public String Name { get; set; }
-        public int MaxTemperature { get; set; }
-        public int MaxHumidity { get; set; }
-        public int MinHumidity { get; set; }
-        public List<Time> TimeForWaterList;
+        public String N { get; set; }
+        public int MaxT { get; set; }
+        public int MaxH { get; set; }
+        public int MinH { get; set; }
+        public List<Time> Times;
     }
 
     public class Time
     {
-        public int Hour { get; set; }
-        public int Minute { get; set; }
+        public int H { get; set; }
+        public int M { get; set; }
     }
 }

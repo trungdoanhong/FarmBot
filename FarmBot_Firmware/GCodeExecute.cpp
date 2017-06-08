@@ -7,6 +7,7 @@
 void GCodeExecute::Init(vector<String>* gCodeQueue)
 {
 	this->GCodeQueue = gCodeQueue;
+	IsRunning = false;
 }
 
 void GCodeExecute::Add(String Code, char argu1, char argu2, char argu3, void(*func)(float, float, float))
@@ -60,12 +61,12 @@ void GCodeExecute::Run()
 	String GcodeInProcessing = GCodeQueue->operator[](0);
 	vector<KeyValue> keyValues = getKeyValues(GcodeInProcessing);
 
-	for (uint8_t i = 0; i < keyValues.size(); i++)
+	/*for (uint8_t i = 0; i < keyValues.size(); i++)
 	{
 		Serial.print(keyValues[i].Key);
 		Serial.print("-");
 		Serial.println(keyValues[i].Value);
-	}
+	}*/
 	
 	// Make a prefix like "G01" from key-value pair
 	String prefix = String(keyValues[0].Key);
@@ -116,11 +117,11 @@ void GCodeExecute::checkAndRunFunction3Argument(String prefix, vector<KeyValue> 
 			float argu2 = ThreeArgumentFunctions[index].Agruments[1];
 			float argu3 = ThreeArgumentFunctions[index].Agruments[2];
 
-			Serial.print(argu1);
+			/*Serial.print(argu1);
 			Serial.print(", ");
 			Serial.print(argu2);
 			Serial.print(", ");
-			Serial.println(argu3);
+			Serial.println(argu3);*/
 
 			ThreeArgumentFunctions[index].Function(argu1, argu2, argu3);
 		}
@@ -150,9 +151,9 @@ void GCodeExecute::checkAndRunFunction2Argument(String prefix, vector<KeyValue> 
 		float argu1 = TwoArgumentFunctions[index].Agruments[0];
 		float argu2 = TwoArgumentFunctions[index].Agruments[1];
 
-		Serial.print(argu1);
+		/*Serial.print(argu1);
 		Serial.print(", ");
-		Serial.println(argu2);
+		Serial.println(argu2);*/
 
 		TwoArgumentFunctions[index].Function(argu1, argu2);
 		
@@ -177,7 +178,7 @@ void GCodeExecute::checkAndRunFunction1Argument(String prefix, vector<KeyValue> 
 
 		float argu1 = OneArgumentFunctions[index].Agrument;
 
-		Serial.println(argu1);
+		//Serial.println(argu1);
 
 		OneArgumentFunctions[index].Function(argu1);
 	}

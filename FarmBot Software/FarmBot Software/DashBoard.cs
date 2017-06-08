@@ -164,9 +164,9 @@ namespace FarmBot_Software
 
             AddTimeControlToPanel(hour, minute);
             Time addingTime = new Time();
-            addingTime.Hour = hour;
-            addingTime.Minute = minute;
-            LoadingSeason.Tree[LoadingTreeIndex].TimeForWaterList.Add(addingTime);
+            addingTime.H = hour;
+            addingTime.M = minute;
+            LoadingSeason.T[LoadingTreeIndex].Times.Add(addingTime);
         }
 
         public void AddTimeControlToPanel(int hour, int minute)
@@ -188,7 +188,7 @@ namespace FarmBot_Software
             }
             TimeControlList[order].DeleteControls();
             TimeControlList.RemoveAt(order);
-            LoadingSeason.Tree[LoadingTreeIndex].TimeForWaterList.RemoveAt(order);
+            LoadingSeason.T[LoadingTreeIndex].Times.RemoveAt(order);
 
             for (int i = order; i < TimeControlList.Count; i++)
             {
@@ -217,7 +217,7 @@ namespace FarmBot_Software
         {
             for (int i = 0; i < 24; i++)
             {
-                LoadingGarden.SetTreeIcon(i, (GardenCell)LoadingSeason.Garden[i]);
+                LoadingGarden.SetTreeIcon(i, (GardenCell)LoadingSeason.G[i]);
             }
         }
 
@@ -225,23 +225,23 @@ namespace FarmBot_Software
         {
             if (LoadingTreeIndex != -1)
             {
-                LoadingSeason.Tree[LoadingTreeIndex].Name = tbTreeName.Text;
-                LoadingSeason.Tree[LoadingTreeIndex].MaxTemperature = int.Parse(tbTempForWater.Text);
-                LoadingSeason.Tree[LoadingTreeIndex].MaxHumidity = int.Parse(tbHumiForFan.Text);
-                LoadingSeason.Tree[LoadingTreeIndex].MinHumidity = int.Parse(tbHumiForMist.Text);
+                LoadingSeason.T[LoadingTreeIndex].N = tbTreeName.Text;
+                LoadingSeason.T[LoadingTreeIndex].MaxT = int.Parse(tbTempForWater.Text);
+                LoadingSeason.T[LoadingTreeIndex].MaxH = int.Parse(tbHumiForFan.Text);
+                LoadingSeason.T[LoadingTreeIndex].MinH = int.Parse(tbHumiForMist.Text);
             }
 
             RemoveAllTimeControls();
 
-            tbTreeName.Text = LoadingSeason.Tree[order].Name;
-            tbTempForWater.Text = LoadingSeason.Tree[order].MaxTemperature.ToString();
-            tbHumiForFan.Text = LoadingSeason.Tree[order].MaxHumidity.ToString();
-            tbHumiForMist.Text = LoadingSeason.Tree[order].MinHumidity.ToString();
+            tbTreeName.Text = LoadingSeason.T[order].N;
+            tbTempForWater.Text = LoadingSeason.T[order].MaxT.ToString();
+            tbHumiForFan.Text = LoadingSeason.T[order].MaxH.ToString();
+            tbHumiForMist.Text = LoadingSeason.T[order].MinH.ToString();
 
-            for( int i = 0; i < LoadingSeason.Tree[order].TimeForWaterList.Count; i++ )
+            for( int i = 0; i < LoadingSeason.T[order].Times.Count; i++ )
             {
-                int hour = LoadingSeason.Tree[order].TimeForWaterList[i].Hour;
-                int minute = LoadingSeason.Tree[order].TimeForWaterList[i].Minute;
+                int hour = LoadingSeason.T[order].Times[i].H;
+                int minute = LoadingSeason.T[order].Times[i].M;
                 AddTimeControlToPanel(hour, minute);
             }
 
@@ -298,14 +298,14 @@ namespace FarmBot_Software
             if (LoadingSeason == null)
                 return;
 
-            LoadingSeason.Tree[LoadingTreeIndex].Name = tbTreeName.Text;
-            LoadingSeason.Tree[LoadingTreeIndex].MaxTemperature = int.Parse(tbTempForWater.Text);
-            LoadingSeason.Tree[LoadingTreeIndex].MaxHumidity = int.Parse(tbHumiForFan.Text);
-            LoadingSeason.Tree[LoadingTreeIndex].MinHumidity = int.Parse(tbHumiForMist.Text);
+            LoadingSeason.T[LoadingTreeIndex].N = tbTreeName.Text;
+            LoadingSeason.T[LoadingTreeIndex].MaxT = int.Parse(tbTempForWater.Text);
+            LoadingSeason.T[LoadingTreeIndex].MaxH = int.Parse(tbHumiForFan.Text);
+            LoadingSeason.T[LoadingTreeIndex].MinH = int.Parse(tbHumiForMist.Text);
 
             for (int i = 0; i < 24; i++ )
             {
-                LoadingSeason.Garden[i] = (int)LoadingGarden.Cells[i];
+                LoadingSeason.G[i] = (int)LoadingGarden.Cells[i];
             }
             LoadingDatabaseXml.UpdateSeason(LoadingSeason);
             ShowMessage("Saved", 3000);
@@ -316,7 +316,7 @@ namespace FarmBot_Software
             if (tbSeasonName.Text == "")
                 return;
             LoadingSeason = LoadingDatabaseXml.CreateSeason(tbSeasonName.Text);
-            cbSeasonName.SelectedIndex = cbSeasonName.Items.Add(LoadingSeason.Name);
+            cbSeasonName.SelectedIndex = cbSeasonName.Items.Add(LoadingSeason.N);
             btLoadSeason_Click(null, null);
 
             tbSeasonName.Text = "";
@@ -521,10 +521,20 @@ namespace FarmBot_Software
             var serializeObject = new JavaScriptSerializer();
             jsonString = serializeObject.Serialize(LoadingSeason);
             Season seasonFromJson = serializeObject.Deserialize<Season>(jsonString);
+
+            ShowMessage("Uploading ...", 3000);
             FarmBotSerialPort.WriteLine("Json-" + jsonString);
-            Thread.Sleep(1000);
+
+            
+            Thread uploadDoneThread = new Thread(SendUploadDoneSignal);
+            uploadDoneThread.Start();
+        }
+
+        void SendUploadDoneSignal()
+        {
+            Thread.Sleep(3000);
             FarmBotSerialPort.WriteLine("UploadDone");
-            ShowMessage("Upload Done", 1000);
+            ShowMessage("Upload Done", 2000);
         }
 
         private void pbEndActuator_MouseUp(object sender, MouseEventArgs e)
@@ -629,11 +639,11 @@ namespace FarmBot_Software
             string gcode = "G43 F";
             if (cbFan.Checked == true)
             {
-                gcode += "1";
+                gcode += "0";
             }
             else
             {
-                gcode += "0";
+                gcode += "1";
             }
             SendGCode(gcode);
         }
@@ -643,11 +653,11 @@ namespace FarmBot_Software
             string gcode = "G44 L";
             if (cbLamp.Checked == true)
             {
-                gcode += "1";
+                gcode += "0";
             }
             else
             {
-                gcode += "0";
+                gcode += "1";
             }
             SendGCode(gcode);
         }
@@ -685,7 +695,7 @@ namespace FarmBot_Software
             if (e.KeyData != Keys.Enter)
                 return;
 
-            LoadingSeason.Tree[LoadingTreeIndex].Name = tbTreeName.Text;
+            LoadingSeason.T[LoadingTreeIndex].N = tbTreeName.Text;
             ShowMessage("Edit", 1000);
         }
 
@@ -694,7 +704,7 @@ namespace FarmBot_Software
             if (e.KeyData != Keys.Enter)
                 return;
 
-            LoadingSeason.Tree[LoadingTreeIndex].MaxTemperature = int.Parse(tbTempForWater.Text);
+            LoadingSeason.T[LoadingTreeIndex].MaxT = int.Parse(tbTempForWater.Text);
             ShowMessage("Edit", 1000);
         }
 
@@ -703,7 +713,7 @@ namespace FarmBot_Software
             if (e.KeyData != Keys.Enter)
                 return;
 
-            LoadingSeason.Tree[LoadingTreeIndex].MaxHumidity = int.Parse(tbHumiForFan.Text);
+            LoadingSeason.T[LoadingTreeIndex].MaxH = int.Parse(tbHumiForFan.Text);
             ShowMessage("Edit", 1000);
         }
 
@@ -712,7 +722,7 @@ namespace FarmBot_Software
             if (e.KeyData != Keys.Enter)
                 return;
 
-            LoadingSeason.Tree[LoadingTreeIndex].MinHumidity = int.Parse(tbHumiForMist.Text);
+            LoadingSeason.T[LoadingTreeIndex].MinH = int.Parse(tbHumiForMist.Text);
             ShowMessage("Edit", 1000);
         }
 

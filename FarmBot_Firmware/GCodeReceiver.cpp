@@ -28,8 +28,8 @@ void GCodeReceiver::Execute()
 		GCodeQueue->push_back(receiveString);
 	}
 
-	Serial.print("Respond : ");
-	Serial.println(receiveString);
+	/*Serial.print("Respond : ");
+	Serial.println(receiveString);*/
 
 	for (uint8_t i = 0; i < CodeFunctionPairs.size(); i++)
 	{

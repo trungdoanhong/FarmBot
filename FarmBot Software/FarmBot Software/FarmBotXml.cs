@@ -32,14 +32,14 @@ namespace FarmBot_Software
             for (int i = 0; i < xmlSeasons.Count; i++)
             {
                 Season tempSeason = new Season();
-                tempSeason.Name = xmlSeasons[i]["Name"].InnerText;
-                tempSeason.Id = i + 1;
+                tempSeason.N = xmlSeasons[i]["Name"].InnerText;
+                tempSeason.I = i + 1;
 
                 String[] treeStrings = xmlSeasons[i]["Garden"].InnerText.Split(',');
 
                 for (int index = 0; index < 24; index++)
                 {
-                    tempSeason.Garden[index] = int.Parse(treeStrings[index]);
+                    tempSeason.G[index] = int.Parse(treeStrings[index]);
                 }
 
                 int treeIndex = 0;
@@ -47,17 +47,17 @@ namespace FarmBot_Software
                 {
                     if (nodeOfSeason.Name == "Tree")
                     {
-                        tempSeason.Tree[treeIndex].Name = nodeOfSeason["Name"].InnerText;
-                        tempSeason.Tree[treeIndex].MaxTemperature = int.Parse(nodeOfSeason["MaxTemp"].InnerText);
-                        tempSeason.Tree[treeIndex].MaxHumidity = int.Parse(nodeOfSeason["MaxHumi"].InnerText);
-                        tempSeason.Tree[treeIndex].MinHumidity = int.Parse(nodeOfSeason["MinHumi"].InnerText);
+                        tempSeason.T[treeIndex].N = nodeOfSeason["Name"].InnerText;
+                        tempSeason.T[treeIndex].MaxT = int.Parse(nodeOfSeason["MaxTemp"].InnerText);
+                        tempSeason.T[treeIndex].MaxH = int.Parse(nodeOfSeason["MaxHumi"].InnerText);
+                        tempSeason.T[treeIndex].MinH = int.Parse(nodeOfSeason["MinHumi"].InnerText);
                         XmlNode timeForWaterNode = nodeOfSeason["TimeForWater"];
                         for (int index = 0; index < timeForWaterNode.ChildNodes.Count; index++)
                         {
                             Time time = new Time();
-                            time.Hour = int.Parse(timeForWaterNode.ChildNodes[index]["Hour"].InnerText);
-                            time.Minute = int.Parse(timeForWaterNode.ChildNodes[index]["Minute"].InnerText);
-                            tempSeason.Tree[treeIndex].TimeForWaterList.Add(time);
+                            time.H = int.Parse(timeForWaterNode.ChildNodes[index]["Hour"].InnerText);
+                            time.M = int.Parse(timeForWaterNode.ChildNodes[index]["Minute"].InnerText);
+                            tempSeason.T[treeIndex].Times.Add(time);
                         }
                         treeIndex++;
                     }
@@ -103,7 +103,7 @@ namespace FarmBot_Software
         {
             foreach(Season season in Seasons)
             {
-                cbSeasonName.Items.Add(season.Name);
+                cbSeasonName.Items.Add(season.N);
             }
             if (cbSeasonName.Items.Count > 0)
                 cbSeasonName.SelectedIndex = 0;
@@ -113,7 +113,7 @@ namespace FarmBot_Software
         {
             foreach(Season season in Seasons)
             {
-                if (season.Name == seasonName)
+                if (season.N == seasonName)
                 {
                     LoadingSeason = season;
                 }
@@ -127,7 +127,7 @@ namespace FarmBot_Software
 
             XmlNode newSeasonNode = CreateSeasonNode(loadingSeason);
 
-            XmlNode replaceNode = LoadingXML.DocumentElement.ChildNodes[LoadingSeason.Id - 1];
+            XmlNode replaceNode = LoadingXML.DocumentElement.ChildNodes[LoadingSeason.I - 1];
             LoadingXML.DocumentElement.ReplaceChild(newSeasonNode, replaceNode);
 
             LoadingXML.Save(XmlFileName);
@@ -141,14 +141,14 @@ namespace FarmBot_Software
             XmlNode newGarden = LoadingXML.CreateElement("Garden");
             XmlAttribute newSeasonId = LoadingXML.CreateAttribute("id");
 
-            newSeasonName.InnerText = seasonForCreateNode.Name;
-            newSeasonId.InnerText = seasonForCreateNode.Id.ToString();
+            newSeasonName.InnerText = seasonForCreateNode.N;
+            newSeasonId.InnerText = seasonForCreateNode.I.ToString();
 
             String gardenString = "";
 
             for (int i = 0; i < 24; i++)
             {
-                gardenString += seasonForCreateNode.Garden[i];
+                gardenString += seasonForCreateNode.G[i];
                 if (i < 23)
                 {
                     gardenString += ",";
@@ -171,10 +171,10 @@ namespace FarmBot_Software
                 XmlNode newTimeForWater = LoadingXML.CreateElement("TimeForWater");
                 XmlAttribute newTreeId = LoadingXML.CreateAttribute("id");
 
-                newTreeName.InnerText = seasonForCreateNode.Tree[index].Name;
-                newMaxTemp.InnerText = seasonForCreateNode.Tree[index].MaxTemperature.ToString();
-                newMaxHumi.InnerText = seasonForCreateNode.Tree[index].MaxHumidity.ToString();
-                newMinHumi.InnerText = seasonForCreateNode.Tree[index].MinHumidity.ToString();
+                newTreeName.InnerText = seasonForCreateNode.T[index].N;
+                newMaxTemp.InnerText = seasonForCreateNode.T[index].MaxT.ToString();
+                newMaxHumi.InnerText = seasonForCreateNode.T[index].MaxH.ToString();
+                newMinHumi.InnerText = seasonForCreateNode.T[index].MinH.ToString();
                 newTreeId.InnerText = (index + 1).ToString();
 
                 // Add parameter into Tree
@@ -187,15 +187,15 @@ namespace FarmBot_Software
                 newTree[index].Attributes.Append(newTreeId);
 
                 // Add time into TimeForWater
-                for (int i = 0; i < seasonForCreateNode.Tree[index].TimeForWaterList.Count; i++)
+                for (int i = 0; i < seasonForCreateNode.T[index].Times.Count; i++)
                 {
                     XmlNode newTime = LoadingXML.CreateElement("Time");
                     XmlNode newHour = LoadingXML.CreateElement("Hour");
                     XmlNode newMinute = LoadingXML.CreateElement("Minute");
                     XmlAttribute newTimeId = LoadingXML.CreateAttribute("id");
 
-                    newHour.InnerText = seasonForCreateNode.Tree[index].TimeForWaterList[i].Hour.ToString();
-                    newMinute.InnerText = seasonForCreateNode.Tree[index].TimeForWaterList[i].Minute.ToString();
+                    newHour.InnerText = seasonForCreateNode.T[index].Times[i].H.ToString();
+                    newMinute.InnerText = seasonForCreateNode.T[index].Times[i].M.ToString();
                     newTimeId.InnerText = (i + 1).ToString();
 
                     newTime.AppendChild(newHour);
@@ -215,8 +215,8 @@ namespace FarmBot_Software
         public Season CreateSeason(String SeasonName)
         {
             Season creatingSeason = new Season();
-            creatingSeason.Name = SeasonName;
-            creatingSeason.Id = Seasons.Count + 1;
+            creatingSeason.N = SeasonName;
+            creatingSeason.I = Seasons.Count + 1;
 
             Seasons.Add(creatingSeason);
 
@@ -233,7 +233,7 @@ namespace FarmBot_Software
             int deleteSeasonOrder = -1;
             for (int index = 0; index < Seasons.Count; index++ )
             {
-                if (Seasons[index].Name == seasonName)
+                if (Seasons[index].N == seasonName)
                 {
                     deleteSeasonOrder = index;
                     break;
@@ -245,7 +245,7 @@ namespace FarmBot_Software
 
             for (int index = 0; index < Seasons.Count; index++)
             {
-                Seasons[index].Id = index + 1;
+                Seasons[index].I = index + 1;
             }
 
             Seasons.RemoveAt(deleteSeasonOrder);
