@@ -7,12 +7,12 @@
 #include "Constants.h"
 #include "idDHTLib.h"
 
-#define SOIL_SENSOR_SERVO_PIN 6
-#define SOIL_SENSOR_PIN A15
+#define SOIL_SENSOR_SERVO_PIN 11
+#define SOIL_SENSOR_PIN A0
 #define LAMP_PIN 26
 #define FAN_PIN 28
 #define VACCUM_PIN 9
-#define PUMP_PIN 10
+#define PUMP_PIN 12
 
 #define ON HIGH
 #define OFF LOW
@@ -54,7 +54,7 @@ float SoilMoistureValue = 0;
 
 void setup()
 {
-	Serial.begin(9600);
+	Serial.begin(9600);	
 
 	TaskScheduler.Init();
 	/*TaskScheduler.Add(WatchDog, 1000);
@@ -170,7 +170,7 @@ void GetGCodeState()
 {
 	if (GcodeExecute.IsRunning == true)
 	{
-		//Serial.println("GcodeRunning");
+		Serial.println("GcodeRunning");
 	}
 	else
 	{
@@ -182,7 +182,11 @@ void WhenFinishMove()
 {
 	if (CNC3Axis.NumberOfRunningMotor == 0 & IsPause == false)
 	{
-		GcodeExecute.IsRunning = false;
+		if (GcodeExecute.IsRunning == true)
+		{
+			Serial.println("Ok");
+			GcodeExecute.IsRunning = false;
+		}
 	}
 }
 

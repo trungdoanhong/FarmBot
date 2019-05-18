@@ -384,7 +384,7 @@ namespace FarmBot_Software
                     lbConnectState.Text += ".";
                 });
                 
-                Thread.Sleep(100);
+                Thread.Sleep(500);
                 if (IsFarmBotConnected == true)
                 {
                     break;

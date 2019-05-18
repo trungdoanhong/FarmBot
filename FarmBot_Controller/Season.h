@@ -9,9 +9,9 @@ typedef struct
 typedef struct
 {
 	char Name[30];
-	uint8_t MaxTemperature;
-	uint8_t MaxHumidity;
-	uint8_t MinHumidity;
+	int16_t MaxTemperature;
+	int16_t MaxHumidity;
+	int16_t MinHumidity;
 	Time TimesForWater[6];
 } Tree;
 

@@ -58,14 +58,22 @@ void GCodeReceiver::serialEvent()
 	while (ReceiveSerial->available())
 	{
 		char inChar = (char)ReceiveSerial->read();
+		//ReceiveSerial->print(inChar);
 
 		if (inChar == '\n')
 		{
-			isStringComplete = true;
+			if (receiveString != "")
+			{
+				isStringComplete = true;
+			}
+			
 			break;
 		}
 
-		receiveString += inChar;
+		if (inChar != '\r')
+		{
+			receiveString += inChar;
+		}
 	}
 }
 

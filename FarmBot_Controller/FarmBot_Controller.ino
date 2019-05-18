@@ -16,9 +16,9 @@
 #define SEASON_ADDRESS 0
 
 #define RETURN  7
-#define LEFT    9
-#define RIGHT   11
-#define DOWN    10
+#define LEFT    11
+#define RIGHT   10
+#define DOWN    9
 #define UP      12
 #define ENTER   8 
 
@@ -29,7 +29,7 @@ SerialCommand SerialCMD1;
 
 uint8_t ButtonArray[] = { RETURN, LEFT, RIGHT, UP, DOWN, ENTER };
 
-LiquidCrystal_I2C lcd(0x27, 20, 4);
+LiquidCrystal_I2C lcd(0x3F, 20, 4);
 
 tmElements_t TodayTime;
 
@@ -100,8 +100,8 @@ void(*AddTimes[3])();
 void(*DeleteTimes[3])();
 vector<TimeControl> TimeControls[3];
 
-String JsonContainer;
-char JsonStringPtr[550];
+String* JsonContainer = new String("");
+
 Season ProcessingSeason;
 
 void(*MoveToBowls[3])();
@@ -138,7 +138,7 @@ void setup()
 
 	GetDataFromEeprom();
 
-	SerialCMD.AddCommand("Json", JsonStringPtr);
+	SerialCMD.AddCommand("Json", JsonContainer);
 	SerialCMD.AddCommand("Load", SendDataToSoftware);
 	SerialCMD.AddCommand("UploadDone", ConvertJsonStringToDataStruct);
 	SerialCMD.AddCommand("PrintEeprom", PrintDataStructFromEeprom);
@@ -146,8 +146,35 @@ void setup()
 	SerialCMD.AddCommand("PrintJson", PrintJson);
 	SerialCMD.AddCommand("IsFarmBot", Confirm);
 
-	SerialCMD1.AddCommand("GcodeDone", WhenGcodeDone);
+	SerialCMD1.AddCommand("Ok", WhenGcodeDone);
 
+	InitUI();
+
+	StableButton.Init(ButtonArray, 6);
+
+	TaskScheduler.Init();
+	TaskScheduler.Add(UpdateTimeInDay, 1000);
+	TaskScheduler.Add(UpdateDateInMonth, 1000);
+	TaskScheduler.Add(CheckTimeToWater, 10000);
+	TaskScheduler.Add(WaterWhenItsTime, 10000);
+
+	TaskScheduler.Run();
+
+}
+
+void loop()
+{
+	ReadTime();
+	ExecuteMenuButton();
+	LCDMenu.ExecuteEffect();	
+	LCDMenu.UpdateScreen();
+	SerialCMD.Execute();
+	SerialCMD1.Execute();
+	//GetGcodeState();	
+}
+
+void InitUI()
+{
 	FirstMenu = new OriginMenu();
 	{
 		lbToday = new Label(FirstMenu, "Today: ", 0, 0);
@@ -176,7 +203,7 @@ void setup()
 					vtAddHour[i]->Min = 0;
 
 					vtAddMinute[i]->Max = 59;
-					vtAddMinute[i]->Min = 0;					
+					vtAddMinute[i]->Min = 0;
 				}
 
 				lbMaxTemp[i] = new Label(smTree[i]->Container, "Max temp", 0, 1);
@@ -191,9 +218,9 @@ void setup()
 
 				vtMinHumiValue[i] = new VariableText(smTree[i]->Container, ProcessingSeason.Trees[i].MinHumidity, 10, 3);
 
-				vtMaxTempValue[i]->SetExternalValue((uint16_t*)&ProcessingSeason.Trees[i].MaxTemperature);
-				vtMaxHumiValue[i]->SetExternalValue((uint16_t*)&ProcessingSeason.Trees[i].MaxHumidity);
-				vtMinHumiValue[i]->SetExternalValue((uint16_t*)&ProcessingSeason.Trees[i].MinHumidity);
+				vtMaxTempValue[i]->SetExternalValue(&ProcessingSeason.Trees[i].MaxTemperature);
+				vtMaxHumiValue[i]->SetExternalValue(&ProcessingSeason.Trees[i].MaxHumidity);
+				vtMinHumiValue[i]->SetExternalValue(&ProcessingSeason.Trees[i].MinHumidity);
 
 				vtMaxHumiValue[i]->HandleWhenValueChange = SaveDataStructToEeprom;
 				vtMaxHumiValue[i]->HandleWhenValueChange = SaveDataStructToEeprom;
@@ -262,7 +289,7 @@ void setup()
 		{
 			ftMoveToBowl[i] = new FunctionText(FourthMenu, String("Bowl") + String(i + 1), i * 7, 1);
 			ftMoveToBowl[i]->Function = MoveToBowls[i];
-		}		
+		}
 
 		ftSowSeeds = new FunctionText(FourthMenu, "Sow Seeds", 0, 2);
 
@@ -275,7 +302,7 @@ void setup()
 		vtCellY->Max = 8;
 		vtCellY->Min = 1;
 	}
-	
+
 	LCDMenu.Init(&lcd, "FarmBot Controller");
 	LCDMenu.AddMenu(FirstMenu);
 	LCDMenu.AddMenu(SecondMenu);
@@ -285,29 +312,6 @@ void setup()
 	LCDMenu.UpdateScreen();
 
 	UpdateDisplayParameter();
-
-	StableButton.Init(ButtonArray, 6);
-
-	TaskScheduler.Init();
-	TaskScheduler.Add(UpdateTimeInDay, 1000);
-	TaskScheduler.Add(UpdateDateInMonth, 1000);
-	TaskScheduler.Add(CheckTimeToWater, 10000);
-	TaskScheduler.Add(WaterWhenItsTime, 10000);
-
-	TaskScheduler.Run();
-
-}
-
-void loop()
-{
-	ReadTime();
-	ExecuteMenuButton();
-	LCDMenu.ExecuteEffect();	
-	LCDMenu.UpdateScreen();
-	SerialCMD.Execute();
-	SerialCMD1.Execute();
-	GetGcodeState();
-	
 }
 
 uint32_t lastTime = 0;
@@ -648,21 +652,90 @@ void ChangeMovingWidth()
 	vtZ->Resolution = vtMoveValue->GetValue();
 }
 
+void CutTimesInJson(String* json)
+{
+	if (*json == "")
+		return;
+
+	int ite = 0;
+
+	for (uint8_t i = 0; i < 3; i++)
+	{
+		int16_t timeOrder = json->indexOf("\"Times\"");
+		int16_t commaOrder = json->indexOf("],", timeOrder) + 1;
+
+		String time = json->substring(timeOrder, commaOrder);
+		json->remove(timeOrder, time.length() + 1);
+
+		int ite = 0;
+
+		for (uint8_t j = 0; j < 6; j++)
+		{
+			int h_Order = time.indexOf("H", ite);
+			int m_Order = time.indexOf("M", h_Order);
+			int b_Order = time.indexOf("}", m_Order);
+
+			/*Serial.print(h_Order);
+			Serial.print("-");
+			Serial.println(m_Order);*/
+
+			ite = b_Order;
+
+			if (h_Order > -1 && m_Order > h_Order)
+			{
+				String h = time.substring(h_Order + 3, m_Order - 2);
+				String m = time.substring(m_Order + 3, b_Order);
+
+				ProcessingSeason.Trees[i].TimesForWater[j].Hour = h.toInt();
+				ProcessingSeason.Trees[i].TimesForWater[j].Minute = m.toInt();
+
+				/*Serial.print(ProcessingSeason.Trees[i].TimesForWater[j].Hour);
+				Serial.print(":");
+				Serial.println(ProcessingSeason.Trees[i].TimesForWater[j].Minute);*/
+			}
+			else
+			{
+				//Serial.println("NULL");
+				ProcessingSeason.Trees[i].TimesForWater[j].Hour = NULL_TIME;
+				ProcessingSeason.Trees[i].TimesForWater[j].Minute = 0;
+			}
+		}
+	}
+}
+
 void ConvertJsonStringToDataStruct()
 {
+	if (*JsonContainer == "")
+		return;
+
+	CutTimesInJson(JsonContainer);	
+
+	ConvertRemainJsonToStruct();
+	
+	*JsonContainer = "";
+
+	PrintProcessingSeason();
+
+	SaveDataStructToEeprom();
+	UpdateDisplayParameter();
+}
+
+void ConvertRemainJsonToStruct()
+{
 	//DynamicJsonBuffer jsonBuffer;
-	StaticJsonBuffer<1400> jsonBuffer;
+	StaticJsonBuffer<600> jsonBuffer;
+	//String abc = "{\"T\":[{\"Times\":[{\"H\":16,\"M\":15}],\"N\":\"Cai Ngot\",\"MaxT\":80,\"MaxH\":60,\"MinH\":40},{\"Times\":[{\"H\":12,\"M\":0}],\"N\":\"Xu hao\",\"MaxT\":56,\"MaxH\":0,\"MinH\":0},{\"Times\":[{\"H\":12,\"M\":0}],\"N\":\"Rau muong\",\"MaxT\":50,\"MaxH\":20,\"MinH\":10}],\"G\":[1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,3,3,3,3,3,3],\"N\":\"Season 1\",\"I\":1}";
+		
+	JsonObject& root = jsonBuffer.parseObject(*JsonContainer);
 
-	JsonObject& root = jsonBuffer.parseObject(JsonStringPtr);
-
-	if (!root.success()) 
+	if (!root.success())
 	{
-		Serial.println("parseObject() failed");
+		Serial.println("root parseobject() failed");
 		return;
 	}
 	else
 	{
-		Serial.println("parseObject() success");
+		Serial.println(" rootparseobject() success");
 	}
 
 	ProcessingSeason.Id = root["I"];
@@ -673,71 +746,12 @@ void ConvertJsonStringToDataStruct()
 		ProcessingSeason.Garden[i] = root["G"][i];
 	}
 
-
 	for (uint8_t i = 0; i < 3; i++)
 	{
-		strcpy(ProcessingSeason.Trees[i].Name, root["Tree"][i]["N"]);
+		strcpy(ProcessingSeason.Trees[i].Name, root["T"][i]["N"]);
 		ProcessingSeason.Trees[i].MaxTemperature = root["T"][i]["MaxT"];
 		ProcessingSeason.Trees[i].MaxHumidity = root["T"][i]["MaxH"];
 		ProcessingSeason.Trees[i].MinHumidity = root["T"][i]["MinH"];
-
-		for (uint8_t j = 0; j < 6; j++)
-		{
-			if (j < root["Tree"][i]["TimeForWaterList"].size())
-			{
-				ProcessingSeason.Trees[i].TimesForWater[j].Hour = root["T"][i]["Times"][j]["H"];
-				ProcessingSeason.Trees[i].TimesForWater[j].Minute = root["T"][i]["Times"][j]["M"];
-			}
-			else
-			{
-				ProcessingSeason.Trees[i].TimesForWater[j].Hour = NULL_TIME;
-				ProcessingSeason.Trees[i].TimesForWater[j].Minute = 0;
-			}
-		}
-	
-	}
-
-	SaveDataStructToEeprom();
-	UpdateDisplayParameter();
-}
-
-void PrintSeason(Season season)
-{
-	Serial.print("Id : ");
-	Serial.println(season.Id);
-	Serial.print("Name : ");
-	Serial.println(season.Name);
-	Serial.print("Garden : ");
-	for (uint8_t i = 0; i < 24; i++)
-	{
-		Serial.print(season.Garden[i]);
-		if (i == 23)
-		{
-			Serial.println();
-			break;
-		}
-		Serial.print(",");
-	}
-
-	for (uint8_t i = 0; i < 3; i++)
-	{
-		Serial.print("Tree Name : ");
-		Serial.println(season.Trees[i].Name);
-		Serial.print("MaxTemperature : ");
-		Serial.println(season.Trees[i].MaxTemperature);
-		Serial.print("MaxHumidity : ");
-		Serial.println(season.Trees[i].MaxHumidity);
-		Serial.print("MinHumidity : ");
-		Serial.println(season.Trees[i].MinHumidity);
-
-		for (uint8_t j = 0; j < 6; j++)
-		{
-			if (season.Trees[i].TimesForWater[j].Hour == NULL_TIME)
-				break;
-			Serial.print(season.Trees[i].TimesForWater[j].Hour);
-			Serial.print(":");
-			Serial.println(season.Trees[i].TimesForWater[j].Minute);
-		}
 	}
 }
 
@@ -806,6 +820,7 @@ void PrintDataStructFromEeprom()
 {
 	Season eepromSeason;
 	EEPROM.get(SEASON_ADDRESS, eepromSeason);
+	
 	PrintSeason(eepromSeason);
 }
 
@@ -816,7 +831,7 @@ void Confirm()
 
 void PrintJson()
 {
-	Serial.println(JsonStringPtr);
+	Serial.println(*JsonContainer);
 }
 
 void UpdateDisplayParameter()
@@ -860,6 +875,46 @@ void UpdateDisplayParameter()
 	}
 
 	LCDMenu.ReLoadMenu();
+}
+
+void PrintSeason(Season season)
+{
+	Serial.print("Id : ");
+	Serial.println(season.Id);
+	Serial.print("Name : ");
+	Serial.println(season.Name);
+	Serial.print("Garden : ");
+	for (uint8_t i = 0; i < 24; i++)
+	{
+		Serial.print(season.Garden[i]);
+		if (i == 23)
+		{
+			Serial.println();
+			break;
+		}
+		Serial.print(",");
+	}
+
+	for (uint8_t i = 0; i < 3; i++)
+	{
+		Serial.print("Tree Name : ");
+		Serial.println(season.Trees[i].Name);
+		Serial.print("MaxTemperature : ");
+		Serial.println(season.Trees[i].MaxTemperature);
+		Serial.print("MaxHumidity : ");
+		Serial.println(season.Trees[i].MaxHumidity);
+		Serial.print("MinHumidity : ");
+		Serial.println(season.Trees[i].MinHumidity);
+
+		for (uint8_t j = 0; j < 6; j++)
+		{
+			if (season.Trees[i].TimesForWater[j].Hour == NULL_TIME)
+				break;
+			Serial.print(season.Trees[i].TimesForWater[j].Hour);
+			Serial.print(":");
+			Serial.println(season.Trees[i].TimesForWater[j].Minute);
+		}
+	}
 }
 
 void PrintProcessingSeason()
@@ -935,7 +990,6 @@ void MoveToCell(uint8_t cellX, uint8_t cellY, END_ACTUATOR endActuator = VACCUM)
 	vtX->SetValue(xPos);
 	vtY->SetValue(yPos);
 	vtZ->SetValue(zPos);
-
 }
 
 void MoveToCell()

@@ -576,7 +576,7 @@ void VariableText::SetExternalValue(float* pExVal)
 	this->pExternalValue_float = pExVal;
 }
 
-void VariableText::SetExternalValue(uint16_t* pExVal)
+void VariableText::SetExternalValue(int16_t* pExVal)
 {
 	this->pExternalValue_int = pExVal;
 }
